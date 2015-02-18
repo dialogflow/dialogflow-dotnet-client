@@ -26,8 +26,8 @@ namespace ApiAiSDK.Model
 	public class Status
 	{
 		[JsonProperty("code")]
-		public int Code{ get; set; }
-	
+		public int? Code{ get; set; }
+
 		[JsonProperty("errorType")]
 		public string ErrorType{ get; set; }
 	

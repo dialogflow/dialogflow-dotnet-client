@@ -32,9 +32,12 @@ namespace ApiAiSDK
 	{
 		private AIConfiguration config;
 
+		private readonly string sessionId;
+
 		public AIDataService(AIConfiguration config)
 		{
 			this.config = config;
+			sessionId = Guid.NewGuid().ToString();
 		}
 
 		public AIResponse Request(AIRequest request)
@@ -42,6 +45,7 @@ namespace ApiAiSDK
 
 			request.Language = config.Language.code;
 			request.Timezone = TimeZone.CurrentTimeZone.StandardName;
+			request.SessionId = sessionId;
 
 			try {
 
@@ -88,6 +92,7 @@ namespace ApiAiSDK
 			var request = new AIRequest();
 			request.Language = config.Language.code;
 			request.Timezone = TimeZone.CurrentTimeZone.StandardName;
+			request.SessionId = sessionId;
 
 			try {
 

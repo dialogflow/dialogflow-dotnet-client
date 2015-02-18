@@ -38,6 +38,18 @@ namespace ApiAiSDK.Model
 	
 		[JsonProperty("status")]
 		public Status Status{ get; set; }
+
+		public bool IsError
+		{
+			get
+			{
+				if (Status != null && Status.Code.HasValue && Status.Code >= 400) {
+					return true;
+				}
+
+				return false;
+			}
+		}
 	}
 
 }

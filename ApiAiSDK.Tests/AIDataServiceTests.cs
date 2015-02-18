@@ -17,6 +17,7 @@
 // specific language governing permissions and limitations under the License.
 //
 // ***********************************************************************************************************************
+
 using System;
 using NUnit.Framework;
 using ApiAiSDK;
@@ -31,7 +32,7 @@ namespace ApiAiSDK.Tests
 		private readonly string ACCESS_TOKEN = "3485a96fb27744db83e78b8c4bc9e7b7";
 
 		[Test]
-		public void TestTextRequest()
+		public void TextRequestTest()
 		{
 			var config = new AIConfiguration(SUBSCRIPTION_KEY, ACCESS_TOKEN, SupportedLanguage.English);
 			var dataService = new AIDataService(config);
@@ -46,6 +47,82 @@ namespace ApiAiSDK.Tests
 				Assert.Fail(e.Message);
 			}
 		}
+
+		[Test]
+		public void DifferentAgentsTest()
+		{
+			var query = "I want pizza";
+
+			{
+				var config = new AIConfiguration(SUBSCRIPTION_KEY, ACCESS_TOKEN, SupportedLanguage.English);
+				var dataService = new AIDataService(config);
+
+				var request = new AIRequest(query);
+				try {
+					var response = dataService.Request(request);
+					Assert.NotNull(response.Result);
+					Assert.AreEqual("pizza", response.Result.Action);
+				} catch (Exception ex) {
+					Assert.Fail(ex.Message);
+				}
+			}
+
+			{
+				var config = new AIConfiguration(SUBSCRIPTION_KEY, "968235e8e4954cf0bb0dc07736725ecd", SupportedLanguage.English);
+				var dataService = new AIDataService(config);
+				var request = new AIRequest(query);
+				try {
+					var response = dataService.Request(request);
+					Assert.NotNull(response.Result);
+					Assert.IsTrue(string.IsNullOrEmpty(response.Result.Action));
+				} catch (Exception ex) {
+					Assert.Fail(ex.Message);
+				}
+			}
+
+		}
+
+		[Test]
+		public void SessionTest()
+		{
+			var config = new AIConfiguration(SUBSCRIPTION_KEY, ACCESS_TOKEN, SupportedLanguage.English);
+			try {
+				var firstService = new AIDataService(config);
+				var secondService = new AIDataService(config);
+
+				{
+					var weatherRequest = new AIRequest("weather");
+					var weatherResponse = MakeRequest(firstService, weatherRequest);
+				}
+				
+				{
+					var checkSecondRequest = new AIRequest("check weather");
+					var checkSecondResponse = MakeRequest(secondService, checkSecondRequest);
+					Assert.IsNull(checkSecondResponse.Result.Action);
+				}
+				
+				{
+					var checkFirstRequest = new AIRequest("check weather");
+					var checkFirstResponse = MakeRequest(firstService, checkFirstRequest);
+					Assert.NotNull(checkFirstResponse.Result.Action);
+					Assert.IsTrue(checkFirstResponse.Result.Action.Equals("checked", StringComparison.InvariantCultureIgnoreCase));
+				}
+
+			} catch (Exception ex) {
+				Assert.Fail(ex.Message);
+			}
+		}
+
+		private AIResponse MakeRequest(AIDataService service, AIRequest request)
+		{
+			var aiResponse = service.Request(request);
+			Assert.NotNull(aiResponse);
+			Assert.False(aiResponse.IsError);
+			Assert.False(string.IsNullOrEmpty(aiResponse.Id));
+			Assert.NotNull(aiResponse.Result);
+			return aiResponse;
+		}
+
 	}
 }
 
