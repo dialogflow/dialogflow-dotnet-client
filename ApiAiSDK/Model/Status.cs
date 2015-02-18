@@ -17,7 +17,6 @@
 // specific language governing permissions and limitations under the License.
 //
 // ***********************************************************************************************************************
-
 using System;
 using fastJSON;
 
@@ -26,20 +25,19 @@ namespace ApiAiSDK.Model
 	[Serializable]
 	public class Status
 	{
-
 		[JsonProperty("code")]
-		public int code{ get; set; }
+		public int Code{ get; set; }
 	
 		[JsonProperty("errorType")]
-		public string errorType{ get; set; }
+		public string ErrorType{ get; set; }
 	
 		[JsonProperty("errorDetails")]
-		public string errorDetails{ get; set; }
+		public string ErrorDetails{ get; set; }
 	
 		[JsonProperty("errorID")]
-		public string errorID{ get; set; }
+		public string ErrorID{ get; set; }
 
-		public Status ()
+		public Status()
 		{
 		}
 	}

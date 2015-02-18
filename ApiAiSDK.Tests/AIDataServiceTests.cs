@@ -1,5 +1,5 @@
 //
-// API.AI .NET SDK - client-side libraries for API.AI
+// API.AI .NET SDK tests - client-side tests for API.AI
 // =================================================
 //
 // Copyright (C) 2015 by Speaktoit, Inc. (https://www.speaktoit.com)
@@ -17,28 +17,35 @@
 // specific language governing permissions and limitations under the License.
 //
 // ***********************************************************************************************************************
-
 using System;
-using fastJSON;
+using NUnit.Framework;
+using ApiAiSDK;
+using ApiAiSDK.Model;
 
-namespace ApiAiSDK.Model
+namespace ApiAiSDK.Tests
 {
-	[Serializable]
-	public class Result
+	[TestFixture]
+	public class AIDataServiceTests
 	{
-		[JsonProperty("speech")]
-		public String Speech{ get; set; }
-	
-		[JsonProperty("action")]
-		public String Action{ get; set; }
+		private readonly string SUBSCRIPTION_KEY = "cb9693af-85ce-4fbf-844a-5563722fc27f";
+		private readonly string ACCESS_TOKEN = "3485a96fb27744db83e78b8c4bc9e7b7";
 
-		[JsonProperty("resolvedQuery")]
-		public String ResolvedQuery{ get; set; }
-
-		public Result ()
+		[Test]
+		public void TestTextRequest()
 		{
+			var config = new AIConfiguration(SUBSCRIPTION_KEY, ACCESS_TOKEN, SupportedLanguage.English);
+			var dataService = new AIDataService(config);
+
+			var request = new AIRequest("Hello");
+			try {
+				var response = dataService.Request(request);
+				Assert.NotNull(response);
+				Assert.AreEqual("greeting", response.Result.Action);
+				Assert.AreEqual("Hi! How are you?", response.Result.Speech);
+			} catch (Exception e) {
+				Assert.Fail(e.Message);
+			}
 		}
 	}
 }
-
 
