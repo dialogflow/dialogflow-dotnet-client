@@ -1,0 +1,13 @@
+language: csharp
+solution: api-ai-net.sln
+
+branches:
+  only:
+    - master
+
+install:
+  - nuget restore api-ai-net.sln
+  - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
+script:
+  - xbuild /p:Configuration=Release api-ai-net.sln
+  - mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe ./ApiAiSDK.Tests/bin/Release/ApiAiSDK.Tests.dll
