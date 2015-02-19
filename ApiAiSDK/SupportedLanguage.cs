@@ -39,7 +39,7 @@ namespace ApiAiSDK
 		public static readonly SupportedLanguage ChineseHongKong = new SupportedLanguage("zh-HK");
 		public static readonly SupportedLanguage ChineseTaiwan = new SupportedLanguage("zh-TW");
 
-		internal readonly string code;
+		public readonly string code;
 
 		private SupportedLanguage(string code)
 		{

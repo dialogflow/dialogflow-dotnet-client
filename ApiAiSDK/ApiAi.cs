@@ -38,17 +38,30 @@ namespace ApiAiSDK
 			dataService = new AIDataService(this.config);
 		}
 
-		public AIResponse textRequest(string text)
+		public AIResponse TextRequest(string text)
 		{
-			return dataService.Request(new AIRequest(text));
+			if (string.IsNullOrEmpty(text)) {
+				throw new ArgumentNullException("text");
+			}
+
+			return TextRequest(new AIRequest(text));
 		}
 
-		public AIResponse voiceRequest(Stream voiceStream)
+		public AIResponse TextRequest(AIRequest request)
+		{
+			if (request == null) {
+				throw new ArgumentNullException("request");
+			}
+
+			return dataService.Request(request);
+		}
+
+		public AIResponse VoiceRequest(Stream voiceStream)
 		{
 			return dataService.VoiceRequest(voiceStream);
 		}
 
-		public AIResponse voiceRequest(float[] samples)
+		public AIResponse VoiceRequest(float[] samples)
 		{
 			try {
 
@@ -62,7 +75,7 @@ namespace ApiAiSDK
 					var voiceStream = new MemoryStream(bytes);
 					voiceStream.Seek(0, SeekOrigin.Begin);
 				
-					var aiResponse = voiceRequest(voiceStream);
+					var aiResponse = VoiceRequest(voiceStream);
 					return aiResponse;
 				}
 
