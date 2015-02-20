@@ -49,9 +49,9 @@ Done! Now you can easily do requests to the API.AI service
     var response = apiAi.VoiceRequest(voiceStream);
     ```
 
-Also see unit tests for more examples.
+Also see [unit tests](https://github.com/api-ai/api-ai-net/blob/master/ApiAiSDK.Tests/ApiAiTest.cs) for more examples.
 
 ## Open Source Project Credits
 
-* JSON parsing implemented using modified [fastJSON](https://github.com/xVir/fastJSON)) library originally forked from Mehdi Gholam's [repository](https://github.com/mgholam/fastJSON).
+* JSON parsing implemented using modified [fastJSON](https://github.com/xVir/fastJSON) library originally forked from Mehdi Gholam's [repository](https://github.com/mgholam/fastJSON).
 
