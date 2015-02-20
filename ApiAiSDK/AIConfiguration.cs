@@ -29,13 +29,15 @@ namespace ApiAiSDK
 		private const string SERVICE_PROD_URL = "https://api.api.ai/v1/";
 		private const string SERVICE_DEV_URL = "https://dev.api.ai/api/";
 
+		private const string CURRENT_PROTOCOL_VERSION = "20150204";
+
 		public string SubscriptionKey { get; private set; }
 
 		public string ClientAccessToken { get; private set; }
 
 		public SupportedLanguage Language { get; set; }
 
-		public bool DebugMode { get; set; }
+		public bool DevMode { get; set; }
 	
 		public AIConfiguration(string subscriptionKey, string clientAccessToken, SupportedLanguage language)
 		{
@@ -43,16 +45,13 @@ namespace ApiAiSDK
 			this.ClientAccessToken = clientAccessToken;
 			this.Language = language;
 
-			DebugMode = false;
+			DevMode = false;
 		}
 
 		public string RequestUrl {
 			get {
-				if (DebugMode) {
-					return SERVICE_DEV_URL + "query";
-				} else {
-					return SERVICE_PROD_URL + "query";
-				}
+				var baseUrl = DevMode ? SERVICE_DEV_URL : SERVICE_PROD_URL;
+				return string.Format("{0}{1}?v={2}", baseUrl, "query", CURRENT_PROTOCOL_VERSION);
 			}
 		}
 

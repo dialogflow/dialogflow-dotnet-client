@@ -19,6 +19,7 @@
 // ***********************************************************************************************************************
 
 using System;
+using System.Linq;
 using NUnit.Framework;
 using ApiAiSDK;
 using ApiAiSDK.Model;
@@ -110,6 +111,35 @@ namespace ApiAiSDK.Tests
 
 			} catch (Exception ex) {
 				Assert.Fail(ex.Message);
+			}
+		}
+
+		[Test]
+		public void ParametersTest()
+		{
+			var config = new AIConfiguration(SUBSCRIPTION_KEY, ACCESS_TOKEN, SupportedLanguage.English);
+			var dataService = new AIDataService(config);
+			
+			var request = new AIRequest("what is your name");
+			try {
+				var response = MakeRequest(dataService, request);
+
+				Assert.NotNull(response.Result.Parameters);
+				Assert.IsTrue(response.Result.Parameters.Count > 0);
+
+				Assert.IsTrue(response.Result.Parameters.ContainsKey("my_name"));
+				Assert.IsTrue(response.Result.Parameters.ContainsValue("Sam"));
+
+				Assert.IsNotNull(response.Result.Contexts);
+				Assert.IsTrue(response.Result.Contexts.Length > 0);
+				var context = response.Result.Contexts[0];
+
+				Assert.IsNotNull(context.Parameters);
+				Assert.IsTrue(context.Parameters.ContainsKey("my_name"));
+				Assert.IsTrue(context.Parameters.ContainsValue("Sam"));
+
+			} catch (Exception e) {
+				Assert.Fail(e.Message);
 			}
 		}
 

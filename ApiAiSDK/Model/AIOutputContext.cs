@@ -1,4 +1,4 @@
-﻿//
+//
 // API.AI .NET SDK - client-side libraries for API.AI
 // =================================================
 //
@@ -19,36 +19,23 @@
 // ***********************************************************************************************************************
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using fastJSON;
 
 namespace ApiAiSDK.Model
 {
 	[Serializable]
-	public class AIRequest : QuestionMetadata
+	public class AIOutputContext
 	{
-		[JsonProperty("query")]
-		public string[] Query { get; set; }
-	
-		[JsonProperty("confidence")]
-		public float[] Confidence { get; set; }
-	
-		[JsonProperty("contexts")]
-		public List<String> Contexts { get; set; }
-	
-		[JsonProperty("resetContexts")]
-		public bool? ResetContexts { get; set; }
+		[JsonProperty("name")]
+		public string Name { get; set; }
 
-		public AIRequest ()
+		[JsonProperty("parameters")]
+		public Dictionary<string, string> Parameters { get; set; }
+
+		public AIOutputContext()
 		{
 		}
-
-		public AIRequest (string text)
-		{
-			Query = new string[] { text };
-			Confidence = new float[] { 1.0f };
-		}
-
 	}
 }
+

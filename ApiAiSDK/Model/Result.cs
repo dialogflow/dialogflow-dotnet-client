@@ -19,6 +19,7 @@
 // ***********************************************************************************************************************
 
 using System;
+using System.Collections.Generic;
 using fastJSON;
 
 namespace ApiAiSDK.Model
@@ -31,6 +32,15 @@ namespace ApiAiSDK.Model
 	
 		[JsonProperty("action")]
 		public String Action{ get; set; }
+
+		[JsonProperty("parameters")]
+		public Dictionary<string, string> Parameters { get; set; }
+
+		[JsonProperty("contexts")]
+		public AIOutputContext[] Contexts { get; set; }
+
+		[JsonProperty("metadata")]
+		public Metadata Metadata { get; set; }
 
 		[JsonProperty("resolvedQuery")]
 		public String ResolvedQuery{ get; set; }

@@ -48,6 +48,8 @@
     <Compile Include="AIConfiguration.cs" />
     <Compile Include="AIServiceException.cs" />
     <Compile Include="SupportedLanguage.cs" />
+    <Compile Include="Model\AIOutputContext.cs" />
+    <Compile Include="Model\Metadata.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
