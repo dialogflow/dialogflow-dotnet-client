@@ -31,20 +31,19 @@ private ApiAi apiAi;
 
 Now you need to initialize `ApiAi` object with appropriate access keys and language.
 ```csharp
-var config = new AIConfiguration("YOUR_SUBSCRIPTION_KEY", "YOUR_CLIENT_ACCESS_TOKEN", SupportedLanguage.English);
-
+var config = new AIConfiguration("YOUR_SUBSCRIPTION_KEY", 
+                                 "YOUR_CLIENT_ACCESS_TOKEN", 
+                                 SupportedLanguage.English);
 apiAi = new ApiAi(config);
 ```
 
 Done! Now you can easily do requests to the API.AI service 
 * using `TextRequest` method for simple text requests
-    
     ```csharp
     var response = apiAi.TextRequest("hello");
     ```
 
 * using `VoiceRequest` method for voice binary data in PCM (16000Hz, Mono, Signed 16 bit) format
-    
     ```csharp
     var response = apiAi.VoiceRequest(voiceStream);
     ```
