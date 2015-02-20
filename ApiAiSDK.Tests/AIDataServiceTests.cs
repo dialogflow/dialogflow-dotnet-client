@@ -29,8 +29,8 @@ namespace ApiAiSDK.Tests
 	[TestFixture]
 	public class AIDataServiceTests
 	{
-		private readonly string SUBSCRIPTION_KEY = "cb9693af-85ce-4fbf-844a-5563722fc27f";
-		private readonly string ACCESS_TOKEN = "3485a96fb27744db83e78b8c4bc9e7b7";
+		private const string SUBSCRIPTION_KEY = "cb9693af-85ce-4fbf-844a-5563722fc27f";
+		private const string ACCESS_TOKEN = "3485a96fb27744db83e78b8c4bc9e7b7";
 
 		[Test]
 		public void TextRequestTest()

@@ -37,6 +37,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AIDataServiceTests.cs" />
+    <Compile Include="ApiAiTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -44,5 +45,11 @@
       <Project>{162D1664-491D-41A3-B4E7-332EAAF87CCA}</Project>
       <Name>ApiAiSDK</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="TestData\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestData\what_is_your_name.raw" />
   </ItemGroup>
 </Project>

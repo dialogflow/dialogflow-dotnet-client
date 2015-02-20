@@ -37,7 +37,15 @@ namespace ApiAiSDK
 
 		public SupportedLanguage Language { get; set; }
 
+		/// <summary>
+		/// If true, will be used Testing API.AI server instead of Production server. This option for TESTING PURPOSES ONLY.
+		/// </summary>
 		public bool DevMode { get; set; }
+
+		/// <summary>
+		/// If true, all request and response content will be printed to the console. Use this option only FOR DEVELOPMENT.
+		/// </summary>
+		public bool DebugLog { get; set; }
 	
 		public AIConfiguration(string subscriptionKey, string clientAccessToken, SupportedLanguage language)
 		{
@@ -46,6 +54,7 @@ namespace ApiAiSDK
 			this.Language = language;
 
 			DevMode = false;
+			DebugLog = false;
 		}
 
 		public string RequestUrl {

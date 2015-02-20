@@ -68,7 +68,10 @@ namespace ApiAiSDK
 				};
 			
 				var jsonRequest = fastJSON.JSON.ToJSON(request, jsonParams);
-				Console.WriteLine("Request: " + jsonRequest);
+
+				if (config.DebugLog) {
+					Console.WriteLine("Request: " + jsonRequest);
+				}
 
 				using (var streamWriter = new StreamWriter(httpRequest.GetRequestStream())) {
 					streamWriter.Write(jsonRequest);
@@ -78,7 +81,11 @@ namespace ApiAiSDK
 				var httpResponse = httpRequest.GetResponse() as HttpWebResponse;
 				using (var streamReader = new StreamReader(httpResponse.GetResponseStream())) {
 					var result = streamReader.ReadToEnd();
-					Console.WriteLine("Result: " + result);
+
+					if (config.DebugLog) {
+						Console.WriteLine("Response: " + result);
+					}
+
 					return fastJSON.JSON.ToObject<AIResponse>(result);
 				}
 
@@ -115,7 +122,9 @@ namespace ApiAiSDK
 				
 				var jsonRequest = fastJSON.JSON.ToJSON(request, jsonParams);
 
-				Console.WriteLine("Request: " + jsonRequest);
+				if(config.DebugLog) {
+					Console.WriteLine("Request: " + jsonRequest);
+				}
 
 				var multipartClient = new MultipartHttpClient(httpRequest);
 				multipartClient.connect();
@@ -125,9 +134,13 @@ namespace ApiAiSDK
 
 				multipartClient.finish();
 
-				var textJson = multipartClient.getResponse();
+				var responseJsonString = multipartClient.getResponse();
 
-				return fastJSON.JSON.ToObject<AIResponse>(textJson);
+				if (config.DebugLog) {
+					Console.WriteLine("Response: " + responseJsonString);
+				}
+
+				return fastJSON.JSON.ToObject<AIResponse>(responseJsonString);
 
 			} catch (Exception e) {
 				throw new AIServiceException(e);
