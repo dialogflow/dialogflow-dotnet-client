@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+  <metadata>
+    <id>ApiAiSDK</id>
+    <version>1.0.0</version>
+    <title>ApiAiSDK</title>
+    <authors>Speaktoit</authors>
+    <owners>Speaktoit</owners>
+    <licenseUrl>http://github.com/api-ai/api-ai-net/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/api-ai/api-ai-net</projectUrl>
+    <iconUrl>http://api.ai/assets/ico/favicon-e15c6e41317c4ff907cc983a5c8676d9.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Library provides simple programming interface for making text and voice requests to the API.AI service.</description>
+    <releaseNotes>First version of the API.AI NET SDK.</releaseNotes>
+    <copyright>2015 Speaktoit, Inc.</copyright>
+    <tags>natural language processing</tags>
+  </metadata>
+  <files>
+    <file src="bin/Release/ApiAiSDK.dll" target="lib/Net35" />
+    <file src="lib/fastJSON.dll" target="lib/Net35" />
+  </files>
+</package>

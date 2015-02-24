@@ -4,3 +4,5 @@ ApiAiSDK/lib
 ApiAiSDK.Tests/bin
 ApiAiSDK.Tests/test-results
 test-results
+*.nupkg
+*.userprefs

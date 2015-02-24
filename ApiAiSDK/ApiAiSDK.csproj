@@ -10,6 +10,8 @@
     <RootNamespace>ApiAiSDK</RootNamespace>
     <AssemblyName>ApiAiSDK</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <ReleaseVersion>1.0.0</ReleaseVersion>
+    <SynchReleaseVersion>False</SynchReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
