@@ -1,1 +1,1 @@
-nuget pack ApiAiSDK.nuspec -Verbosity detailed -Prop Configuration=Release
+nuget pack ApiAiSDK.nuspec -Verbosity detailed -Prop Configuration=Release -sym
