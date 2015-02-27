@@ -68,7 +68,7 @@ namespace ApiAiSDK
 					WithoutDynamicMethodsGeneration = config.JsonProcessingWithoutDynamicCode
 				};
 			
-				var jsonRequest = fastJSON.JSON.ToJSON(request, jsonParams);
+				var jsonRequest = JSON.ToJSON(request, jsonParams);
 
 				if (config.DebugLog) {
 					Console.WriteLine("Request: " + jsonRequest);

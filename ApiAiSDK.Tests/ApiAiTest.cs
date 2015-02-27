@@ -42,7 +42,7 @@ namespace ApiAiSDK.Tests
 
 				var response = apiAi.TextRequest("hello");
 
-				Assert.NotNull(response);
+				Assert.IsNotNull(response);
 				Assert.AreEqual("greeting", response.Result.Action);
 				Assert.AreEqual("Hi! How are you?", response.Result.Speech);
 			} catch (Exception ex) {
@@ -61,7 +61,7 @@ namespace ApiAiSDK.Tests
 				var request = new AIRequest("hello");
 				var response = apiAi.TextRequest(request);
 				
-				Assert.NotNull(response);
+				Assert.IsNotNull(response);
 				Assert.AreEqual("greeting", response.Result.Action);
 				Assert.AreEqual("Hi! How are you?", response.Result.Speech);
 			} catch (Exception ex) {
@@ -80,7 +80,7 @@ namespace ApiAiSDK.Tests
 
 				var response = apiAi.VoiceRequest(stream);
 
-				Assert.NotNull(response);
+				Assert.IsNotNull(response);
 				Assert.AreEqual("what is your name", response.Result.ResolvedQuery);
 
 			} catch (Exception ex) {

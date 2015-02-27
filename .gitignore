@@ -6,3 +6,6 @@ ApiAiSDK.Tests/test-results
 test-results
 *.nupkg
 *.userprefs
+ApiAiSDK.Tests/obj
+ApiAiSDK/obj
+testrunner

@@ -41,7 +41,7 @@ namespace ApiAiSDK.Tests
 			var request = new AIRequest("Hello");
 			try {
 				var response = dataService.Request(request);
-				Assert.NotNull(response);
+				Assert.IsNotNull(response);
 				Assert.AreEqual("greeting", response.Result.Action);
 				Assert.AreEqual("Hi! How are you?", response.Result.Speech);
 			} catch (Exception e) {
@@ -61,7 +61,7 @@ namespace ApiAiSDK.Tests
 				var request = new AIRequest(query);
 				try {
 					var response = dataService.Request(request);
-					Assert.NotNull(response.Result);
+					Assert.IsNotNull(response.Result);
 					Assert.AreEqual("pizza", response.Result.Action);
 				} catch (Exception ex) {
 					Assert.Fail(ex.Message);
@@ -74,7 +74,7 @@ namespace ApiAiSDK.Tests
 				var request = new AIRequest(query);
 				try {
 					var response = dataService.Request(request);
-					Assert.NotNull(response.Result);
+					Assert.IsNotNull(response.Result);
 					Assert.IsTrue(string.IsNullOrEmpty(response.Result.Action));
 				} catch (Exception ex) {
 					Assert.Fail(ex.Message);
@@ -105,7 +105,7 @@ namespace ApiAiSDK.Tests
 				{
 					var checkFirstRequest = new AIRequest("check weather");
 					var checkFirstResponse = MakeRequest(firstService, checkFirstRequest);
-					Assert.NotNull(checkFirstResponse.Result.Action);
+					Assert.IsNotNull(checkFirstResponse.Result.Action);
 					Assert.IsTrue(checkFirstResponse.Result.Action.Equals("checked", StringComparison.InvariantCultureIgnoreCase));
 				}
 
@@ -124,7 +124,7 @@ namespace ApiAiSDK.Tests
 			try {
 				var response = MakeRequest(dataService, request);
 
-				Assert.NotNull(response.Result.Parameters);
+				Assert.IsNotNull(response.Result.Parameters);
 				Assert.IsTrue(response.Result.Parameters.Count > 0);
 
 				Assert.IsTrue(response.Result.Parameters.ContainsKey("my_name"));
@@ -146,10 +146,10 @@ namespace ApiAiSDK.Tests
 		private AIResponse MakeRequest(AIDataService service, AIRequest request)
 		{
 			var aiResponse = service.Request(request);
-			Assert.NotNull(aiResponse);
-			Assert.False(aiResponse.IsError);
-			Assert.False(string.IsNullOrEmpty(aiResponse.Id));
-			Assert.NotNull(aiResponse.Result);
+			Assert.IsNotNull(aiResponse);
+			Assert.IsFalse(aiResponse.IsError);
+			Assert.IsFalse(string.IsNullOrEmpty(aiResponse.Id));
+			Assert.IsNotNull(aiResponse.Result);
 			return aiResponse;
 		}
 
