@@ -87,7 +87,7 @@ namespace ApiAiSDK
 						Console.WriteLine("Response: " + result);
 					}
 
-					return fastJSON.JSON.ToObject<AIResponse>(result);
+					return JSON.ToObject<AIResponse>(result, jsonParams);
 				}
 
 			} catch (Exception e) {
@@ -122,7 +122,7 @@ namespace ApiAiSDK
 					WithoutDynamicMethodsGeneration = config.JsonProcessingWithoutDynamicCode
 				};
 				
-				var jsonRequest = fastJSON.JSON.ToJSON(request, jsonParams);
+				var jsonRequest = JSON.ToJSON(request, jsonParams);
 
 				if(config.DebugLog) {
 					Console.WriteLine("Request: " + jsonRequest);
@@ -142,7 +142,7 @@ namespace ApiAiSDK
 					Console.WriteLine("Response: " + responseJsonString);
 				}
 
-				return fastJSON.JSON.ToObject<AIResponse>(responseJsonString);
+				return JSON.ToObject<AIResponse>(responseJsonString, jsonParams);
 
 			} catch (Exception e) {
 				throw new AIServiceException(e);
