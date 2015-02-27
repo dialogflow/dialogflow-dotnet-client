@@ -46,6 +46,12 @@ namespace ApiAiSDK
 		/// If true, all request and response content will be printed to the console. Use this option only FOR DEVELOPMENT.
 		/// </summary>
 		public bool DebugLog { get; set; }
+
+		/// <summary>
+		/// If true ILGenerator will not be used while json serialization and deserialization. Use this on platforms with denied code generation, like iOS.
+		/// Generally you should not change this option.
+		/// </summary>
+		public bool JsonProcessingWithoutDynamicCode { get; set; }
 	
 		public AIConfiguration(string subscriptionKey, string clientAccessToken, SupportedLanguage language)
 		{

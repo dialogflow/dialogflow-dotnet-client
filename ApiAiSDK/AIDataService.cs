@@ -62,9 +62,10 @@ namespace ApiAiSDK
 				httpRequest.Headers.Add("ocp-apim-subscription-key", config.SubscriptionKey);
 						
 				var jsonParams = new JSONParameters { 
-				UseExtensions = false,
-				EnableAnonymousTypes = true,
-				SerializeNullValues = false,
+					UseExtensions = false,
+					EnableAnonymousTypes = true,
+					SerializeNullValues = false,
+					WithoutDynamicMethodsGeneration = config.JsonProcessingWithoutDynamicCode
 				};
 			
 				var jsonRequest = fastJSON.JSON.ToJSON(request, jsonParams);
@@ -118,6 +119,7 @@ namespace ApiAiSDK
 					UseExtensions = false,
 					EnableAnonymousTypes = true,
 					SerializeNullValues = false,
+					WithoutDynamicMethodsGeneration = config.JsonProcessingWithoutDynamicCode
 				};
 				
 				var jsonRequest = fastJSON.JSON.ToJSON(request, jsonParams);
