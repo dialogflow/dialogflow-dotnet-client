@@ -94,6 +94,7 @@ namespace ApiAiSDK.Tests
 				{
 					var weatherRequest = new AIRequest("weather");
 					var weatherResponse = MakeRequest(firstService, weatherRequest);
+                    Assert.IsNotNull(weatherResponse);
 				}
 				
 				{
