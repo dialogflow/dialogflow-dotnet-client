@@ -1,5 +1,4 @@
 ApiAiSDK/bin
-ApiAiSDK/lib
 *.meta
 ApiAiSDK.Tests/bin
 ApiAiSDK.Tests/test-results
