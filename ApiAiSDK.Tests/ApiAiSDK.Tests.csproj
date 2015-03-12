@@ -55,13 +55,4 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ProjectExtensions>
-    <MonoDevelop>
-      <Properties>
-        <Policies>
-          <StandardHeader Text="//&#xA;// API.AI .NET SDK tests - client-side tests for API.AI&#xA;// =================================================&#xA;//&#xA;// Copyright (C) 2015 by Speaktoit, Inc. (https://www.speaktoit.com)&#xA;// https://www.api.ai&#xA;//&#xA;// ***********************************************************************************************************************&#xA;//&#xA;// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;); you may not use this file except in compliance with&#xA;// the License. You may obtain a copy of the License at&#xA;//&#xA;//     http://www.apache.org/licenses/LICENSE-2.0&#xA;//&#xA;// Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on&#xA;// an &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the&#xA;// specific language governing permissions and limitations under the License.&#xA;//&#xA;// ***********************************************************************************************************************&#xA;" IncludeInNewFiles="True" />
-        </Policies>
-      </Properties>
-    </MonoDevelop>
-  </ProjectExtensions>
 </Project>
