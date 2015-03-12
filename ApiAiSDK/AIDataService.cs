@@ -25,6 +25,7 @@ using System.IO;
 using fastJSON;
 using ApiAiSDK.Model;
 using ApiAiSDK.Http;
+using System.Diagnostics;
 
 namespace ApiAiSDK
 {
@@ -71,7 +72,7 @@ namespace ApiAiSDK
 				var jsonRequest = JSON.ToJSON(request, jsonParams);
 
 				if (config.DebugLog) {
-					Console.WriteLine("Request: " + jsonRequest);
+                    Debug.WriteLine("Request: " + jsonRequest);
 				}
 
 				using (var streamWriter = new StreamWriter(httpRequest.GetRequestStream())) {
@@ -84,7 +85,7 @@ namespace ApiAiSDK
 					var result = streamReader.ReadToEnd();
 
 					if (config.DebugLog) {
-						Console.WriteLine("Response: " + result);
+                        Debug.WriteLine("Response: " + result);
 					}
 
 					return JSON.ToObject<AIResponse>(result, jsonParams);
@@ -125,7 +126,7 @@ namespace ApiAiSDK
 				var jsonRequest = JSON.ToJSON(request, jsonParams);
 
 				if(config.DebugLog) {
-					Console.WriteLine("Request: " + jsonRequest);
+                    Debug.WriteLine("Request: " + jsonRequest);
 				}
 
 				var multipartClient = new MultipartHttpClient(httpRequest);
@@ -139,7 +140,7 @@ namespace ApiAiSDK
 				var responseJsonString = multipartClient.getResponse();
 
 				if (config.DebugLog) {
-					Console.WriteLine("Response: " + responseJsonString);
+                    Debug.WriteLine("Response: " + responseJsonString);
 				}
 
 				return JSON.ToObject<AIResponse>(responseJsonString, jsonParams);
