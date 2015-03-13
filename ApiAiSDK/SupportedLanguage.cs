@@ -39,12 +39,41 @@ namespace ApiAiSDK
 		public static readonly SupportedLanguage ChineseHongKong = new SupportedLanguage("zh-HK");
 		public static readonly SupportedLanguage ChineseTaiwan = new SupportedLanguage("zh-TW");
 
+        private static readonly SupportedLanguage[] AllLangs = 
+        { 
+                English, 
+                Russian,  
+                German,
+                Portuguese,
+                PortugueseBrazil,
+                Spanish,
+                French,
+                Italian,
+                Japanese,
+                ChineseChina,
+                ChineseHongKong,
+                ChineseTaiwan
+        };
+
 		public readonly string code;
 
 		private SupportedLanguage(string code)
 		{
 			this.code = code;
 		}
+
+        public static SupportedLanguage FromLanguageTag(string languageTag)
+        {
+            foreach (var item in AllLangs)
+            {
+                if (string.Equals(item.code, languageTag, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return item;
+                }
+            }
+
+            return English;
+        }
 	}
 }
 
