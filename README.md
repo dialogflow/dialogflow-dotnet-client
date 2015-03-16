@@ -1,6 +1,9 @@
-# api-ai-net [![Build Status](https://travis-ci.org/api-ai/api-ai-net.svg?branch=master)](https://travis-ci.org/api-ai/api-ai-net)
+api.ai: .NET Core Library
+==============
 
-The API.AI .NET Core Library makes it easy to integrate the [API.AI natural language processing API](http://api.ai) into your .NET application. API.AI allows using voice commands and integration with dialog scenarios defined for a particular agent in API.AI.
+[![Build Status](https://travis-ci.org/api-ai/api-ai-net.svg?branch=master)](https://travis-ci.org/api-ai/api-ai-net)
+
+The api.ai .NET Core Library makes it easy to integrate the [API.AI natural language processing API](http://api.ai) into your .NET application. API.AI allows using voice commands and integration with dialog scenarios defined for a particular agent in API.AI.
 
 Library provides simple programming interface for making text and voice requests to the API.AI service. 
 
