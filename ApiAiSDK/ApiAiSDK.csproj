@@ -52,10 +52,14 @@
     <Compile Include="SupportedLanguage.cs" />
     <Compile Include="Model\AIOutputContext.cs" />
     <Compile Include="Model\Metadata.cs" />
+    <Compile Include="Util\VoiceActivityDetector.cs" />
+    <Compile Include="Util\ActionExtensions.cs" />
+    <Compile Include="Util\ByteBuffer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Model\" />
     <Folder Include="Http\" />
+    <Folder Include="Util\" />
   </ItemGroup>
 </Project>

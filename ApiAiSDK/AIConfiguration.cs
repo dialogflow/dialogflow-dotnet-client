@@ -37,6 +37,8 @@ namespace ApiAiSDK
 
 		public SupportedLanguage Language { get; set; }
 
+        public bool VoiceActivityDetectionEnabled { get; set; }
+
 		/// <summary>
 		/// If true, will be used Testing API.AI server instead of Production server. This option for TESTING PURPOSES ONLY.
 		/// </summary>
@@ -61,6 +63,7 @@ namespace ApiAiSDK
 
 			DevMode = false;
 			DebugLog = false;
+            VoiceActivityDetectionEnabled = true;
 		}
 
 		public string RequestUrl {
