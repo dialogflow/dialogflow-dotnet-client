@@ -55,6 +55,7 @@ namespace ApiAiSDK.Util
         public VoiceActivityDetector(int sampleRate)
         {
             this.sampleRate = sampleRate;
+            Enabled = true; // default value
         }
 
         public void ProcessBuffer(byte[] buffer, int bytesRead) {
