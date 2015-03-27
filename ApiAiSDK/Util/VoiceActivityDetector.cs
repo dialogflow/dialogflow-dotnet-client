@@ -19,6 +19,7 @@
 //  ***********************************************************************************************************************
 
 using System;
+using System.Diagnostics;
 
 namespace ApiAiSDK.Util
 {
@@ -78,10 +79,9 @@ namespace ApiAiSDK.Util
 
                         speechActive = true;
 
-                        //Log.d(TAG, "LAST SPEECH " + time);
+                        Debug.WriteLine("LAST SPEECH " + time);
                         lastSequenceTime = time;
                         silenceLengthMilis = Math.Max(minSilenceLengthMilis, silenceLengthMilis - (maxSilenceLengthMilis - minSilenceLengthMilis) / 4);
-                        //Log.d(TAG, "SM:" + silenceLengthMilis);
 
                     }
                 } else {
@@ -91,14 +91,14 @@ namespace ApiAiSDK.Util
             } else {
                 if (time - lastSequenceTime > silenceLengthMilis) {
                     if (lastSequenceTime > 0) {
-                        //Log.d(TAG, "TERMINATE: " + time);
+                        Debug.WriteLine("TERMINATE: " + time);
                         if (speechActive) {
                             speechActive = false;
                             OnSpeechEnd();
                         }
 
                     } else {
-                        //Log.d(TAG, "NOSPEECH: " + time);
+                        Debug.WriteLine("NOSPEECH: " + time);
                     }
                 }
             }
@@ -112,7 +112,7 @@ namespace ApiAiSDK.Util
             var energy = 0.0;
 
             var frameSize = frame.ShortArrayLength;
-            var shorts = frame.ShortArray;
+            short[] shorts = frame.ShortArray;
 
             for (int i = 0; i < frameSize; i++) {
                 var amplitudeValue = shorts[i];
@@ -132,7 +132,10 @@ namespace ApiAiSDK.Util
                 lastSign = sign;
             }
 
-            OnAudiLevelChange(Convert.ToSingle(Math.Sqrt(energy / frameSize) / 10 /* normalization value */));
+            Debug.WriteLine("energy: " + energy + " " + averageNoiseEnergy);
+
+
+            OnAudioLevelChange(Convert.ToSingle(Math.Sqrt(energy / frameSize) / 10 /* normalization value */));
 
             var result = false;
             if (time < startNoiseInterval) {
@@ -177,7 +180,7 @@ namespace ApiAiSDK.Util
             }
         }
 
-        protected void OnAudiLevelChange(float level)
+        protected void OnAudioLevelChange(float level)
         {
             AudioLevelChange.InvokeSafely(level);
         }

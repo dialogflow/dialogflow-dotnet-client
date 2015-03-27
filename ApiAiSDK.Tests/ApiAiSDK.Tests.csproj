@@ -38,6 +38,7 @@
   <ItemGroup>
     <Compile Include="AIDataServiceTests.cs" />
     <Compile Include="ApiAiTest.cs" />
+    <Compile Include="VADTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -51,6 +52,11 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="TestData\what_is_your_name.raw" />
+    <EmbeddedResource Include="TestData\speech.raw" />
+    <EmbeddedResource Include="TestData\log.raw" />
+    <EmbeddedResource Include="TestData\noiseAndNotification.raw" />
+    <EmbeddedResource Include="TestData\noiseOnly.raw" />
+    <EmbeddedResource Include="TestData\silence.raw" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

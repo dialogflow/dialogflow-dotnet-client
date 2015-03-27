@@ -26,23 +26,11 @@ namespace ApiAiSDK.Util
     /// <summary>
     /// Class for converts among different array types. Inspired with NAudio WaveBuffer class https://github.com/naudio/NAudio
     /// </summary>
-    [StructLayout(LayoutKind.Explicit, Pack = 2)]
     internal sealed class ByteBuffer
     {
-        [FieldOffset(0)]
-        private int numberOfBytes;
+        private readonly int numberOfBytes;
 
-        [FieldOffset(8)]
         private byte[] byteBuffer;
-
-        [FieldOffset(8)]
-        private float[] floatBuffer;
-
-        [FieldOffset(8)]
-        private short[] shortBuffer;
-
-        [FieldOffset(8)]
-        private int[] intBuffer;
 
         public ByteBuffer(byte[] byteArray)
         {
@@ -66,19 +54,27 @@ namespace ApiAiSDK.Util
             get { return numberOfBytes; }
         }
 
-        public float[] FloatArray
-        {
-            get { return floatBuffer; }
-        }
-
-        public int FloatArrayLength
-        {
-            get { return numberOfBytes / 4; }
-        }
-
         public short[] ShortArray
         {
-            get { return shortBuffer; }
+            get 
+            {
+                var result = new short[ShortArrayLength];
+
+                for (int i = 0; i < numberOfBytes; i += 2)
+                {
+                    if (BitConverter.IsLittleEndian)
+                    {
+                        result[i / 2] = BitConverter.ToInt16(new [] { byteBuffer[i+1], byteBuffer[i] }, 0);
+                    }
+                    else
+                    {
+                        result[i / 2] = BitConverter.ToInt16(byteBuffer, i);
+                    }
+
+                }
+                
+                return result; 
+            }
         }
 
         public int ShortArrayLength

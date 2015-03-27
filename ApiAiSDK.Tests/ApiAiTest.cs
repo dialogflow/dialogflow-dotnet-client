@@ -37,17 +37,13 @@ namespace ApiAiSDK.Tests
 		{
 			var config = new AIConfiguration(SUBSCRIPTION_KEY, ACCESS_TOKEN, SupportedLanguage.English);
 
-			try {
-				var apiAi = new ApiAi(config);
+			var apiAi = new ApiAi(config);
 
-				var response = apiAi.TextRequest("hello");
+			var response = apiAi.TextRequest("hello");
 
-				Assert.IsNotNull(response);
-				Assert.AreEqual("greeting", response.Result.Action);
-				Assert.AreEqual("Hi! How are you?", response.Result.Speech);
-			} catch (Exception ex) {
-				Assert.Fail(ex.Message);
-			}
+			Assert.IsNotNull(response);
+			Assert.AreEqual("greeting", response.Result.Action);
+			Assert.AreEqual("Hi! How are you?", response.Result.Speech);
 		}
 
 		[Test]
@@ -55,18 +51,14 @@ namespace ApiAiSDK.Tests
 		{
 			var config = new AIConfiguration(SUBSCRIPTION_KEY, ACCESS_TOKEN, SupportedLanguage.English);
 			
-			try {
-				var apiAi = new ApiAi(config);
+			var apiAi = new ApiAi(config);
 
-				var request = new AIRequest("hello");
-				var response = apiAi.TextRequest(request);
-				
-				Assert.IsNotNull(response);
-				Assert.AreEqual("greeting", response.Result.Action);
-				Assert.AreEqual("Hi! How are you?", response.Result.Speech);
-			} catch (Exception ex) {
-				Assert.Fail(ex.Message);
-			}
+			var request = new AIRequest("hello");
+			var response = apiAi.TextRequest(request);
+			
+			Assert.IsNotNull(response);
+			Assert.AreEqual("greeting", response.Result.Action);
+			Assert.AreEqual("Hi! How are you?", response.Result.Speech);
 		}
 
 		[Test]
@@ -74,18 +66,13 @@ namespace ApiAiSDK.Tests
 		{
 			var config = new AIConfiguration(SUBSCRIPTION_KEY, ACCESS_TOKEN, SupportedLanguage.English);
 
-			try {
-				var apiAi = new ApiAi(config);
-				var stream = ReadFileFromResource("ApiAiSDK.Tests.TestData.what_is_your_name.raw");
+			var apiAi = new ApiAi(config);
+			var stream = ReadFileFromResource("ApiAiSDK.Tests.TestData.what_is_your_name.raw");
 
-				var response = apiAi.VoiceRequest(stream);
+			var response = apiAi.VoiceRequest(stream);
 
-				Assert.IsNotNull(response);
-				Assert.AreEqual("what is your name", response.Result.ResolvedQuery);
-
-			} catch (Exception ex) {
-				Assert.Fail(ex.Message);
-			}
+			Assert.IsNotNull(response);
+			Assert.AreEqual("what is your name", response.Result.ResolvedQuery);
 		}
 
 		private Stream ReadFileFromResource(string resourceId)
