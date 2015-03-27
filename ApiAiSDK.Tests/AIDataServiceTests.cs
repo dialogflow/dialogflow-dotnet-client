@@ -39,14 +39,11 @@ namespace ApiAiSDK.Tests
 			var dataService = new AIDataService(config);
 
 			var request = new AIRequest("Hello");
-			try {
-				var response = dataService.Request(request);
-				Assert.IsNotNull(response);
-				Assert.AreEqual("greeting", response.Result.Action);
-				Assert.AreEqual("Hi! How are you?", response.Result.Speech);
-			} catch (Exception e) {
-				Assert.Fail(e.Message);
-			}
+			
+			var response = dataService.Request(request);
+			Assert.IsNotNull(response);
+			Assert.AreEqual("greeting", response.Result.Action);
+			Assert.AreEqual("Hi! How are you?", response.Result.Speech);
 		}
 
 		[Test]
@@ -59,26 +56,22 @@ namespace ApiAiSDK.Tests
 				var dataService = new AIDataService(config);
 
 				var request = new AIRequest(query);
-				try {
-					var response = dataService.Request(request);
-					Assert.IsNotNull(response.Result);
-					Assert.AreEqual("pizza", response.Result.Action);
-				} catch (Exception ex) {
-					Assert.Fail(ex.Message);
-				}
+				
+				var response = dataService.Request(request);
+				Assert.IsNotNull(response.Result);
+				Assert.AreEqual("pizza", response.Result.Action);
+				
 			}
 
 			{
 				var config = new AIConfiguration(SUBSCRIPTION_KEY, "968235e8e4954cf0bb0dc07736725ecd", SupportedLanguage.English);
 				var dataService = new AIDataService(config);
 				var request = new AIRequest(query);
-				try {
-					var response = dataService.Request(request);
-					Assert.IsNotNull(response.Result);
-					Assert.IsTrue(string.IsNullOrEmpty(response.Result.Action));
-				} catch (Exception ex) {
-					Assert.Fail(ex.Message);
-				}
+				
+				var response = dataService.Request(request);
+				Assert.IsNotNull(response.Result);
+				Assert.IsTrue(string.IsNullOrEmpty(response.Result.Action));
+				
 			}
 
 		}
@@ -87,31 +80,27 @@ namespace ApiAiSDK.Tests
 		public void SessionTest()
 		{
 			var config = new AIConfiguration(SUBSCRIPTION_KEY, ACCESS_TOKEN, SupportedLanguage.English);
-			try {
-				var firstService = new AIDataService(config);
-				var secondService = new AIDataService(config);
+			
+			var firstService = new AIDataService(config);
+			var secondService = new AIDataService(config);
 
-				{
-					var weatherRequest = new AIRequest("weather");
-					var weatherResponse = MakeRequest(firstService, weatherRequest);
-                    Assert.IsNotNull(weatherResponse);
-				}
-				
-				{
-					var checkSecondRequest = new AIRequest("check weather");
-					var checkSecondResponse = MakeRequest(secondService, checkSecondRequest);
-					Assert.IsNull(checkSecondResponse.Result.Action);
-				}
-				
-				{
-					var checkFirstRequest = new AIRequest("check weather");
-					var checkFirstResponse = MakeRequest(firstService, checkFirstRequest);
-					Assert.IsNotNull(checkFirstResponse.Result.Action);
-					Assert.IsTrue(checkFirstResponse.Result.Action.Equals("checked", StringComparison.InvariantCultureIgnoreCase));
-				}
-
-			} catch (Exception ex) {
-				Assert.Fail(ex.Message);
+			{
+				var weatherRequest = new AIRequest("weather");
+				var weatherResponse = MakeRequest(firstService, weatherRequest);
+                Assert.IsNotNull(weatherResponse);
+			}
+			
+			{
+				var checkSecondRequest = new AIRequest("check weather");
+				var checkSecondResponse = MakeRequest(secondService, checkSecondRequest);
+				Assert.IsNull(checkSecondResponse.Result.Action);
+			}
+			
+			{
+				var checkFirstRequest = new AIRequest("check weather");
+				var checkFirstResponse = MakeRequest(firstService, checkFirstRequest);
+				Assert.IsNotNull(checkFirstResponse.Result.Action);
+				Assert.IsTrue(checkFirstResponse.Result.Action.Equals("checked", StringComparison.InvariantCultureIgnoreCase));
 			}
 		}
 
@@ -122,26 +111,22 @@ namespace ApiAiSDK.Tests
 			var dataService = new AIDataService(config);
 			
 			var request = new AIRequest("what is your name");
-			try {
-				var response = MakeRequest(dataService, request);
+			
+			var response = MakeRequest(dataService, request);
 
-				Assert.IsNotNull(response.Result.Parameters);
-				Assert.IsTrue(response.Result.Parameters.Count > 0);
+			Assert.IsNotNull(response.Result.Parameters);
+			Assert.IsTrue(response.Result.Parameters.Count > 0);
 
-				Assert.IsTrue(response.Result.Parameters.ContainsKey("my_name"));
-				Assert.IsTrue(response.Result.Parameters.ContainsValue("Sam"));
+			Assert.IsTrue(response.Result.Parameters.ContainsKey("my_name"));
+			Assert.IsTrue(response.Result.Parameters.ContainsValue("Sam"));
 
-				Assert.IsNotNull(response.Result.Contexts);
-				Assert.IsTrue(response.Result.Contexts.Length > 0);
-				var context = response.Result.Contexts[0];
+			Assert.IsNotNull(response.Result.Contexts);
+			Assert.IsTrue(response.Result.Contexts.Length > 0);
+			var context = response.Result.Contexts[0];
 
-				Assert.IsNotNull(context.Parameters);
-				Assert.IsTrue(context.Parameters.ContainsKey("my_name"));
-				Assert.IsTrue(context.Parameters.ContainsValue("Sam"));
-
-			} catch (Exception e) {
-				Assert.Fail(e.Message);
-			}
+			Assert.IsNotNull(context.Parameters);
+			Assert.IsTrue(context.Parameters.ContainsKey("my_name"));
+			Assert.IsTrue(context.Parameters.ContainsValue("Sam"));
 		}
 
 		private AIResponse MakeRequest(AIDataService service, AIRequest request)
