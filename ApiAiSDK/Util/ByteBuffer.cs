@@ -19,7 +19,6 @@
 //  ***********************************************************************************************************************
 
 using System;
-using System.Runtime.InteropServices;
 
 namespace ApiAiSDK.Util
 {
@@ -60,17 +59,22 @@ namespace ApiAiSDK.Util
             {
                 var result = new short[ShortArrayLength];
 
+                var tmpBuffer = new byte[2];
+
                 for (int i = 0; i < numberOfBytes; i += 2)
                 {
                     if (BitConverter.IsLittleEndian)
                     {
-                        result[i / 2] = BitConverter.ToInt16(new [] { byteBuffer[i+1], byteBuffer[i] }, 0);
+                        tmpBuffer[0] = byteBuffer[i + 1];
+                        tmpBuffer[1] = byteBuffer[i];
                     }
                     else
                     {
-                        result[i / 2] = BitConverter.ToInt16(byteBuffer, i);
+                        tmpBuffer[0] = byteBuffer[i];
+                        tmpBuffer[1] = byteBuffer[i + 1];
                     }
-
+                        
+                    result[i / 2] = BitConverter.ToInt16(tmpBuffer, 0);
                 }
                 
                 return result; 
