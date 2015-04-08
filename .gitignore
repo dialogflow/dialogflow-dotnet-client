@@ -8,3 +8,4 @@ test-results
 ApiAiSDK.Tests/obj
 ApiAiSDK/obj
 testrunner
+packages

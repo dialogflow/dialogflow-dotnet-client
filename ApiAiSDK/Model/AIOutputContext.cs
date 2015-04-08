@@ -20,7 +20,7 @@
 
 using System;
 using System.Collections.Generic;
-using fastJSON;
+using Newtonsoft.Json;
 
 namespace ApiAiSDK.Model
 {

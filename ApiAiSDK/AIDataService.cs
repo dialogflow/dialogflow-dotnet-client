@@ -22,7 +22,7 @@ using System;
 using System.Collections;
 using System.Net;
 using System.IO;
-using fastJSON;
+using Newtonsoft.Json;
 using ApiAiSDK.Model;
 using ApiAiSDK.Http;
 using System.Diagnostics;
@@ -62,14 +62,11 @@ namespace ApiAiSDK
 				httpRequest.Headers.Add("Authorization", "Bearer " + config.ClientAccessToken);
 				httpRequest.Headers.Add("ocp-apim-subscription-key", config.SubscriptionKey);
 						
-				var jsonParams = new JSONParameters { 
-					UseExtensions = false,
-					EnableAnonymousTypes = true,
-					SerializeNullValues = false,
-					WithoutDynamicMethodsGeneration = config.JsonProcessingWithoutDynamicCode
+                var jsonSettings = new JsonSerializerSettings { 
+                    NullValueHandling = NullValueHandling.Ignore
 				};
 			
-				var jsonRequest = JSON.ToJSON(request, jsonParams);
+                var jsonRequest = JsonConvert.SerializeObject(request, Formatting.None, jsonSettings);
 
 				if (config.DebugLog) {
                     Debug.WriteLine("Request: " + jsonRequest);
@@ -88,7 +85,7 @@ namespace ApiAiSDK
                         Debug.WriteLine("Response: " + result);
 					}
 
-					return JSON.ToObject<AIResponse>(result, jsonParams);
+                    return JsonConvert.DeserializeObject<AIResponse>(result);
 				}
 
 			} catch (Exception e) {
@@ -116,14 +113,11 @@ namespace ApiAiSDK
 				httpRequest.Headers.Add("Authorization", "Bearer " + config.ClientAccessToken);
 				httpRequest.Headers.Add("ocp-apim-subscription-key", config.SubscriptionKey);
 
-				var jsonParams = new JSONParameters { 
-					UseExtensions = false,
-					EnableAnonymousTypes = true,
-					SerializeNullValues = false,
-					WithoutDynamicMethodsGeneration = config.JsonProcessingWithoutDynamicCode
-				};
+                var jsonSettings = new JsonSerializerSettings { 
+                    NullValueHandling = NullValueHandling.Ignore
+                };
 				
-				var jsonRequest = JSON.ToJSON(request, jsonParams);
+                var jsonRequest = JsonConvert.SerializeObject(request, Formatting.None, jsonSettings);
 
 				if(config.DebugLog) {
                     Debug.WriteLine("Request: " + jsonRequest);
@@ -143,7 +137,7 @@ namespace ApiAiSDK
                     Debug.WriteLine("Response: " + responseJsonString);
 				}
 
-				return JSON.ToObject<AIResponse>(responseJsonString, jsonParams);
+                return JsonConvert.DeserializeObject<AIResponse>(responseJsonString);
 
 			} catch (Exception e) {
 				throw new AIServiceException(e);

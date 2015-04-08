@@ -18,7 +18,7 @@
 //
 // ***********************************************************************************************************************
 using System;
-using fastJSON;
+using Newtonsoft.Json;
 
 namespace ApiAiSDK.Model
 {
