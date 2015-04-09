@@ -55,5 +55,5 @@ Also see [unit tests](https://github.com/api-ai/api-ai-net/blob/master/ApiAiSDK.
 
 ## Open Source Project Credits
 
-* JSON parsing implemented using modified [fastJSON](https://github.com/xVir/fastJSON) library originally forked from Mehdi Gholam's [repository](https://github.com/mgholam/fastJSON).
+* JSON parsing implemented using [Json.NET](http://www.newtonsoft.com/json).
 
