@@ -19,11 +19,14 @@
 // ***********************************************************************************************************************
 
 using System;
+using ApiAiSDK.Model;
 
 namespace ApiAiSDK
 {
 	public class AIServiceException : Exception
 	{
+        public AIResponse Response { get; set; }
+
 		public AIServiceException()
 		{
 		}
@@ -35,6 +38,27 @@ namespace ApiAiSDK
 		public AIServiceException(Exception e) : base(e.Message, e)
 		{
 		}
+
+        public AIServiceException(AIResponse response)
+        {
+            Response = response;
+        }
+
+        public override string Message
+        {
+            get
+            {
+                if (Response != null && Response.IsError)
+                {
+                    if (!string.IsNullOrEmpty(Response.Status.ErrorDetails))
+                    {
+                        return Response.Status.ErrorDetails;
+                    }
+                }
+
+                return base.Message;
+            }
+        }
 	}
 }
 

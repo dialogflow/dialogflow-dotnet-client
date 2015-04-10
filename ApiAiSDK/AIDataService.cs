@@ -19,7 +19,6 @@
 // ***********************************************************************************************************************
 
 using System;
-using System.Collections;
 using System.Net;
 using System.IO;
 using Newtonsoft.Json;
@@ -29,120 +28,158 @@ using System.Diagnostics;
 
 namespace ApiAiSDK
 {
-	public class AIDataService
-	{
-		private AIConfiguration config;
+    public class AIDataService
+    {
+        private AIConfiguration config;
 
-		private readonly string sessionId;
+        private readonly string sessionId;
 
-		public AIDataService(AIConfiguration config)
-		{
-			this.config = config;
-			sessionId = Guid.NewGuid().ToString();
-		}
+        public AIDataService(AIConfiguration config)
+        {
+            this.config = config;
+            sessionId = Guid.NewGuid().ToString();
+        }
 
-		public AIResponse Request(AIRequest request)
-		{
+        public AIResponse Request(AIRequest request)
+        {
 
-			request.Language = config.Language.code;
-			request.Timezone = TimeZone.CurrentTimeZone.StandardName;
-			request.SessionId = sessionId;
+            request.Language = config.Language.code;
+            request.Timezone = TimeZone.CurrentTimeZone.StandardName;
+            request.SessionId = sessionId;
 
-			try {
+            try
+            {
 
-				//WORKAROUND for http://stackoverflow.com/questions/3285489/mono-problems-with-cert-and-mozroots
-				ServicePointManager.ServerCertificateValidationCallback = (a, b, c, d) => {
-					return true; };
+                //WORKAROUND for http://stackoverflow.com/questions/3285489/mono-problems-with-cert-and-mozroots
+                ServicePointManager.ServerCertificateValidationCallback = (a, b, c, d) =>
+                {
+                    return true;
+                };
 
-				var httpRequest = (HttpWebRequest)WebRequest.Create(config.RequestUrl);
-				httpRequest.Method = "POST";
-				httpRequest.ContentType = "application/json; charset=utf-8";
-				httpRequest.Accept = "application/json";
+                var httpRequest = (HttpWebRequest)WebRequest.Create(config.RequestUrl);
+                httpRequest.Method = "POST";
+                httpRequest.ContentType = "application/json; charset=utf-8";
+                httpRequest.Accept = "application/json";
 						
-				httpRequest.Headers.Add("Authorization", "Bearer " + config.ClientAccessToken);
-				httpRequest.Headers.Add("ocp-apim-subscription-key", config.SubscriptionKey);
+                httpRequest.Headers.Add("Authorization", "Bearer " + config.ClientAccessToken);
+                httpRequest.Headers.Add("ocp-apim-subscription-key", config.SubscriptionKey);
 						
-                var jsonSettings = new JsonSerializerSettings { 
+                var jsonSettings = new JsonSerializerSettings
+                { 
                     NullValueHandling = NullValueHandling.Ignore
-				};
+                };
 			
                 var jsonRequest = JsonConvert.SerializeObject(request, Formatting.None, jsonSettings);
 
-				if (config.DebugLog) {
+                if (config.DebugLog)
+                {
                     Debug.WriteLine("Request: " + jsonRequest);
-				}
+                }
 
-				using (var streamWriter = new StreamWriter(httpRequest.GetRequestStream())) {
-					streamWriter.Write(jsonRequest);
-					streamWriter.Close();
-				}
+                using (var streamWriter = new StreamWriter(httpRequest.GetRequestStream()))
+                {
+                    streamWriter.Write(jsonRequest);
+                    streamWriter.Close();
+                }
 
-				var httpResponse = httpRequest.GetResponse() as HttpWebResponse;
-				using (var streamReader = new StreamReader(httpResponse.GetResponseStream())) {
-					var result = streamReader.ReadToEnd();
+                var httpResponse = httpRequest.GetResponse() as HttpWebResponse;
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
 
-					if (config.DebugLog) {
+                    if (config.DebugLog)
+                    {
                         Debug.WriteLine("Response: " + result);
-					}
+                    }
 
-                    return JsonConvert.DeserializeObject<AIResponse>(result);
-				}
+                    var aiResponse = JsonConvert.DeserializeObject<AIResponse>(result);
 
-			} catch (Exception e) {
-				throw new AIServiceException(e);
-			}
-		}
+                    CheckForErrors(aiResponse);
 
-		public AIResponse VoiceRequest(Stream voiceStream)
-		{
-			var request = new AIRequest();
-			request.Language = config.Language.code;
-			request.Timezone = TimeZone.CurrentTimeZone.StandardName;
-			request.SessionId = sessionId;
+                    return aiResponse;
+                }
 
-			try {
+            }
+            catch (Exception e)
+            {
+                throw new AIServiceException(e);
+            }
+        }
 
-				//WORKAROUND for http://stackoverflow.com/questions/3285489/mono-problems-with-cert-and-mozroots
-				ServicePointManager.ServerCertificateValidationCallback = (a, b, c, d) => {
-					return true; };
+        public AIResponse VoiceRequest(Stream voiceStream)
+        {
+            var request = new AIRequest();
+            request.Language = config.Language.code;
+            request.Timezone = TimeZone.CurrentTimeZone.StandardName;
+            request.SessionId = sessionId;
+
+            try
+            {
+
+                //WORKAROUND for http://stackoverflow.com/questions/3285489/mono-problems-with-cert-and-mozroots
+                ServicePointManager.ServerCertificateValidationCallback = (a, b, c, d) =>
+                {
+                    return true;
+                };
 				
-				var httpRequest = (HttpWebRequest)WebRequest.Create(config.RequestUrl);
-				httpRequest.Method = "POST";
-				httpRequest.Accept = "application/json";
+                var httpRequest = (HttpWebRequest)WebRequest.Create(config.RequestUrl);
+                httpRequest.Method = "POST";
+                httpRequest.Accept = "application/json";
 				
-				httpRequest.Headers.Add("Authorization", "Bearer " + config.ClientAccessToken);
-				httpRequest.Headers.Add("ocp-apim-subscription-key", config.SubscriptionKey);
+                httpRequest.Headers.Add("Authorization", "Bearer " + config.ClientAccessToken);
+                httpRequest.Headers.Add("ocp-apim-subscription-key", config.SubscriptionKey);
 
-                var jsonSettings = new JsonSerializerSettings { 
+                var jsonSettings = new JsonSerializerSettings
+                { 
                     NullValueHandling = NullValueHandling.Ignore
                 };
 				
                 var jsonRequest = JsonConvert.SerializeObject(request, Formatting.None, jsonSettings);
 
-				if(config.DebugLog) {
+                if (config.DebugLog)
+                {
                     Debug.WriteLine("Request: " + jsonRequest);
-				}
+                }
 
-				var multipartClient = new MultipartHttpClient(httpRequest);
-				multipartClient.connect();
+                var multipartClient = new MultipartHttpClient(httpRequest);
+                multipartClient.connect();
 
-				multipartClient.addStringPart("request", jsonRequest);
-				multipartClient.addFilePart("voiceData", "voice.wav", voiceStream);
+                multipartClient.addStringPart("request", jsonRequest);
+                multipartClient.addFilePart("voiceData", "voice.wav", voiceStream);
 
-				multipartClient.finish();
+                multipartClient.finish();
 
-				var responseJsonString = multipartClient.getResponse();
+                var responseJsonString = multipartClient.getResponse();
 
-				if (config.DebugLog) {
+                if (config.DebugLog)
+                {
                     Debug.WriteLine("Response: " + responseJsonString);
-				}
+                }
 
-                return JsonConvert.DeserializeObject<AIResponse>(responseJsonString);
+                var aiResponse = JsonConvert.DeserializeObject<AIResponse>(responseJsonString);
 
-			} catch (Exception e) {
-				throw new AIServiceException(e);
-			};
-		}
+                CheckForErrors(aiResponse);
 
-	}
+                return aiResponse;
+
+            }
+            catch (Exception e)
+            {
+                throw new AIServiceException(e);
+            }
+        }
+
+        static void CheckForErrors(AIResponse aiResponse)
+        {
+            if (aiResponse == null)
+            {
+                throw new AIServiceException("API.AI response parsed as null. Check debug log for details.");
+            }
+
+            if (aiResponse.IsError)
+            {
+                throw new AIServiceException(aiResponse);
+            }
+        }
+    }
 }
