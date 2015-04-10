@@ -19,6 +19,7 @@
 // ***********************************************************************************************************************
 
 using System;
+using System.Globalization;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
@@ -28,10 +29,26 @@ namespace ApiAiSDK.Model
 	public class Result
 	{
 		[JsonProperty("speech")]
-		public String Speech{ get; set; }
+		public String Speech { get; set; }
 	
+        String action;
+
 		[JsonProperty("action")]
-		public String Action{ get; set; }
+        public String Action
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(action))
+                {
+                    return string.Empty;
+                }
+                return action;
+            }
+            set
+            {
+                action = value;
+            }
+        }
 
 		[JsonProperty("parameters")]
 		public Dictionary<string, string> Parameters { get; set; }
@@ -44,6 +61,70 @@ namespace ApiAiSDK.Model
 
 		[JsonProperty("resolvedQuery")]
 		public String ResolvedQuery{ get; set; }
+
+        [JsonIgnore]
+        public bool HasParameters
+        {
+            get
+            {
+                return Parameters != null && Parameters.Count > 0;
+            }
+        }
+
+        public string GetStringParameter(string name, string defaultValue)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException("name");
+            }
+
+            if (Parameters.ContainsKey(name))
+            {
+                return Parameters[name];
+            }
+
+            return defaultValue;
+        }
+
+        public int GetIntParameter(string name, int defaultValue)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException("name");
+            }
+
+            if (Parameters.ContainsKey(name))
+            {
+                var parameterValue = Parameters[name];
+                int result;
+                if (int.TryParse(parameterValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out result))
+                {
+                    return result;
+                }
+            }
+
+            return defaultValue;
+        }
+
+        public float GetFloatParameter(string name, float defaultValue)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException("name");
+            }
+
+            if (Parameters.ContainsKey(name))
+            {
+                var parameterValue = Parameters[name];
+                float result;
+                if (float.TryParse(parameterValue, NumberStyles.Float, CultureInfo.InvariantCulture, out result))
+                {
+                    return result;
+                }
+            }
+
+            return defaultValue;
+        }
 
 		public Result ()
 		{
