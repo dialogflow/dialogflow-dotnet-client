@@ -20,6 +20,7 @@
 
 using System.Collections;
 using ApiAiSDK.Model;
+using System;
 
 namespace ApiAiSDK
 {
@@ -49,12 +50,23 @@ namespace ApiAiSDK
 		/// </summary>
 		public bool DebugLog { get; set; }
 
-		/// <summary>
-		/// If true ILGenerator will not be used while json serialization and deserialization. Use this on platforms with denied code generation, like iOS.
-		/// Generally you should not change this option.
-		/// </summary>
-		public bool JsonProcessingWithoutDynamicCode { get; set; }
-	
+        string protocolVersion;
+        public string ProtocolVersion
+        {
+            get
+            {
+                return protocolVersion;
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    throw new ArgumentNullException("value");
+                }
+                protocolVersion = value;
+            }
+        }
+        	
 		public AIConfiguration(string subscriptionKey, string clientAccessToken, SupportedLanguage language)
 		{
 			this.SubscriptionKey = subscriptionKey;
@@ -64,12 +76,14 @@ namespace ApiAiSDK
 			DevMode = false;
 			DebugLog = false;
             VoiceActivityDetectionEnabled = true;
+
+            ProtocolVersion = CURRENT_PROTOCOL_VERSION;
 		}
 
 		public string RequestUrl {
 			get {
 				var baseUrl = DevMode ? SERVICE_DEV_URL : SERVICE_PROD_URL;
-				return string.Format("{0}{1}?v={2}", baseUrl, "query", CURRENT_PROTOCOL_VERSION);
+                return string.Format("{0}{1}?v={2}", baseUrl, "query", ProtocolVersion);
 			}
 		}
 
