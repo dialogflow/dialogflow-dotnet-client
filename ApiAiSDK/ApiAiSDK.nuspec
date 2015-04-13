@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>ApiAiSDK</id>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <title>ApiAiSDK</title>
     <authors>Speaktoit</authors>
     <owners>Speaktoit</owners>
@@ -11,12 +11,16 @@
     <iconUrl>http://api.ai/assets/ico/favicon-e15c6e41317c4ff907cc983a5c8676d9.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Library provides simple programming interface for making text and voice requests to the API.AI service.</description>
-    <releaseNotes>First version of the API.AI NET SDK.</releaseNotes>
+    <releaseNotes>Changed Json parser to Json.NET. Added useful methods to model classes.</releaseNotes>
     <copyright>2015 Speaktoit, Inc.</copyright>
     <tags>natural language processing</tags>
+
+    <dependencies>
+      <dependency id="Newtonsoft.Json" version="6.0.8" />
+    </dependencies>
+
   </metadata>
   <files>
     <file src="bin/Release/ApiAiSDK.dll" target="lib/Net35" />
-    <file src="lib/fastJSON.dll" target="lib/Net35" />
   </files>
 </package>
