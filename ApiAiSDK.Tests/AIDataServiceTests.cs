@@ -93,7 +93,7 @@ namespace ApiAiSDK.Tests
 			{
 				var checkSecondRequest = new AIRequest("check weather");
 				var checkSecondResponse = MakeRequest(secondService, checkSecondRequest);
-				Assert.IsNull(checkSecondResponse.Result.Action);
+                Assert.IsEmpty(checkSecondResponse.Result.Action);
 			}
 			
 			{
