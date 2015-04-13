@@ -71,7 +71,7 @@ namespace ApiAiSDK.Model
             }
         }
 
-        public string GetStringParameter(string name, string defaultValue)
+        public string GetStringParameter(string name, string defaultValue = "")
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -86,7 +86,7 @@ namespace ApiAiSDK.Model
             return defaultValue;
         }
 
-        public int GetIntParameter(string name, int defaultValue)
+        public int GetIntParameter(string name, int defaultValue = 0)
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -101,12 +101,19 @@ namespace ApiAiSDK.Model
                 {
                     return result;
                 }
+
+                float floatResult;
+                if (float.TryParse(parameterValue, NumberStyles.Float, CultureInfo.InvariantCulture, out floatResult))
+                {
+                    result = Convert.ToInt32(floatResult);
+                    return result;
+                }
             }
 
             return defaultValue;
         }
 
-        public float GetFloatParameter(string name, float defaultValue)
+        public float GetFloatParameter(string name, float defaultValue = 0)
         {
             if (string.IsNullOrEmpty(name))
             {
