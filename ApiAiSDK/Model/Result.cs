@@ -28,8 +28,6 @@ namespace ApiAiSDK.Model
 	[Serializable]
 	public class Result
 	{
-		[JsonProperty("speech")]
-		public String Speech { get; set; }
 	
         String action;
 
@@ -61,6 +59,9 @@ namespace ApiAiSDK.Model
 
 		[JsonProperty("resolvedQuery")]
 		public String ResolvedQuery{ get; set; }
+
+        [JsonProperty("fulfillment")]
+        public Fulfillment Fulfillment { get; set; }
 
         [JsonIgnore]
         public bool HasParameters

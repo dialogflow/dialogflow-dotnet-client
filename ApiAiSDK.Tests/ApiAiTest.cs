@@ -43,7 +43,7 @@ namespace ApiAiSDK.Tests
 
 			Assert.IsNotNull(response);
 			Assert.AreEqual("greeting", response.Result.Action);
-			Assert.AreEqual("Hi! How are you?", response.Result.Speech);
+            Assert.AreEqual("Hi! How are you?", response.Result.Fulfillment.Speech);
 		}
 
 		[Test]
@@ -58,7 +58,7 @@ namespace ApiAiSDK.Tests
 			
 			Assert.IsNotNull(response);
 			Assert.AreEqual("greeting", response.Result.Action);
-			Assert.AreEqual("Hi! How are you?", response.Result.Speech);
+            Assert.AreEqual("Hi! How are you?", response.Result.Fulfillment.Speech);
 		}
 
 		[Test]
