@@ -45,7 +45,7 @@ namespace ApiAiSDK
             sessionId = Guid.NewGuid().ToString();
         }
 
-        public async Task<AIResponse> Request(AIRequest request)
+        public async Task<AIResponse> RequestAsync(AIRequest request)
         {
 
             request.Language = config.Language.code;
@@ -105,7 +105,7 @@ namespace ApiAiSDK
             }
         }
 
-        public async Task<AIResponse> VoiceRequest(Stream voiceStream)
+        public async Task<AIResponse> VoiceRequestAsync(Stream voiceStream)
         {
             var request = new AIRequest();
             request.Language = config.Language.code;

@@ -35,7 +35,11 @@ namespace ApiAiSDK
 		{
 		}
 
-		public AIServiceException(Exception e) : base(e.Message, e)
+	    public AIServiceException(string message, Exception innerException) : base(message, innerException)
+	    {
+	    }
+
+	    public AIServiceException(Exception e) : base(e.Message, e)
 		{
 		}
 

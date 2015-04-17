@@ -40,29 +40,29 @@ namespace ApiAiSDK
             dataService = new AIDataService(this.config);
         }
 
-        public async Task<AIResponse> TextRequest(string text)
+        public async Task<AIResponse> TextRequestAsync(string text)
         {
             if (string.IsNullOrEmpty(text))
             {
                 throw new ArgumentNullException("text");
             }
 
-            return await TextRequest(new AIRequest(text));
+            return await TextRequestAsync(new AIRequest(text));
         }
 
-        public async Task<AIResponse> TextRequest(AIRequest request)
+        public async Task<AIResponse> TextRequestAsync(AIRequest request)
         {
             if (request == null)
             {
                 throw new ArgumentNullException("request");
             }
 
-            return await dataService.Request(request);
+            return await dataService.RequestAsync(request);
         }
 
-        public async Task<AIResponse> VoiceRequest(Stream voiceStream)
+        public async Task<AIResponse> VoiceRequestAsync(Stream voiceStream)
         {
-            return await dataService.VoiceRequest(voiceStream);
+            return await dataService.VoiceRequestAsync(voiceStream);
         }
 
         public async Task<AIResponse> VoiceRequest(float[] samples)
@@ -80,7 +80,7 @@ namespace ApiAiSDK
                     var voiceStream = new MemoryStream(bytes);
                     voiceStream.Seek(0, SeekOrigin.Begin);
 
-                    var aiResponse = VoiceRequest(voiceStream);
+                    var aiResponse = VoiceRequestAsync(voiceStream);
                     return await aiResponse;
                 }
 
