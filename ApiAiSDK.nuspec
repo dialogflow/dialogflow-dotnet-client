@@ -21,8 +21,7 @@
 
   </metadata>
   <files>
-    <file src="bin/Release/ApiAiSDK.dll" target="lib/net35" />
-    <file src="bin/Release/ApiAiSDK.dll" target="lib/wpa" />
-    <file src="bin/Release/ApiAiSDK.dll" target="lib/netcore45" />
+    <file src="ApiAiSDK/bin/Release/ApiAiSDK.dll" target="lib/net35" />
+    <file src="ApiAiSDK.WP8/bin/Release/ApiAiSDK.dll" target="lib/wpa" />
   </files>
 </package>

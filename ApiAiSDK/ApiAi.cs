@@ -26,7 +26,7 @@ using ApiAiSDK.Model;
 
 namespace ApiAiSDK
 {
-	public class ApiAi
+    public class ApiAi : ApiAiBase
 	{
 		private AIConfiguration config;
 		private AIDataService dataService;
@@ -88,63 +88,6 @@ namespace ApiAiSDK
 			return null;
 		}
 
-		private float[] TrimSilence(float[] samples)
-		{
-			if (samples == null) {
-				return null;
-			}
-
-			float min = 0.000001f;
-			
-			int startIndex = 0;
-			int endIndex = samples.Length;
-			
-			for (int i = 0; i < samples.Length; i++) {
-				
-				if (Math.Abs(samples[i]) > min) {
-					startIndex = i;
-					break;
-				}
-			}
-
-			for (int i = samples.Length - 1; i > 0; i--) {
-				if (Math.Abs(samples[i]) > min) {
-					endIndex = i;
-					break;
-				}
-			}
-
-			if (endIndex <= startIndex) {
-				return null;
-			}
-			
-			var result = new float[endIndex - startIndex];
-			Array.Copy(samples, startIndex, result, 0, endIndex - startIndex);
-			return result;
-			
-		}
-
-		private static byte[] ConvertArrayShortToBytes(short[] array)
-		{
-			byte[] numArray = new byte[array.Length * 2];
-			Buffer.BlockCopy((Array)array, 0, (Array)numArray, 0, numArray.Length);
-			return numArray;
-		}
 		
-		private static short[] ConvertIeeeToPcm16(float[] source)
-		{
-			short[] resultBuffer = new short[source.Length];
-			for (int i = 0; i < source.Length; i++) {
-				float f = source[i] * 32768f;
-				
-				if ((double)f > (double)short.MaxValue)
-					f = (float)short.MaxValue;
-				else if ((double)f < (double)short.MinValue)
-					f = (float)short.MinValue;
-				resultBuffer[i] = Convert.ToInt16(f);
-			}
-			
-			return resultBuffer;
-		}
 	}
 }

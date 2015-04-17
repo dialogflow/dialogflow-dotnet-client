@@ -9,3 +9,6 @@ ApiAiSDK.Tests/obj
 ApiAiSDK/obj
 testrunner
 packages
+ApiAiSDK.WP8/bin
+ApiAiSDK.WP8/obj
+*.suo

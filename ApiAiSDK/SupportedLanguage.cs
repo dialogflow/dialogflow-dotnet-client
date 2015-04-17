@@ -66,7 +66,7 @@ namespace ApiAiSDK
         {
             foreach (var item in AllLangs)
             {
-                if (string.Equals(item.code, languageTag, StringComparison.InvariantCultureIgnoreCase))
+                if (string.Equals(item.code, languageTag, StringComparison.OrdinalIgnoreCase))
                 {
                     return item;
                 }

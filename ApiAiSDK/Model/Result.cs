@@ -25,7 +25,7 @@ using Newtonsoft.Json;
 
 namespace ApiAiSDK.Model
 {
-	[Serializable]
+    [JsonObject]
 	public class Result
 	{
 	

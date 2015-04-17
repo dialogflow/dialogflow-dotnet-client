@@ -23,7 +23,7 @@ using Newtonsoft.Json;
 
 namespace ApiAiSDK.Model
 {
-	[Serializable]
+    [JsonObject]
 	public class Metadata
 	{
 		[JsonProperty("intentName")]

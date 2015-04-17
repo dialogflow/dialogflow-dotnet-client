@@ -22,7 +22,7 @@ using Newtonsoft.Json;
 
 namespace ApiAiSDK.Model
 {
-	[Serializable]
+    [JsonObject]
 	public class Status
 	{
 		[JsonProperty("code")]

@@ -22,7 +22,7 @@ using Newtonsoft.Json;
 
 namespace ApiAiSDK
 {
-    [Serializable]
+    [JsonObject]
     public class Fulfillment
     {
         [JsonProperty("speech")]
