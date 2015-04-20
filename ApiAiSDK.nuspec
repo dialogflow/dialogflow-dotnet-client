@@ -11,7 +11,7 @@
     <iconUrl>http://api.ai/assets/ico/favicon-e15c6e41317c4ff907cc983a5c8676d9.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Library provides simple programming interface for making text and voice requests to the API.AI service.</description>
-    <releaseNotes>Changed Json parser to Json.NET. Added useful methods to model classes.</releaseNotes>
+    <releaseNotes>Added new protocol support and Windows Phone 8 platform support</releaseNotes>
     <copyright>2015 Speaktoit, Inc.</copyright>
     <tags>natural language processing</tags>
 
