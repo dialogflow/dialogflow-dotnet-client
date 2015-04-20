@@ -20,7 +20,7 @@
 using System;
 using Newtonsoft.Json;
 
-namespace ApiAiSDK
+namespace ApiAiSDK.Model
 {
     [JsonObject]
     public class Fulfillment
