@@ -19,13 +19,9 @@
 //  ***********************************************************************************************************************
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using ApiAiSDK.Http;
 using ApiAiSDK.Model;
@@ -134,12 +130,12 @@ namespace ApiAiSDK
                 }
 
                 var multipartClient = new MultipartHttpClient(httpRequest);
-                multipartClient.connect();
+                multipartClient.Connect();
 
-                multipartClient.addStringPart("request", jsonRequest);
-                multipartClient.addFilePart("voiceData", "voice.wav", voiceStream);
+                multipartClient.AddStringPart("request", jsonRequest);
+                multipartClient.AddFilePart("voiceData", "voice.wav", voiceStream);
 
-                multipartClient.finish();
+                multipartClient.Finish();
 
                 var responseJsonString = await multipartClient.GetResponse();
 

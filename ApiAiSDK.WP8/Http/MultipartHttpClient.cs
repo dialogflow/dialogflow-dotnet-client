@@ -40,7 +40,7 @@ namespace ApiAiSDK.Http
             this.request = request;
         }
 
-        public async void connect()
+        public async void Connect()
         {
             request.ContentType = "multipart/form-data; boundary=" + boundary;
 
@@ -48,7 +48,7 @@ namespace ApiAiSDK.Http
             os = new BinaryWriter(requestStream, Encoding.UTF8);
         }
 
-        public void addStringPart(string paramName, string data)
+        public void AddStringPart(string paramName, string data)
         {
             WriteString(delimiter + boundary + "\r\n");
             WriteString("Content-Type: application/json\r\n");
@@ -56,7 +56,7 @@ namespace ApiAiSDK.Http
             WriteString("\r\n" + data + "\r\n");
         }
 
-        public void addFilePart(string paramName, string fileName, Stream data)
+        public void AddFilePart(string paramName, string fileName, Stream data)
         {
             WriteString(delimiter + boundary + "\r\n");
             WriteString("Content-Disposition: form-data; name=\"" + paramName + "\"; filename=\"" + fileName + "\"\r\n");
@@ -79,7 +79,7 @@ namespace ApiAiSDK.Http
             WriteString("\r\n");
         }
 
-        public void finish()
+        public void Finish()
         {
             WriteString(delimiter + boundary + delimiter + "\r\n");
             os.Dispose();
