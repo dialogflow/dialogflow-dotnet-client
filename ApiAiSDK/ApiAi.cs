@@ -56,18 +56,18 @@ namespace ApiAiSDK
 			return dataService.Request(request);
 		}
 
-        public AIResponse TextRequest(string text, RequestExtras extras)
+        public AIResponse TextRequest(string text, RequestExtras requestExtras)
         {
             if (string.IsNullOrEmpty(text)) {
                 throw new ArgumentNullException("text");
             }
 
-            return TextRequest(new AIRequest(text, extras));
+            return TextRequest(new AIRequest(text, requestExtras));
         }
 
-		public AIResponse VoiceRequest(Stream voiceStream)
+		public AIResponse VoiceRequest(Stream voiceStream, RequestExtras requestExtras = null)
 		{
-			return dataService.VoiceRequest(voiceStream);
+			return dataService.VoiceRequest(voiceStream, requestExtras);
 		}
 
 		public AIResponse VoiceRequest(float[] samples)
