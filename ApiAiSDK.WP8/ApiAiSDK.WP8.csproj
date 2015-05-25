@@ -88,6 +88,9 @@
     <Compile Include="..\ApiAiSDK\ApiAiBase.cs">
       <Link>ApiAiBase.cs</Link>
     </Compile>
+    <Compile Include="..\ApiAiSDK\Model\AIContext.cs">
+      <Link>Model\AIContext.cs</Link>
+    </Compile>
     <Compile Include="..\ApiAiSDK\Model\AIOutputContext.cs">
       <Link>Model\AIOutputContext.cs</Link>
     </Compile>
@@ -96,6 +99,12 @@
     </Compile>
     <Compile Include="..\ApiAiSDK\Model\AIResponse.cs">
       <Link>Model\AIResponse.cs</Link>
+    </Compile>
+    <Compile Include="..\ApiAiSDK\Model\Entity.cs">
+      <Link>Model\Entity.cs</Link>
+    </Compile>
+    <Compile Include="..\ApiAiSDK\Model\EntityEntry.cs">
+      <Link>Model\EntityEntry.cs</Link>
     </Compile>
     <Compile Include="..\ApiAiSDK\Model\Fulfillment.cs">
       <Link>Model\Fulfillment.cs</Link>
@@ -111,6 +120,9 @@
     </Compile>
     <Compile Include="..\ApiAiSDK\Model\Status.cs">
       <Link>Model\Status.cs</Link>
+    </Compile>
+    <Compile Include="..\ApiAiSDK\RequestExtras.cs">
+      <Link>RequestExtras.cs</Link>
     </Compile>
     <Compile Include="..\ApiAiSDK\SupportedLanguage.cs">
       <Link>SupportedLanguage.cs</Link>

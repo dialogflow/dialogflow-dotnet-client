@@ -21,6 +21,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using ApiAiSDK.Http;
@@ -101,12 +102,26 @@ namespace ApiAiSDK
             }
         }
 
-        public async Task<AIResponse> VoiceRequestAsync(Stream voiceStream)
+        public async Task<AIResponse> VoiceRequestAsync(Stream voiceStream, RequestExtras requestExtras = null)
         {
             var request = new AIRequest();
             request.Language = config.Language.code;
             request.Timezone = TimeZoneInfo.Local.StandardName;
             request.SessionId = sessionId;
+
+            if (requestExtras != null)
+            {
+                if (requestExtras.HasContexts)
+                {
+                    var contextsList = requestExtras.Contexts.Select(c => c.Name).ToList();
+                    request.Contexts = contextsList;
+                }
+
+                if (requestExtras.HasEntities)
+                {
+                    request.Entities = requestExtras.Entities;
+                }
+            }
 
             try
             {
