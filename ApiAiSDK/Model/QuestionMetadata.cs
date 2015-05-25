@@ -21,6 +21,7 @@
 using System;
 using System.Collections;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace ApiAiSDK.Model
 {
@@ -35,5 +36,8 @@ namespace ApiAiSDK.Model
 
 		[JsonProperty("sessionId")]
 		public string SessionId { get; set; }
+
+        [JsonProperty("entities")]
+        public List<Entity> Entities { get; set; }
 	}
 }

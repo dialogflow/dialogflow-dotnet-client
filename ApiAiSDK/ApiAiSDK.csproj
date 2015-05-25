@@ -57,6 +57,10 @@
     <Compile Include="Util\ByteBuffer.cs" />
     <Compile Include="Model\Fulfillment.cs" />
     <Compile Include="ApiAiBase.cs" />
+    <Compile Include="RequestExtras.cs" />
+    <Compile Include="Model\Entity.cs" />
+    <Compile Include="Model\EntityEntry.cs" />
+    <Compile Include="Model\AIContext.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

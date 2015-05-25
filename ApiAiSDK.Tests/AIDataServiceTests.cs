@@ -23,6 +23,7 @@ using System.Linq;
 using NUnit.Framework;
 using ApiAiSDK;
 using ApiAiSDK.Model;
+using System.Collections.Generic;
 
 namespace ApiAiSDK.Tests
 {
@@ -128,6 +129,96 @@ namespace ApiAiSDK.Tests
 			Assert.IsTrue(context.Parameters.ContainsKey("my_name"));
 			Assert.IsTrue(context.Parameters.ContainsValue("Sam"));
 		}
+
+        [Test]
+        public void ContextsTest()
+        {
+            var config = new AIConfiguration(SUBSCRIPTION_KEY, ACCESS_TOKEN, SupportedLanguage.English);
+            var dataService = new AIDataService(config);
+            var aiRequest = new AIRequest("weather");
+
+            dataService.ResetContexts();
+
+            var aiResponse = MakeRequest(dataService, aiRequest);
+            var action = aiResponse.Result.Action;
+            Assert.AreEqual("showWeather", action);
+            Assert.IsTrue(aiResponse.Result.Contexts.Any(c=>c.Name == "weather"));
+                
+        }
+
+        [Test]
+        public void ResetContextsTest()
+        {
+            var config = new AIConfiguration(SUBSCRIPTION_KEY, ACCESS_TOKEN, SupportedLanguage.English);
+            var dataService = new AIDataService(config);
+
+            dataService.ResetContexts();
+
+            {
+                var aiRequest = new AIRequest("what is your name");
+                var aiResponse = MakeRequest(dataService, aiRequest);
+                Assert.IsTrue(aiResponse.Result.Contexts.Any(c=>c.Name == "name_question"));
+                var resetSucceed = dataService.ResetContexts();
+                Assert.IsTrue(resetSucceed);
+            }
+
+            {
+                var aiRequest = new AIRequest("hello");
+                var aiResponse = MakeRequest(dataService, aiRequest);
+                Assert.IsFalse(aiResponse.Result.Contexts.Any(c=>c.Name == "name_question"));
+            }
+                
+        }
+
+        [Test]
+        public void EntitiesTest()
+        {
+            var config = new AIConfiguration(SUBSCRIPTION_KEY, ACCESS_TOKEN, SupportedLanguage.English);
+            var dataService = new AIDataService(config);
+
+            var aiRequest = new AIRequest("hi nori");
+
+            var myDwarfs = new Entity("dwarfs");
+            myDwarfs.AddEntry(new EntityEntry("Ori", new [] {"ori", "Nori"}));
+            myDwarfs.AddEntry(new EntityEntry("bifur", new [] {"Bofur","Bombur"}));
+
+            var extraEntities = new List<Entity> { myDwarfs };
+
+            aiRequest.Entities = extraEntities;
+
+            var aiResponse = MakeRequest(dataService, aiRequest);
+
+            Assert.IsTrue(!string.IsNullOrEmpty(aiResponse.Result.ResolvedQuery));
+            Assert.AreEqual("say_hi", aiResponse.Result.Action);
+            Assert.AreEqual("hi Bilbo, I am Ori", aiResponse.Result.Fulfillment.Speech);
+        }
+
+        [Test]
+        public void WrongEntitiesTest()
+        {
+            var config = new AIConfiguration(SUBSCRIPTION_KEY, ACCESS_TOKEN, SupportedLanguage.English);
+            var dataService = new AIDataService(config);
+
+            var aiRequest = new AIRequest("hi nori");
+
+            var myDwarfs = new Entity("not_dwarfs");
+            myDwarfs.AddEntry(new EntityEntry("Ori", new [] {"ori", "Nori"}));
+            myDwarfs.AddEntry(new EntityEntry("bifur", new [] {"Bofur","Bombur"}));
+
+            var extraEntities = new List<Entity> { myDwarfs };
+
+            aiRequest.Entities = extraEntities;
+
+            try
+            {
+                var aiResponse = MakeRequest(dataService, aiRequest);
+                Assert.True(false, "Request should throws bad_request exception");
+            }
+            catch(AIServiceException e)
+            {
+                Assert.IsTrue(true);
+            }
+        }
 
 		private AIResponse MakeRequest(AIDataService service, AIRequest request)
 		{

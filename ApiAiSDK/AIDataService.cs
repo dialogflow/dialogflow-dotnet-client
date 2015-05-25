@@ -21,6 +21,7 @@
 using System;
 using System.Net;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json;
 using ApiAiSDK.Model;
 using ApiAiSDK.Http;
@@ -106,12 +107,26 @@ namespace ApiAiSDK
             }
         }
 
-        public AIResponse VoiceRequest(Stream voiceStream)
+        public AIResponse VoiceRequest(Stream voiceStream, RequestExtras requestExtras = null)
         {
             var request = new AIRequest();
             request.Language = config.Language.code;
             request.Timezone = TimeZone.CurrentTimeZone.StandardName;
             request.SessionId = sessionId;
+
+            if (requestExtras != null)
+            {
+                if (requestExtras.HasContexts)
+                {
+                    var contextsList = requestExtras.Contexts.Select(c => c.Name).ToList();
+                    request.Contexts = contextsList;
+                }
+                    
+                if (requestExtras.HasEntities)
+                {
+                    request.Entities = requestExtras.Entities;
+                }
+            }
 
             try
             {
@@ -166,6 +181,19 @@ namespace ApiAiSDK
             catch (Exception e)
             {
                 throw new AIServiceException(e);
+            }
+        }
+
+        public bool ResetContexts()
+        {
+            var cleanRequest = new AIRequest("empty_query_for_resetting_contexts");
+            cleanRequest.ResetContexts = true;
+            try {
+                var response = Request(cleanRequest);
+                return !response.IsError;
+            } catch (AIServiceException e) {
+                Debug.WriteLine("Exception while contexts clean." + e);
+                return false;
             }
         }
 

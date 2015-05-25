@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
@@ -49,6 +50,23 @@ namespace ApiAiSDK.Model
 			Query = new string[] { text };
 			Confidence = new float[] { 1.0f };
 		}
+
+        public AIRequest (string text, RequestExtras requestExtras):this(text)
+        {
+            if (requestExtras != null)
+            {
+                if (requestExtras.HasContexts)
+                {
+                    var contextsList = requestExtras.Contexts.Select(c => c.Name).ToList();
+                    Contexts = contextsList;
+                }
+
+                if (requestExtras.HasEntities)
+                {
+                    Entities = requestExtras.Entities;
+                }
+            }
+        }
 
 	}
 }
