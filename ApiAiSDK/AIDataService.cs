@@ -50,13 +50,6 @@ namespace ApiAiSDK
 
             try
             {
-
-                //WORKAROUND for http://stackoverflow.com/questions/3285489/mono-problems-with-cert-and-mozroots
-                ServicePointManager.ServerCertificateValidationCallback = (a, b, c, d) =>
-                {
-                    return true;
-                };
-
                 var httpRequest = (HttpWebRequest)WebRequest.Create(config.RequestUrl);
                 httpRequest.Method = "POST";
                 httpRequest.ContentType = "application/json; charset=utf-8";
@@ -130,13 +123,6 @@ namespace ApiAiSDK
 
             try
             {
-
-                //WORKAROUND for http://stackoverflow.com/questions/3285489/mono-problems-with-cert-and-mozroots
-                ServicePointManager.ServerCertificateValidationCallback = (a, b, c, d) =>
-                {
-                    return true;
-                };
-				
                 var httpRequest = (HttpWebRequest)WebRequest.Create(config.RequestUrl);
                 httpRequest.Method = "POST";
                 httpRequest.Accept = "application/json";
