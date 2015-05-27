@@ -18,7 +18,9 @@
 //
 //  ***********************************************************************************************************************
 using System;
+using System.Linq;
 using System.Collections.Generic;
+using ApiAiSDK.Model;
 
 namespace ApiAiSDK
 {
@@ -62,7 +64,21 @@ namespace ApiAiSDK
             this.Contexts = contexts;
             this.Entities = entities;
         }
-        
+
+        public void CopyTo(AIRequest request)
+        {
+            if (HasContexts)
+            {
+                var contextsList = Contexts.Select(c => c.Name).ToList();
+                request.Contexts = contextsList;
+            }
+
+            if (HasEntities)
+            {
+                request.Entities = Entities;
+            }
+        }
+
     }
 }
 

@@ -55,16 +55,7 @@ namespace ApiAiSDK.Model
         {
             if (requestExtras != null)
             {
-                if (requestExtras.HasContexts)
-                {
-                    var contextsList = requestExtras.Contexts.Select(c => c.Name).ToList();
-                    Contexts = contextsList;
-                }
-
-                if (requestExtras.HasEntities)
-                {
-                    Entities = requestExtras.Entities;
-                }
+                requestExtras.CopyTo(this);
             }
         }
 

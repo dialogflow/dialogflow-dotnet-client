@@ -21,7 +21,7 @@ using System;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace ApiAiSDK
+namespace ApiAiSDK.Model
 {
     [JsonObject]
     public class Entity

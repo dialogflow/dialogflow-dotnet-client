@@ -22,7 +22,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace ApiAiSDK
+namespace ApiAiSDK.Model
 {
     [JsonObject]
     public class EntityEntry
