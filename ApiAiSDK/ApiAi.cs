@@ -28,8 +28,8 @@ namespace ApiAiSDK
 {
     public class ApiAi : ApiAiBase
 	{
-		private AIConfiguration config;
-		private AIDataService dataService;
+		private readonly AIConfiguration config;
+		private readonly AIDataService dataService;
 
 		public ApiAi(AIConfiguration config)
 		{
