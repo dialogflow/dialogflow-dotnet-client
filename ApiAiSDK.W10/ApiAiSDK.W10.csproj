@@ -7,7 +7,7 @@
     <ProjectGuid>{69AF92F4-2AD9-4576-98F3-A4335485D3D3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ApiAiSDK.W10</RootNamespace>
+    <RootNamespace>ApiAiSDK</RootNamespace>
     <AssemblyName>ApiAiSDK.W10</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>

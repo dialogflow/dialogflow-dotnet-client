@@ -28,7 +28,7 @@ using Windows.Web.Http;
 using ApiAiSDK.Model;
 using Newtonsoft.Json;
 
-namespace ApiAiSDK.W10
+namespace ApiAiSDK
 {
     public class AIDataService
     {

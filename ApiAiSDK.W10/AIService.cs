@@ -3,15 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.VoiceCommands;
 using Windows.Storage;
 using ApiAiSDK.Model;
 using ApiAiSDK.Util;
 
-namespace ApiAiSDK.W10
+namespace ApiAiSDK
 {
     public abstract class AIService
     {
+        protected readonly AIDataService dataService;
+        protected readonly AIConfiguration config;
+
+        /// <summary>
+        /// Unique SessionId. Normally should not be changed.
+        /// </summary>
+        public string SessionId
+        {
+            get { return dataService.SessionId; }
+            set { dataService.SessionId = value; }
+        }
+
         public static AIService CreateService(AIConfiguration config)
         {
             return new SystemRecognitionService(config);
@@ -22,16 +35,58 @@ namespace ApiAiSDK.W10
             await VoiceCommandDefinitionManager.InstallCommandDefinitionsFromStorageFileAsync(file);
         }
 
+        protected AIService(AIConfiguration config)
+        {
+            this.config = config;
+            dataService = new AIDataService(config);
+        }
+
+        public async Task ProcessOnActivated(IActivatedEventArgs e)
+        {
+            string callParameter;
+
+            var commandArgs = e as VoiceCommandActivatedEventArgs;
+            if (commandArgs != null)
+            {
+                // if program activated with voice command 
+                // we make request to api.ai to activate context
+                callParameter = commandArgs.Result?.Text;
+                if (callParameter != null)
+                {
+                    await TextRequestAsync(callParameter);
+                }
+            }
+            else
+            {
+                // if program activated with protocol 
+                // we should restore SessionId, stored from 
+                // VoiceCommandService
+
+                // TODO
+                var protocolArgs = e as ProtocolActivatedEventArgs;
+                callParameter = protocolArgs?.Uri?.Query;
+
+                if (!string.IsNullOrEmpty(callParameter))
+                {
+                    callParameter = callParameter.Substring("?LaunchContext=".Length);
+                    callParameter = Uri.UnescapeDataString(callParameter);
+                }
+            }
+        }
+
         /// <summary>
         /// Event fired on the success processing result received from server
         /// </summary>
-        public virtual event Action<AIResponse> OnResult;
+        public event Action<AIResponse> OnResult;
 
         /// <summary>
         /// Event will fire if an error appears
         /// </summary>
-        public virtual event Action<AIServiceException> OnError;
+        public event Action<AIServiceException> OnError;
 
+        public event Action OnListeningStarted;
+        public event Action OnListeningStopped;
+        
         /// <summary>
         /// Initialize service, call this method before any requests
         /// </summary>
@@ -84,6 +139,16 @@ namespace ApiAiSDK.W10
         protected virtual void FireOnError(AIServiceException aiException)
         {
             OnError.InvokeSafely(aiException);
+        }
+
+        protected virtual void FireOnListeningStarted()
+        {
+            OnListeningStarted.InvokeSafely();
+        }
+
+        protected virtual void FireOnListeningStopped()
+        {
+            OnListeningStopped.InvokeSafely();
         }
     }
 }

@@ -26,12 +26,22 @@ using System.Text;
 using System.Threading.Tasks;
 using ApiAiSDK.Model;
 
-namespace ApiAiSDK.W10
+namespace ApiAiSDK
 {
     public class ApiAi : ApiAiBase
     {
         private AIConfiguration config;
         private AIDataService dataService;
+
+        /// <summary>
+        /// Unique SessionId. Normally should not be changed.
+        /// </summary>
+        public string SessionId
+        {
+            get { return dataService.SessionId; }
+            set { dataService.SessionId = value; }
+        }
+
 
         public ApiAi(AIConfiguration config)
         {

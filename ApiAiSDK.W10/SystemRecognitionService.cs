@@ -20,15 +20,17 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Globalization;
 using Windows.Media.SpeechRecognition;
+using Windows.UI.Core;
 using ApiAiSDK.Model;
 
-namespace ApiAiSDK.W10
+namespace ApiAiSDK
 {
     internal class SystemRecognitionService : AIService
     {
@@ -37,16 +39,12 @@ namespace ApiAiSDK.W10
 
         private volatile SpeechRecognizer speechRecognizer;
         private readonly object speechRecognizerLock = new object();
-
-        private readonly AIConfiguration config;
-        protected readonly AIDataService dataService;
-
+        
         private volatile IAsyncOperation<SpeechRecognitionResult> currentOperation;
 
-        public SystemRecognitionService(AIConfiguration config)
+        public SystemRecognitionService(AIConfiguration config) : base(config)
         {
-            this.config = config;
-            dataService = new AIDataService(config);
+            
         }
 
         public override async Task InitializeAsync()
@@ -56,6 +54,7 @@ namespace ApiAiSDK.W10
                 try
                 {
                     var recognizer = new SpeechRecognizer(ConvertAILangToSystem(config.Language));
+                    recognizer.StateChanged += Recognizer_StateChanged;
 
                     // INFO: Dictation is default Constraint
                     //var webSearchGrammar = new SpeechRecognitionTopicConstraint(SpeechRecognitionScenario.Dictation, "dictation");
@@ -69,6 +68,10 @@ namespace ApiAiSDK.W10
                         {
                             speechRecognizer = recognizer;
                         }
+                        else
+                        {
+                            recognizer.Dispose();
+                        }
                     }
                 }
                 catch (Exception e)
@@ -80,6 +83,33 @@ namespace ApiAiSDK.W10
                     throw;
                 }
 
+            }
+        }
+
+        private void Recognizer_StateChanged(SpeechRecognizer sender, SpeechRecognizerStateChangedEventArgs args)
+        {
+            Debug.WriteLine("SpeechRecognizer_StateChanged " + args.State);
+
+            switch (args.State)
+            {
+                case SpeechRecognizerState.Idle:
+                    break;
+                case SpeechRecognizerState.Capturing:
+                    FireOnListeningStarted();
+                    break;
+                case SpeechRecognizerState.Processing:
+                    FireOnListeningStopped();
+                    break;
+                case SpeechRecognizerState.SoundStarted:
+                    break;
+                case SpeechRecognizerState.SoundEnded:
+                    break;
+                case SpeechRecognizerState.SpeechDetected:
+                    break;
+                case SpeechRecognizerState.Paused:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -203,7 +233,7 @@ namespace ApiAiSDK.W10
         {
             if (!string.IsNullOrWhiteSpace(results.Text))
             {
-                var request = ConvertToRequest(results);
+                var request = CreateAIRequest(results);
 
                 try
                 {
@@ -218,21 +248,26 @@ namespace ApiAiSDK.W10
                 }
             }
         }
-
-        private static AIRequest ConvertToRequest(SpeechRecognitionResult results)
+        
+        private AIRequest CreateAIRequest(SpeechRecognitionResult recognitionResults)
         {
-            var request = new AIRequest();
-            request.Query = new[] { results.Text };
+            var texts = new List<string> { recognitionResults.Text };
+            var confidences = new List<float> { ConfidenceToFloat(recognitionResults.Confidence) };
 
-            try
-            {
-                request.Confidence = new[] { Convert.ToSingle(results.RawConfidence) };
-            }
-            catch
-            {
-            }
+            var aiRequest = new AIRequest();
 
-            return request;
+            var alternates = recognitionResults.GetAlternates(5);
+            if (alternates != null)
+            {
+                foreach (var a in alternates)
+                {
+                    texts.Add(a.Text);
+                    confidences.Add(ConfidenceToFloat(a.Confidence));
+                }
+            }
+            aiRequest.Query = texts.ToArray();
+            aiRequest.Confidence = confidences.ToArray();
+            return aiRequest;
         }
 
         private float ConfidenceToFloat(SpeechRecognitionConfidence confidence)
