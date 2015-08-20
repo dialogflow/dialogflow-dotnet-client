@@ -14,3 +14,5 @@ ApiAiSDK.WP8/obj
 ApiAiSDK.W10/bin
 ApiAiSDK.W10/obj
 *.suo
+/ApiAiSDK.W10.Tests/obj
+/ApiAiSDK.W10.Tests/bin

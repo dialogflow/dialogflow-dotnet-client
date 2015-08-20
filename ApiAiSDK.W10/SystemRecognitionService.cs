@@ -21,13 +21,10 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
-using Windows.Foundation;
 using Windows.Globalization;
 using Windows.Media.SpeechRecognition;
-using Windows.UI.Core;
 using ApiAiSDK.Model;
 
 namespace ApiAiSDK
@@ -40,7 +37,11 @@ namespace ApiAiSDK
         private volatile SpeechRecognizer speechRecognizer;
         private readonly object speechRecognizerLock = new object();
         
-        private volatile IAsyncOperation<SpeechRecognitionResult> currentOperation;
+        //private volatile IAsyncOperation<SpeechRecognitionResult> currentOperation;
+
+        private volatile CancellationTokenSource cancellationTokenSource;
+
+        private bool capturingWasStarted;
 
         public SystemRecognitionService(AIConfiguration config) : base(config)
         {
@@ -93,12 +94,23 @@ namespace ApiAiSDK
             switch (args.State)
             {
                 case SpeechRecognizerState.Idle:
+                    if (capturingWasStarted)
+                    {
+                        FireOnListeningStopped();
+                        capturingWasStarted = false;
+                    }
+
                     break;
                 case SpeechRecognizerState.Capturing:
+                    capturingWasStarted = true;
                     FireOnListeningStarted();
                     break;
                 case SpeechRecognizerState.Processing:
-                    FireOnListeningStopped();
+                    if (capturingWasStarted)
+                    {
+                        FireOnListeningStopped();
+                        capturingWasStarted = false;
+                    }
                     break;
                 case SpeechRecognizerState.SoundStarted:
                     break;
@@ -119,109 +131,96 @@ namespace ApiAiSDK
             {
                 case "en":
                     return new Language("en-US");
-                    break;
                 case "ru":
                     return new Language("ru-RU");
-                    break;
                 case "de":
                     return new Language("de-DE");
-                    break;
                 case "pt":
                     return new Language("pt-PT");
-                    break;
                 case "pt-BR":
                     return new Language("pt-BR");
-                    break;
                 case "es":
                     return new Language("es-ES");
-                    break;
                 case "fr":
                     return new Language("fr-FR");
-                    break;
                 case "it":
                     return new Language("it-IT");
-                    break;
                 case "ja":
                     return new Language("ja-JP");
-                    break;
                 case "zh-CN":
                     return new Language("zh-CN");
-                    break;
                 case "zh-HK":
                     return new Language("zh-HK");
-                    break;
                 case "zh-TW":
                     return new Language("zh-TW");
-                    break;
             }
 
             return new Language("en-US");
         }
 
-        public override async Task StartRecognitionAsync(RequestExtras requestExtras = null)
+        public override async Task<AIResponse> StartRecognitionAsync(RequestExtras requestExtras = null)
         {
-            if (currentOperation == null)
+            if (cancellationTokenSource != null)
             {
-                try
-                {
-                    var speechRecognitionResultTask = speechRecognizer.RecognizeAsync();
-                    currentOperation = speechRecognitionResultTask;
+                cancellationTokenSource.Cancel();
+                cancellationTokenSource.Dispose();
+            }
+            
+            try
+            {
+                cancellationTokenSource = new CancellationTokenSource();
 
-                    var results = await speechRecognitionResultTask;
-                    currentOperation = null;
-
-                    switch (results.Status)
-                    {
-                        case SpeechRecognitionResultStatus.Success:
-                            ProcessRecognitionResultsAsync(results, requestExtras);
-                            break;
-                        case SpeechRecognitionResultStatus.TopicLanguageNotSupported:
-                            FireOnError(new AIServiceException("This language is not supported"));
-                            break;
-                        case SpeechRecognitionResultStatus.GrammarLanguageMismatch:
-                            FireOnError(new AIServiceException("GrammarLanguageMismatch"));
-                            break;
-                        case SpeechRecognitionResultStatus.GrammarCompilationFailure:
-                            FireOnError(new AIServiceException("GrammarCompilationFailure"));
-                            break;
-                        case SpeechRecognitionResultStatus.AudioQualityFailure:
-                            FireOnError(new AIServiceException("AudioQualityFailure"));
-                            break;
-                        case SpeechRecognitionResultStatus.UserCanceled:
-                            // do nothing
-                            break;
-                        case SpeechRecognitionResultStatus.Unknown:
-                            FireOnError(new AIServiceException("Unknown recognition error"));
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
-                }
-                catch (TaskCanceledException)
+                var speechRecognitionResultTask = speechRecognizer.RecognizeAsync().AsTask(cancellationTokenSource.Token);
+                var results = await speechRecognitionResultTask;
+                
+                switch (results.Status)
                 {
-                    currentOperation = null;
-                }
-                catch (Exception e)
-                {
-                    currentOperation = null;
-
-                    if ((uint) e.HResult == HRESULT_PRIVACY_STATEMENT_DECLINED)
-                    {
-                        throw new AIServiceException(
-                            "You must accept privacy statement before using speech recognition.", e);
-                    }
-                    else
-                    {
-                        throw new AIServiceException("Exception while recognition", e);
-                    }
+                    case SpeechRecognitionResultStatus.Success:
+                        var response = await ProcessRecognitionResultsAsync(results, requestExtras, cancellationTokenSource.Token);
+                        return response;
+                    case SpeechRecognitionResultStatus.TopicLanguageNotSupported:
+                        throw new AIServiceException("This language is not supported");
+                    case SpeechRecognitionResultStatus.GrammarLanguageMismatch:
+                        throw new AIServiceException("GrammarLanguageMismatch");
+                    case SpeechRecognitionResultStatus.GrammarCompilationFailure:
+                        throw new AIServiceException("GrammarCompilationFailure");
+                    case SpeechRecognitionResultStatus.AudioQualityFailure:
+                        throw new AIServiceException("AudioQualityFailure");
+                    case SpeechRecognitionResultStatus.UserCanceled:
+                        // do nothing
+                        return null;
+                    case SpeechRecognitionResultStatus.Unknown:
+                        throw new AIServiceException("Unknown recognition error");
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
             }
+            catch (OperationCanceledException)
+            {
+                cancellationTokenSource = null;
+                throw;
+            }
+            catch (Exception e)
+            {
+                cancellationTokenSource = null;
+
+                if ((uint) e.HResult == HRESULT_PRIVACY_STATEMENT_DECLINED)
+                {
+                    throw new AIServiceException(
+                        "You must accept privacy statement before using speech recognition.", e);
+                }
+                else
+                {
+                    throw new AIServiceException("Exception while recognition", e);
+                }
+            }
+            
         }
 
 
         public override void Cancel()
         {
-            currentOperation?.Cancel();
+            cancellationTokenSource?.Cancel();
         }
 
         public override async Task<AIResponse> TextRequestAsync(AIRequest request)
@@ -229,23 +228,20 @@ namespace ApiAiSDK
             return await dataService.RequestAsync(request);
         }
 
-        private async Task ProcessRecognitionResultsAsync(SpeechRecognitionResult results, RequestExtras requestExtras)
+        private async Task<AIResponse> ProcessRecognitionResultsAsync(SpeechRecognitionResult results, RequestExtras requestExtras, CancellationToken cancellationToken)
         {
             if (!string.IsNullOrWhiteSpace(results.Text))
             {
                 var request = CreateAIRequest(results);
 
-                try
-                {
-                    requestExtras?.CopyTo(request);
+                requestExtras?.CopyTo(request);
 
-                    var response = await dataService.RequestAsync(request);
-                    FireOnResult(response);
-                }
-                catch (Exception e)
-                {
-                    FireOnError(new AIServiceException(e));
-                }
+                var response = await dataService.RequestAsync(request, cancellationToken);
+                return response;   
+            }
+            else
+            {
+                return null;
             }
         }
         
@@ -287,5 +283,23 @@ namespace ApiAiSDK
             }
         }
 
+        public override void Dispose()
+        {
+            base.Dispose();
+
+            if (cancellationTokenSource != null)
+            {
+                cancellationTokenSource.Cancel();
+                cancellationTokenSource.Dispose();
+                cancellationTokenSource = null;
+            }
+            
+            lock (speechRecognizerLock)
+            {
+                speechRecognizer?.Dispose();
+                speechRecognizer = null;
+            }
+            
+        }
     }
 }

@@ -34,6 +34,13 @@ namespace ApiAiSDK
         private AIConfiguration config;
 
         private readonly string sessionId;
+        public string SessionId
+        {
+            get
+            {
+                return sessionId;
+            }
+        }
 
         public AIDataService(AIConfiguration config)
         {

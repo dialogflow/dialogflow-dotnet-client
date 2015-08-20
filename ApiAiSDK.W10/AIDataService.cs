@@ -22,9 +22,12 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
 using Windows.Web.Http;
+using Windows.Web.Http.Headers;
 using ApiAiSDK.Model;
 using Newtonsoft.Json;
 
@@ -73,9 +76,19 @@ namespace ApiAiSDK
             sessionId = Guid.NewGuid().ToString();
 
             httpClient = new HttpClient();
+
+            httpClient.DefaultRequestHeaders.Authorization = new HttpCredentialsHeaderValue("Bearer", config.ClientAccessToken);
+            httpClient.DefaultRequestHeaders.Accept.Add(new HttpMediaTypeWithQualityHeaderValue("application/json"));
+            httpClient.DefaultRequestHeaders.Append("ocp-apim-subscription-key", config.SubscriptionKey);
+
         }
 
         public async Task<AIResponse> RequestAsync(AIRequest request)
+        {
+            return await RequestAsync(request, CancellationToken.None);
+        }
+
+        public async Task<AIResponse> RequestAsync(AIRequest request, CancellationToken cancellationToken)
         {
 
             request.Language = config.Language.code;
@@ -92,9 +105,8 @@ namespace ApiAiSDK
                 }
 
                 var content = new HttpStringContent(jsonRequest, UnicodeEncoding.Utf8, "application/json");
-                SetupCommonHeaders(content);
 
-                var response = await httpClient.PostAsync(new Uri(config.RequestUrl), content);
+                var response = await httpClient.PostAsync(new Uri(config.RequestUrl), content).AsTask(cancellationToken);
                 return await ProcessResponse(response);
 
             }
@@ -134,7 +146,6 @@ namespace ApiAiSDK
             try
             {
                 var content = new HttpMultipartFormDataContent();
-                SetupCommonHeaders(content);
                 
                 var jsonRequest = JsonConvert.SerializeObject(request, Formatting.None, jsonSettings);
 
@@ -155,18 +166,32 @@ namespace ApiAiSDK
             }
         }
 
-        private void SetupCommonHeaders(IHttpContent content)
+        public async Task<bool> ResetContextsAsync()
         {
-            content.Headers.Append("Authorization", $"Bearer {config.ClientAccessToken}");
-            content.Headers.Append("ocp-apim-subscription-key", config.SubscriptionKey);
-            content.Headers.Append("Accept", "application/json");
+            var cleanRequest = new AIRequest("empty_query_for_resetting_contexts");
+            cleanRequest.ResetContexts = true;
+            try
+            {
+                var response = await RequestAsync(cleanRequest);
+                return !response.IsError;
+            }
+            catch (AIServiceException e)
+            {
+                Debug.WriteLine("Exception while contexts clean." + e);
+                return false;
+            }
         }
 
-        private async Task<AIResponse> ProcessResponse(HttpResponseMessage response)
+        private Task<AIResponse> ProcessResponse(HttpResponseMessage response)
+        {
+            return ProcessResponse(response, CancellationToken.None);
+        }
+
+        private async Task<AIResponse> ProcessResponse(HttpResponseMessage response, CancellationToken cancellationToken)
         {
             if (response.IsSuccessStatusCode)
             {
-                var stringResult = await response.Content.ReadAsStringAsync();
+                var stringResult = await response.Content.ReadAsStringAsync().AsTask(cancellationToken);
                 if (config.DebugLog)
                 {
                     Debug.WriteLine($"Response: {stringResult}");
