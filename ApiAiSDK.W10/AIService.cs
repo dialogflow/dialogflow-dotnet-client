@@ -29,22 +29,18 @@ using Windows.ApplicationModel.VoiceCommands;
 using Windows.Storage;
 using ApiAiSDK.Model;
 using ApiAiSDK.Util;
+using Newtonsoft.Json;
 
 namespace ApiAiSDK
 {
+    /// <summary>
+    /// Class for simplifying interaction with api.ai service. Includes high-level functions for recognition. 
+    /// Could use UI.
+    /// </summary>
     public abstract class AIService : IDisposable
     {
-        protected readonly AIDataService dataService;
+        public AIDataService DataService { get; }
         protected readonly AIConfiguration config;
-
-        /// <summary>
-        /// Unique SessionId. Normally should not be changed.
-        /// </summary>
-        public string SessionId
-        {
-            get { return dataService.SessionId; }
-            set { dataService.SessionId = value; }
-        }
 
         public static AIService CreateService(AIConfiguration config)
         {
@@ -59,10 +55,16 @@ namespace ApiAiSDK
         protected AIService(AIConfiguration config)
         {
             this.config = config;
-            dataService = new AIDataService(config);
+            DataService = new AIDataService(config);
         }
 
-        public async Task ProcessOnActivated(IActivatedEventArgs e)
+        /// <summary>
+        /// Process Activation event args of Application. Restore context is needed. Returns previous api.ai response.
+        /// </summary>
+        /// <param name="e"></param>
+        /// <exception cref="AIServiceException">If request to the api.ai failed</exception>
+        /// <returns></returns>
+        public async Task<AIResponse> ProcessOnActivatedAsync(IActivatedEventArgs e)
         {
             string callParameter;
 
@@ -74,8 +76,10 @@ namespace ApiAiSDK
                 callParameter = commandArgs.Result?.Text;
                 if (callParameter != null)
                 {
-                    await TextRequestAsync(callParameter);
+                    return await TextRequestAsync(callParameter);
                 }
+
+                return null;
             }
             else
             {
@@ -83,7 +87,8 @@ namespace ApiAiSDK
                 // we should restore SessionId, stored from 
                 // VoiceCommandService
 
-                // TODO
+                DataService.RestoreSessionId();
+                
                 var protocolArgs = e as ProtocolActivatedEventArgs;
                 callParameter = protocolArgs?.Uri?.Query;
 
@@ -91,7 +96,19 @@ namespace ApiAiSDK
                 {
                     callParameter = callParameter.Substring("?LaunchContext=".Length);
                     callParameter = Uri.UnescapeDataString(callParameter);
+
+                    try
+                    {
+                        var aiResponse = JsonConvert.DeserializeObject<AIResponse>(callParameter);
+                        return aiResponse;
+                    }
+                    catch (Exception)
+                    {
+                        return null;
+                    }
                 }
+
+                return null;
             }
         }
 

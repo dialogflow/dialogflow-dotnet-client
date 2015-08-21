@@ -225,7 +225,7 @@ namespace ApiAiSDK
 
         public override async Task<AIResponse> TextRequestAsync(AIRequest request)
         {
-            return await dataService.RequestAsync(request);
+            return await DataService.RequestAsync(request);
         }
 
         private async Task<AIResponse> ProcessRecognitionResultsAsync(SpeechRecognitionResult results, RequestExtras requestExtras, CancellationToken cancellationToken)
@@ -236,7 +236,7 @@ namespace ApiAiSDK
 
                 requestExtras?.CopyTo(request);
 
-                var response = await dataService.RequestAsync(request, cancellationToken);
+                var response = await DataService.RequestAsync(request, cancellationToken);
                 return response;   
             }
             else

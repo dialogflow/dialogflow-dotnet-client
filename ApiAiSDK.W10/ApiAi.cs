@@ -20,34 +20,30 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.VoiceCommands;
 using ApiAiSDK.Model;
+using Newtonsoft.Json;
 
 namespace ApiAiSDK
 {
+    /// <summary>
+    /// Class for making simple api.ai requests and performing utility operations. Doesn't use any UI.
+    /// </summary>
     public class ApiAi : ApiAiBase
     {
         private AIConfiguration config;
-        private AIDataService dataService;
-
-        /// <summary>
-        /// Unique SessionId. Normally should not be changed.
-        /// </summary>
-        public string SessionId
-        {
-            get { return dataService.SessionId; }
-            set { dataService.SessionId = value; }
-        }
-
-
+        public AIDataService DataService { get; }
+        
         public ApiAi(AIConfiguration config)
         {
             this.config = config;
 
-            dataService = new AIDataService(this.config);
+            DataService = new AIDataService(this.config);
         }
 
         public async Task<AIResponse> TextRequestAsync(string text)
@@ -77,12 +73,12 @@ namespace ApiAiSDK
                 throw new ArgumentNullException(nameof(request));
             }
 
-            return await dataService.RequestAsync(request);
+            return await DataService.RequestAsync(request);
         }
 
         public async Task<AIResponse> VoiceRequestAsync(Stream voiceStream, RequestExtras requestExtras = null)
         {
-            return await dataService.VoiceRequestAsync(voiceStream, requestExtras);
+            return await DataService.VoiceRequestAsync(voiceStream, requestExtras);
         }
 
         public async Task<AIResponse> VoiceRequest(float[] samples)
@@ -115,6 +111,55 @@ namespace ApiAiSDK
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Make Cortana to speech api.ai response.
+        /// </summary>
+        /// <param name="voiceServiceConnection"></param>
+        /// <param name="aiResponse"></param>
+        /// <returns></returns>
+        public async Task SendResponseToCortanaAsync(VoiceCommandServiceConnection voiceServiceConnection, AIResponse aiResponse)
+        {
+            var textResponse = aiResponse.Result.Fulfillment?.Speech ?? string.Empty;
+            var userMessage = new VoiceCommandUserMessage
+            {
+                DisplayMessage = textResponse,
+                SpokenMessage = textResponse
+            };
+
+            var response = VoiceCommandResponse.CreateResponse(userMessage);
+
+            // Cortana will present a “Go to app_name” link that the user 
+            // can tap to launch the app. 
+            // Pass in a launch to enable the app to deep link to a page 
+            // relevant to the voice command.
+            //response.AppLaunchArgument =
+            //  string.Format("destination={0}”, “Las Vegas");
+
+            await voiceServiceConnection.ReportSuccessAsync(response);
+        }
+
+        /// <summary>
+        /// Launch app and pass the appropriate parameters to it
+        /// </summary>
+        /// <param name="voiceServiceConnection"></param>
+        /// <param name="aiResponse"></param>
+        /// <returns></returns>
+        public async Task LaunchAppInForegroundAsync(VoiceCommandServiceConnection voiceServiceConnection, AIResponse aiResponse)
+        {
+            var textMessage = aiResponse?.Result?.Fulfillment?.Speech ?? string.Empty;
+
+            var userMessage = new VoiceCommandUserMessage
+            {
+                SpokenMessage = textMessage,
+                DisplayMessage = textMessage
+            };
+
+            var response = VoiceCommandResponse.CreateResponse(userMessage);
+            response.AppLaunchArgument = JsonConvert.SerializeObject(aiResponse, Formatting.Indented);
+            
+            await voiceServiceConnection.RequestAppLaunchAsync(response);
         }
     }
 }

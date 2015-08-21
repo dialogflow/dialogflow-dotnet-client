@@ -25,6 +25,7 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.Web.Http;
 using Windows.Web.Http.Headers;
@@ -35,6 +36,8 @@ namespace ApiAiSDK
 {
     public class AIDataService
     {
+        private const string SESSIONID_SETTING = "api_ai_SessionId";
+
         private readonly JsonSerializerSettings jsonSettings = new JsonSerializerSettings
         {
             NullValueHandling = NullValueHandling.Ignore
@@ -179,6 +182,31 @@ namespace ApiAiSDK
             {
                 Debug.WriteLine("Exception while contexts clean." + e);
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// Persist sessionId to LocalSettings. Later sessionId could be restored using RestoreSessionId()
+        /// </summary>
+        public void PersistSessionId()
+        {
+            var localSettings = ApplicationData.Current.LocalSettings;
+            localSettings.Values[SESSIONID_SETTING] = sessionId;
+        }
+
+        /// <summary>
+        /// Restore sessionId from LocalSettings
+        /// </summary>
+        public void RestoreSessionId()
+        {
+            var localSettings = ApplicationData.Current.LocalSettings;
+            if (localSettings.Values.ContainsKey(SESSIONID_SETTING))
+            {
+                var restoredSessionId = Convert.ToString(localSettings.Values[SESSIONID_SETTING]);
+                if (!string.IsNullOrEmpty(restoredSessionId) && restoredSessionId.Length > 30)
+                {
+                    SessionId = restoredSessionId;
+                }
             }
         }
 
