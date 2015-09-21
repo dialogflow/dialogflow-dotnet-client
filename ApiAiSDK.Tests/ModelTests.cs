@@ -21,13 +21,14 @@ using System;
 using NUnit.Framework;
 using Newtonsoft.Json;
 using ApiAiSDK.Model;
+using Newtonsoft.Json.Linq;
 
 namespace ApiAiSDK.Tests
 {
     [TestFixture]
     public class ModelTests
     {
-        private const string TEST_DATA = "{\"id\":\"2d2d947b-6ccd-4615-8f16-59b8bfc0fa6b\",\"timestamp\":\"2015-04-13T11:03:43.023Z\",\"result\":{\"source\":\"agent\",\"resolvedQuery\":\"test params 1.23\",\"speech\":\"\",\"action\":\"test_params\",\"parameters\":{\"number\":\"1.23\", \"integer\":\"17\", \"str\":\"string value\"},\"contexts\":[],\"metadata\":{\"intentId\":\"46a278fb-0ffc-4748-aa9a-5563d89199ee\",\"intentName\":\"test params\"}},\"status\":{\"code\":200,\"errorType\":\"success\"}}";
+        private const string TEST_DATA = "{\"id\":\"2d2d947b-6ccd-4615-8f16-59b8bfc0fa6b\",\"timestamp\":\"2015-04-13T11:03:43.023Z\",\"result\":{\"source\":\"agent\",\"resolvedQuery\":\"test params 1.23\",\"speech\":\"\",\"action\":\"test_params\",\"parameters\":{\"number\":\"1.23\", \"integer\":\"17\", \"str\":\"string value\", \"complex_param\":{\"nested_key\": \"nested_value\"}},\"contexts\":[],\"metadata\":{\"intentId\":\"46a278fb-0ffc-4748-aa9a-5563d89199ee\",\"intentName\":\"test params\"}},\"status\":{\"code\":200,\"errorType\":\"success\"}}";
 
         [Test]
         public void TestResultGetString()
@@ -69,6 +70,20 @@ namespace ApiAiSDK.Tests
 
             Assert.AreEqual(5f, response.Result.GetFloatParameter("str", 5f), float.Epsilon);
             Assert.AreEqual(0, response.Result.GetFloatParameter("str"));
+        }
+
+        [Test]
+        public void TestResultGetComplex()
+        {
+            var response = JsonConvert.DeserializeObject<AIResponse>(TEST_DATA);
+
+            var complexParam = response.Result.GetJsonParameter("complex_param");
+            Assert.IsNotNull(complexParam);
+
+            var nestedToken = complexParam["nested_key"] as JValue;
+            Assert.NotNull(nestedToken);
+            Assert.AreEqual(JTokenType.String, nestedToken.Type);
+            Assert.AreEqual("nested_value", nestedToken.ToString());
         }
     }
 }
