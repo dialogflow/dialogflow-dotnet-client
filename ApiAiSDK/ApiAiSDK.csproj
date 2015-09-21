@@ -62,6 +62,8 @@
     <Compile Include="Model\Entity.cs" />
     <Compile Include="Model\EntityEntry.cs" />
     <Compile Include="Model\AIContext.cs" />
+    <Compile Include="Util\VoiceActivityDetectorV2.cs" />
+    <Compile Include="Util\FFT2.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
