@@ -30,12 +30,23 @@ namespace ApiAiSDK
     {
         int sampleRate;
         const int frameSize = 10;
+
+        const int startSilenceFramesCount = 30;
+
         // frame size in ms
         readonly int samplesInFrame;
+
+        int silenceFramesCount = 0;
 
         int energyPrimThresh = 40;
         int fPrimTresh = 185;
         int sfPrimTresh = 5;
+
+        int frameNumber;
+
+        double minE;
+        double minF;
+        double minSF;
 
         public bool Enabled { get; set; }
 
@@ -65,13 +76,62 @@ namespace ApiAiSDK
                 var frame = new short[samplesInFrame];
                 Array.Copy(shortBuffer, samplesInFrame * i, frame, 0, samplesInFrame);
                 ProcessFrame(frame);
+
             }
         }
 
 
         private void ProcessFrame(short[] frame)
         {
+            frameNumber++;
+
             var frameEnergy = CalcFrameEnergy(frame);
+            var frameSpectralFlatness = CalcSpectralFlatness(frame);
+            var frameDominantFrequence = CalcDominantFrequence(frame);
+
+            if (frameNumber <= startSilenceFramesCount)
+            {
+                minE = Math.Min(minE, frameEnergy);
+                minSF = Math.Min(minSF, frameSpectralFlatness);
+                minF = Math.Min(minF, frameDominantFrequence);
+
+                return;
+            }
+
+            var threshE = energyPrimThresh * Math.Log10(minE);
+            var threshF = fPrimTresh;
+            var threshSF = sfPrimTresh;
+
+            var counter = 0;
+
+            if (frameEnergy - minE >= threshE)
+            {
+                counter++;
+            }
+
+            if (frameDominantFrequence - minF >= threshF)
+            {
+                counter++;
+            }
+
+            if (frameSpectralFlatness - minSF >= threshSF)
+            {
+                counter++;
+            }
+
+            if (counter > 1)
+            {
+                // speech
+            }
+            else
+            {
+                // silence
+
+                silenceFramesCount++;
+
+                minE = ((silenceFramesCount * minE) + frameEnergy) / (silenceFramesCount + 1);
+                threshE = energyPrimThresh * Math.Log10(minE);
+            }
 
         }
 
@@ -84,6 +144,16 @@ namespace ApiAiSDK
                 sum += Math.Pow(frame[i] * hammingWindow(n - i), 2);
             }
             return sum;
+        }
+
+        double CalcSpectralFlatness(short[] frame)
+        {
+            throw new NotImplementedException();
+        }
+
+        double CalcDominantFrequence(short[] frame)
+        {
+            throw new NotImplementedException();
         }
 
         private double hammingWindow(int n)
