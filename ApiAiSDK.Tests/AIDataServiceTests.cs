@@ -194,6 +194,7 @@ namespace ApiAiSDK.Tests
         }
 
         [Test]
+        [ExpectedException(typeof(AIServiceException))]
         public void WrongEntitiesTest()
         {
             var config = new AIConfiguration(SUBSCRIPTION_KEY, ACCESS_TOKEN, SupportedLanguage.English);
@@ -209,15 +210,28 @@ namespace ApiAiSDK.Tests
 
             aiRequest.Entities = extraEntities;
 
-            try
-            {
-                var aiResponse = MakeRequest(dataService, aiRequest);
-                Assert.True(false, "Request should throws bad_request exception");
-            }
-            catch(AIServiceException e)
-            {
-                Assert.IsTrue(true);
-            }
+            MakeRequest(dataService, aiRequest);
+        }
+
+        [Test]
+        public void ComplexParameterTest()
+        {
+            var config = new AIConfiguration(SUBSCRIPTION_KEY, 
+                "23e7d37f6dd24e4eb7dbbd7491f832cf", // special agent with domains
+                SupportedLanguage.English);
+            
+            var dataService = new AIDataService(config);
+
+            var aiRequest = new AIRequest("Turn off TV at 7pm");
+            var response = MakeRequest(dataService, aiRequest);
+
+            Assert.AreEqual("domains", response.Result.Source);
+            Assert.AreEqual("smarthome.appliances_off", response.Result.Action);
+
+            var actionCondition = response.Result.GetJsonParameter("action_condition");
+
+            var timeToken = actionCondition.SelectToken("time");
+            Assert.IsNotNull(timeToken);
         }
 
 		private AIResponse MakeRequest(AIDataService service, AIRequest request)
