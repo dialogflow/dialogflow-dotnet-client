@@ -137,9 +137,12 @@
       <Link>Util\VoiceActivityDetector.cs</Link>
     </Compile>
     <Compile Include="AIDataService.cs" />
+    <Compile Include="AIService.cs" />
     <Compile Include="ApiAi.cs" />
     <Compile Include="Http\MultipartHttpClient.cs" />
+    <Compile Include="PrivacyStatementDeclinedException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SystemRecognitionService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json">
