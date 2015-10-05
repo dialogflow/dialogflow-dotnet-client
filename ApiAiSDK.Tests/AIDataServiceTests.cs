@@ -234,6 +234,33 @@ namespace ApiAiSDK.Tests
             Assert.IsNotNull(timeToken);
         }
 
+        [Test]
+	    public void InputContextWithParametersTest()
+	    {
+            var config = new AIConfiguration(SUBSCRIPTION_KEY, ACCESS_TOKEN, SupportedLanguage.English);
+            var dataService = new AIDataService(config);
+
+            var aiRequest = new AIRequest("and for tomorrow");
+            var aiContext = new AIContext
+            {
+                Name = "weather",
+                Parameters = new Dictionary<string,string>
+                {
+                    { "location", "London"}
+                }
+            };
+
+            aiRequest.Contexts =
+                new List<AIContext>
+                {
+                    aiContext
+                };
+
+            var response = MakeRequest(dataService, aiRequest);
+
+            Assert.AreEqual("Weather in London for tomorrow", response.Result.Fulfillment.Speech);
+	    }
+
 		private AIResponse MakeRequest(AIDataService service, AIRequest request)
 		{
 			var aiResponse = service.Request(request);

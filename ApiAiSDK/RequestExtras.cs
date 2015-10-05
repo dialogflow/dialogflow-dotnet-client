@@ -69,8 +69,7 @@ namespace ApiAiSDK
         {
             if (HasContexts)
             {
-                var contextsList = Contexts.Select(c => c.Name).ToList();
-                request.Contexts = contextsList;
+                request.Contexts = Contexts;
             }
 
             if (HasEntities)
