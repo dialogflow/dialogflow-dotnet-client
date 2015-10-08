@@ -165,7 +165,7 @@ namespace ApiAiSDK.Model
                 throw new ArgumentException("Name must be not empty", nameof(name));
             }
 
-            return Contexts?.FirstOrDefault(c => string.Equals(c.Name, name, StringComparison.InvariantCultureIgnoreCase));
+            return Contexts?.FirstOrDefault(c => string.Equals(c.Name, name, StringComparison.CurrentCultureIgnoreCase));
         }
 
 		public Result ()
