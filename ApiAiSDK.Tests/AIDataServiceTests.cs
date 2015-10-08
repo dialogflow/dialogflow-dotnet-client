@@ -36,10 +36,9 @@ namespace ApiAiSDK.Tests
 		[Test]
 		public void TextRequestTest()
 		{
-			var config = new AIConfiguration(SUBSCRIPTION_KEY, ACCESS_TOKEN, SupportedLanguage.English);
-			var dataService = new AIDataService(config);
+			var dataService = CreateDataService();
 
-			var request = new AIRequest("Hello");
+		    var request = new AIRequest("Hello");
 			
 			var response = dataService.Request(request);
 			Assert.IsNotNull(response);
@@ -47,14 +46,20 @@ namespace ApiAiSDK.Tests
             Assert.AreEqual("Hi! How are you?", response.Result.Fulfillment.Speech);
 		}
 
-		[Test]
+	    private AIDataService CreateDataService()
+	    {
+	        var config = new AIConfiguration(SUBSCRIPTION_KEY, ACCESS_TOKEN, SupportedLanguage.English);
+	        var dataService = new AIDataService(config);
+	        return dataService;
+	    }
+
+	    [Test]
 		public void DifferentAgentsTest()
 		{
 			var query = "I want pizza";
 
 			{
-				var config = new AIConfiguration(SUBSCRIPTION_KEY, ACCESS_TOKEN, SupportedLanguage.English);
-				var dataService = new AIDataService(config);
+				var dataService = CreateDataService();
 
 				var request = new AIRequest(query);
 				
@@ -108,8 +113,7 @@ namespace ApiAiSDK.Tests
 		[Test]
 		public void ParametersTest()
 		{
-			var config = new AIConfiguration(SUBSCRIPTION_KEY, ACCESS_TOKEN, SupportedLanguage.English);
-			var dataService = new AIDataService(config);
+			var dataService = CreateDataService();
 			
 			var request = new AIRequest("what is your name");
 			
@@ -133,8 +137,7 @@ namespace ApiAiSDK.Tests
         [Test]
         public void ContextsTest()
         {
-            var config = new AIConfiguration(SUBSCRIPTION_KEY, ACCESS_TOKEN, SupportedLanguage.English);
-            var dataService = new AIDataService(config);
+            var dataService = CreateDataService();
             var aiRequest = new AIRequest("weather");
 
             dataService.ResetContexts();
@@ -149,8 +152,7 @@ namespace ApiAiSDK.Tests
         [Test]
         public void ResetContextsTest()
         {
-            var config = new AIConfiguration(SUBSCRIPTION_KEY, ACCESS_TOKEN, SupportedLanguage.English);
-            var dataService = new AIDataService(config);
+            var dataService = CreateDataService();
 
             dataService.ResetContexts();
 
@@ -173,8 +175,7 @@ namespace ApiAiSDK.Tests
         [Test]
         public void EntitiesTest()
         {
-            var config = new AIConfiguration(SUBSCRIPTION_KEY, ACCESS_TOKEN, SupportedLanguage.English);
-            var dataService = new AIDataService(config);
+            var dataService = CreateDataService();
 
             var aiRequest = new AIRequest("hi nori");
 
@@ -197,8 +198,7 @@ namespace ApiAiSDK.Tests
         [ExpectedException(typeof(AIServiceException))]
         public void WrongEntitiesTest()
         {
-            var config = new AIConfiguration(SUBSCRIPTION_KEY, ACCESS_TOKEN, SupportedLanguage.English);
-            var dataService = new AIDataService(config);
+            var dataService = CreateDataService();
 
             var aiRequest = new AIRequest("hi nori");
 
@@ -237,8 +237,7 @@ namespace ApiAiSDK.Tests
         [Test]
 	    public void InputContextWithParametersTest()
 	    {
-            var config = new AIConfiguration(SUBSCRIPTION_KEY, ACCESS_TOKEN, SupportedLanguage.English);
-            var dataService = new AIDataService(config);
+            var dataService = CreateDataService();
 
             var aiRequest = new AIRequest("and for tomorrow");
             var aiContext = new AIContext
@@ -260,6 +259,67 @@ namespace ApiAiSDK.Tests
 
             Assert.AreEqual("Weather in London for tomorrow", response.Result.Fulfillment.Speech);
 	    }
+
+        [Test]
+        public void ContextLifespanTest()
+        {
+            var dataService = CreateDataService();
+            var aiResponse = MakeRequest(dataService, new AIRequest("weather in london"));
+            Assert.AreEqual(2, aiResponse.Result.GetContext("shortContext").Lifespan.Value);
+            Assert.AreEqual(5, aiResponse.Result.GetContext("weather").Lifespan.Value);
+            Assert.AreEqual(10, aiResponse.Result.GetContext("longContext").Lifespan.Value);
+
+            for (int i = 0; i < 3; i++)
+            {
+                aiResponse = MakeRequest(dataService, new AIRequest("another request"));
+            }
+            Assert.IsNull(aiResponse.Result.GetContext("shortContext"));
+            Assert.IsNotNull(aiResponse.Result.GetContext("weather"));
+            Assert.IsNotNull(aiResponse.Result.GetContext("longContext"));
+
+            for (int i = 0; i < 3; i++)
+            {
+                aiResponse = MakeRequest(dataService, new AIRequest("another request"));
+            }
+            Assert.IsNull(aiResponse.Result.GetContext("shortContext"));
+            Assert.IsNull(aiResponse.Result.GetContext("weather"));
+            Assert.IsNotNull(aiResponse.Result.GetContext("longContext"));
+        }
+
+        [Test]
+        public void InputContextLifespanTest()
+        {
+            var dataService = CreateDataService();
+            var aiRequest = new AIRequest("and for tomorrow");
+            var aiContext = new AIContext
+            {
+                Name = "weather",
+                Parameters = new Dictionary<string, string>
+                {
+                    { "location", "London"}
+                },
+                Lifespan = 2
+            };
+
+            aiRequest.Contexts =
+                new List<AIContext>
+                {
+                    aiContext
+                };
+
+            var response = MakeRequest(dataService, aiRequest);
+            Assert.IsNotNull(response.Result.GetContext("weather"));
+
+            for (int i = 0; i < 2; i++)
+            {
+                response = MakeRequest(dataService, new AIRequest("next request"));
+            }
+
+            Assert.IsNotNull(response.Result.GetContext("weather"));
+            response = MakeRequest(dataService, new AIRequest("next request"));
+            Assert.IsNull(response.Result.GetContext("weather"));
+        }
+
 
 		private AIResponse MakeRequest(AIDataService service, AIRequest request)
 		{
