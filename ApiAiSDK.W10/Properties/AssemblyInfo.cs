@@ -1,29 +1,21 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using ApiAiSDK;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("ApiAiSDK.W10")]
-[assembly: AssemblyDescription("")]
+
+[assembly: AssemblyTitle(LibraryInfo.Title)]
+[assembly: AssemblyDescription(LibraryInfo.Description)]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("ApiAiSDK.W10")]
-[assembly: AssemblyCopyright("Copyright Speaktoit© 2015")]
+[assembly: AssemblyCompany(LibraryInfo.Company)]
+[assembly: AssemblyProduct(LibraryInfo.Product)]
+[assembly: AssemblyCopyright(LibraryInfo.Copyright)]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
+[assembly: AssemblyVersion(LibraryInfo.Version)]
+[assembly: AssemblyFileVersion(LibraryInfo.Version)]
 
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version 
-//      Build Number
-//      Revision
-//
-// You can specify all the values or you can default the Build and Revision Numbers 
-// by using the '*' as shown below:
-// [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.4.1.0")]
-[assembly: AssemblyFileVersion("1.4.1.0")]
 [assembly: ComVisible(false)]

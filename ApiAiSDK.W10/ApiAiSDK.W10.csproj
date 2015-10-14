@@ -122,6 +122,9 @@
     <Compile Include="..\ApiAiSDK\ApiAiBase.cs">
       <Link>ApiAiBase.cs</Link>
     </Compile>
+    <Compile Include="..\ApiAiSDK\LibraryInfo.cs">
+      <Link>LibraryInfo.cs</Link>
+    </Compile>
     <Compile Include="..\ApiAiSDK\Model\AIContext.cs">
       <Link>Model\AIContext.cs</Link>
     </Compile>
