@@ -16,3 +16,7 @@ ApiAiSDK.W10/obj
 *.suo
 /ApiAiSDK.W10.Tests/obj
 /ApiAiSDK.W10.Tests/bin
+api-ai-net.sln.DotSettings.user
+/.vs/config
+/ApiAiSDK.W10/.vs/config
+.DS_Store

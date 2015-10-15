@@ -21,6 +21,7 @@
 using System;
 using System.Globalization;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -142,7 +143,7 @@ namespace ApiAiSDK.Model
         {
             if (string.IsNullOrEmpty("name"))
             {
-                throw new ArgumentNullException("name");        
+                throw new ArgumentNullException(nameof(name));        
             }
 
             if (Parameters.ContainsKey(name))
@@ -155,6 +156,16 @@ namespace ApiAiSDK.Model
             }
 
             return defaultValue;
+        }
+
+        public AIOutputContext GetContext(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentException("Name must be not empty", nameof(name));
+            }
+
+            return Contexts?.FirstOrDefault(c => string.Equals(c.Name, name, StringComparison.CurrentCultureIgnoreCase));
         }
 
 		public Result ()

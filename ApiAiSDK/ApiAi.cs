@@ -67,6 +67,11 @@ namespace ApiAiSDK
 
 		public AIResponse VoiceRequest(Stream voiceStream, RequestExtras requestExtras = null)
 		{
+		    if (config.Language == SupportedLanguage.Italian)
+		    {
+		        throw new AIServiceException("Sorry, but Italian language now is not supported in Speaktoit recognition. Please use some another speech recognition engine.");
+		    }
+
 			return dataService.VoiceRequest(voiceStream, requestExtras);
 		}
 

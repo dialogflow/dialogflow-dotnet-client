@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ApiAiSDK</RootNamespace>
-    <AssemblyName>ApiAiSDK.W10</AssemblyName>
+    <AssemblyName>ApiAiSDK</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion>10.0.10240.0</TargetPlatformVersion>
@@ -121,6 +121,9 @@
     </Compile>
     <Compile Include="..\ApiAiSDK\ApiAiBase.cs">
       <Link>ApiAiBase.cs</Link>
+    </Compile>
+    <Compile Include="..\ApiAiSDK\LibraryInfo.cs">
+      <Link>LibraryInfo.cs</Link>
     </Compile>
     <Compile Include="..\ApiAiSDK\Model\AIContext.cs">
       <Link>Model\AIContext.cs</Link>

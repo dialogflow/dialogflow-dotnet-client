@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>ApiAiSDK</id>
-    <version>1.3.2</version>
+    <version>1.5.0</version>
     <title>ApiAiSDK</title>
     <authors>Speaktoit</authors>
     <owners>Speaktoit</owners>
@@ -11,17 +11,18 @@
     <iconUrl>http://api.ai/assets/ico/favicon-e15c6e41317c4ff907cc983a5c8676d9.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Library provides simple programming interface for making text and voice requests to the API.AI service.</description>
-    <releaseNotes>Added user entities support, removed SSL workaround</releaseNotes>
+    <releaseNotes>Add parameters to input contexts, add Lifespan property to contexts</releaseNotes>
     <copyright>2015 Speaktoit, Inc.</copyright>
     <tags>natural language processing</tags>
 
     <dependencies>
-      <dependency id="Newtonsoft.Json" version="6.0.8" />
+      <dependency id="Newtonsoft.Json" version="7.0.1" />
     </dependencies>
 
   </metadata>
   <files>
     <file src="ApiAiSDK/bin/Release/ApiAiSDK.dll" target="lib/net35" />
     <file src="ApiAiSDK.WP8/bin/Release/ApiAiSDK.dll" target="lib/wpa" />
+    <file src="ApiAiSDK.W10/bin/Release/ApiAiSDK.dll" target="lib/uap10.0" />
   </files>
 </package>

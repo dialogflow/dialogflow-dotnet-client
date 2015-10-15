@@ -1,5 +1,5 @@
 ﻿//
-//  API.AI .NET SDK - client-side libraries for API.AI
+//  API.AI SDK - client-side libraries for API.AI
 //  =================================================
 //
 //  Copyright (C) 2015 by Speaktoit, Inc. (https://www.speaktoit.com)
@@ -17,30 +17,23 @@
 //  specific language governing permissions and limitations under the License.
 //
 //  ***********************************************************************************************************************
+
 using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace ApiAiSDK.Model
+namespace ApiAiSDK
 {
-    [JsonObject]
-    public class AIContext
+    public class PrivacyStatementDeclinedException : Exception
     {
-        [JsonProperty("name")]
-        public string Name { get; set; }
+        public PrivacyStatementDeclinedException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
 
-        [JsonProperty("parameters")]
-        public Dictionary<string, string> Parameters { get; set; }
-
-        /// <summary>
-        /// Lifespan of the context measured in requests
-        /// </summary>
-        [JsonProperty("lifespan")]
-        public int? Lifespan { get; set; }
-
-        public AIContext()
+        public PrivacyStatementDeclinedException()
         {
         }
     }
 }
-
