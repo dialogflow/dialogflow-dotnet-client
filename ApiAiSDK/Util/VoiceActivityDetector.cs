@@ -20,12 +20,25 @@
 
 using System;
 using System.Diagnostics;
+using System.Text;
 
 namespace ApiAiSDK.Util
 {
     public class VoiceActivityDetector
     {
+        private readonly string TAG = typeof(VoiceActivityDetector).Name;
+
         private readonly int sampleRate;
+
+        /// <summary>
+        /// 160 samples * 2 bytes per sample
+        /// </summary>
+        private const int REQUIRED_BUFFER_SIZE = 320; 
+
+        private const double frameLengthMillis = REQUIRED_BUFFER_SIZE / 2 / 16;
+
+        private const int minCZ = (int)(5 * frameLengthMillis / 10);
+        private const int maxCZ = minCZ * 3;
 
         private double averageNoiseEnergy = 0.0;
         private double lastActiveTime = -1.0;
@@ -33,13 +46,13 @@ namespace ApiAiSDK.Util
         private int sequenceCounter = 0;
         private double time = 0.0;
 
-        private readonly double sequenceLengthMilis = 100.0;
+        private readonly double sequenceLengthMilis = 30.0;
         private readonly int minSpeechSequenceCount = 3;
 
-        private const double energyFactor = 1.1;
+        private const double energyFactor = 3.1;
 
-        private const double maxSilenceLengthMilis = 0.35 * 1000;
-        private const double minSilenceLengthMilis = 0.08 * 1000;
+        private const double maxSilenceLengthMilis = 3.5 * 1000;
+        private const double minSilenceLengthMilis = 0.8 * 1000;
 
         private double silenceLengthMilis = maxSilenceLengthMilis;
 
@@ -50,7 +63,14 @@ namespace ApiAiSDK.Util
 
         public event Action SpeechBegin;
         public event Action SpeechEnd;
+        public event Action SpeechNotDetected;
         public event Action<float> AudioLevelChange;
+
+        public double SpeechBeginTime { get; private set; }
+        public double SpeechEndTime { get; private set; }
+
+        private readonly byte[] bufferToProcess = new byte[REQUIRED_BUFFER_SIZE];
+        private byte[] tempBuffer = null;
 
         public VoiceActivityDetector(int sampleRate)
         {
@@ -58,8 +78,47 @@ namespace ApiAiSDK.Util
             Enabled = true; // default value
         }
 
-        public void ProcessBuffer(byte[] buffer, int bytesRead) {
+        public void ProcessBufferEx(byte[] buffer, int bytesRead)
+        {
+            if (bytesRead > 0)
+            {
+                byte[] sourceBuffer;
 
+                if (tempBuffer == null)
+                {
+                    sourceBuffer = buffer;
+                }
+                else
+                {
+                    sourceBuffer = new byte[tempBuffer.Length + buffer.Length];
+                    Array.Copy(tempBuffer, 0, sourceBuffer, 0, tempBuffer.Length);
+                    Array.Copy(buffer, 0, sourceBuffer, tempBuffer.Length, bytesRead);
+                }
+
+                var currentIndex = 0;
+                while (currentIndex + REQUIRED_BUFFER_SIZE < sourceBuffer.Length)
+                {
+                    Array.Copy(sourceBuffer, currentIndex, bufferToProcess, 0, REQUIRED_BUFFER_SIZE);
+                    ProcessBuffer(bufferToProcess, bufferToProcess.Length);
+                    currentIndex += REQUIRED_BUFFER_SIZE;
+                }
+
+                var bytesToSave = sourceBuffer.Length - currentIndex;
+
+                if (bytesToSave > 0)
+                {
+                    tempBuffer = new byte[bytesToSave];
+                    Array.Copy(sourceBuffer, currentIndex, tempBuffer, 0, bytesToSave);    
+                }
+                else
+                {
+                    tempBuffer = null;
+                }
+            }       
+        }
+
+        public void ProcessBuffer(byte[] buffer, int bytesRead) {
+            
             var byteBuffer = new ByteBuffer(buffer, bytesRead);
             var active = IsFrameActive(byteBuffer);
 
@@ -75,15 +134,14 @@ namespace ApiAiSDK.Util
                     if (sequenceCounter >= minSpeechSequenceCount) {
 
                         if (!speechActive) {
+                            Console.WriteLine("SPEECH BEGIN " + time);
                             OnSpeechBegin();
+
+                            speechActive = true;
                         }
 
-                        speechActive = true;
-
-                        Debug.WriteLine("LAST SPEECH " + time);
                         lastSequenceTime = time;
                         silenceLengthMilis = Math.Max(minSilenceLengthMilis, silenceLengthMilis - (maxSilenceLengthMilis - minSilenceLengthMilis) / 4);
-
                     }
                 } else {
                     sequenceCounter = 1;
@@ -92,14 +150,14 @@ namespace ApiAiSDK.Util
             } else {
                 if (time - lastSequenceTime > silenceLengthMilis) {
                     if (lastSequenceTime > 0) {
-                        Debug.WriteLine("TERMINATE: " + time);
+                        Console.WriteLine("SPEECH END: " + time);
                         if (speechActive) {
                             speechActive = false;
                             OnSpeechEnd();
                         }
-
                     } else {
-                        Debug.WriteLine("NOSPEECH: " + time);
+                        Console.WriteLine("NOSPEECH: " + time);
+                        OnSpeechNotDetected();
                     }
                 }
             }
@@ -116,8 +174,9 @@ namespace ApiAiSDK.Util
             short[] shorts = frame.ShortArray;
 
             for (int i = 0; i < frameSize; i++) {
-                var amplitudeValue = shorts[i];
-                energy += amplitudeValue * amplitudeValue / frameSize;
+                var amplitudeValue = shorts[i] / (float)short.MaxValue;
+
+                energy += amplitudeValue * amplitudeValue / (float)frameSize;
 
                 int sign;
 
@@ -133,20 +192,23 @@ namespace ApiAiSDK.Util
                 lastSign = sign;
             }
 
-            Debug.WriteLine("energy: " + energy + " " + averageNoiseEnergy);
+            if (Math.Abs(time % 100) < 1) // level feedback every 100 ms
+            {
+                var audioLevel = Math.Sqrt(energy) * 3;
+                if (audioLevel > 1)
+                {
+                    audioLevel = 1;
+                }
+                OnAudioLevelChange(Convert.ToSingle(audioLevel));    
+            }
 
-
-            OnAudioLevelChange(Convert.ToSingle(Math.Sqrt(energy / frameSize) / 10 /* normalization value */));
 
             var result = false;
             if (time < startNoiseInterval) {
-                averageNoiseEnergy = (averageNoiseEnergy + energy) / 2.0;
+                averageNoiseEnergy = averageNoiseEnergy + energy / (startNoiseInterval/frameLengthMillis);
             } else {
-                int minCZ = (int) (frameSize * (1 / 3.0));
-                int maxCZ = (int) (frameSize * (3 / 4.0));
-
                 if (czCount >= minCZ && czCount <= maxCZ) {
-                    if (energy > averageNoiseEnergy * energyFactor) {
+                    if (energy > Math.Max(averageNoiseEnergy, 0.001818) * energyFactor) {
                         result = true;
                     }
                 }
@@ -166,19 +228,29 @@ namespace ApiAiSDK.Util
             silenceLengthMilis = maxSilenceLengthMilis;
 
             speechActive = false;
+
+            SpeechBeginTime = 0;
+            SpeechEndTime = 0;
         }
 
         protected void OnSpeechBegin()
         {
+            SpeechBeginTime = time;
             SpeechBegin.InvokeSafely();
         }
 
         protected void OnSpeechEnd()
         {
+            SpeechEndTime = time;
             if (Enabled)
             {
                 SpeechEnd.InvokeSafely();    
             }
+        }
+
+        protected void OnSpeechNotDetected()
+        {
+            SpeechNotDetected?.Invoke();
         }
 
         protected void OnAudioLevelChange(float level)
