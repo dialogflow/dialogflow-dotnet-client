@@ -44,8 +44,9 @@ namespace ApiAiSDK.Util
             public uint revTgt;         // Target position post bit-reversal
         }
 
-        private uint m_logN = 0;        // log2 of FFT size
-        private uint m_N = 0;           // FFT size
+        public uint Log2Size { get; private set; } = 0;        // log2 of FFT size
+        public uint N { get; private set; } = 0;           // FFT size
+
         private FFTElement[] m_X;       // Vector of linked list elements
 
         /**
@@ -63,20 +64,20 @@ namespace ApiAiSDK.Util
         public void init(
             uint logN )
         {
-            m_logN = logN;
-            m_N = (uint)(1 << (int)m_logN);
+            Log2Size = logN;
+            N = (uint)(1 << (int)Log2Size);
 
             // Allocate elements for linked list of complex numbers.
-            m_X = new FFTElement[m_N];
-            for (uint k = 0; k < m_N; k++)
+            m_X = new FFTElement[N];
+            for (uint k = 0; k < N; k++)
                 m_X[k] = new FFTElement();
 
             // Set up "next" pointers.
-            for (uint k = 0; k < m_N-1; k++)
+            for (uint k = 0; k < N-1; k++)
                 m_X[k].next = m_X[k+1];
 
             // Specify target for bit reversal re-ordering.
-            for (uint k = 0; k < m_N; k++ )
+            for (uint k = 0; k < N; k++ )
                 m_X[k].revTgt = BitReverse(k,logN);
         }
 
@@ -92,16 +93,16 @@ namespace ApiAiSDK.Util
             double[] xIm,
             bool inverse = false )
         {
-            uint numFlies = m_N >> 1; // Number of butterflies per sub-FFT
-            uint span = m_N >> 1;     // Width of the butterfly
-            uint spacing = m_N;         // Distance between start of sub-FFTs
+            uint numFlies = N >> 1; // Number of butterflies per sub-FFT
+            uint span = N >> 1;     // Width of the butterfly
+            uint spacing = N;         // Distance between start of sub-FFTs
             uint wIndexStep = 1;        // Increment for twiddle table index
 
             // Copy data into linked complex number objects
             // If it's an IFFT, we divide by N while we're at it
             FFTElement x = m_X[0];
             uint k = 0;
-            double scale = inverse ? 1.0/m_N : 1.0;
+            double scale = inverse ? 1.0/N : 1.0;
             while (x != null)
             {
                 x.re = scale*xRe[k];
@@ -111,7 +112,7 @@ namespace ApiAiSDK.Util
             }
 
             // For each stage of the FFT
-            for (uint stage = 0; stage < m_logN; stage++)
+            for (uint stage = 0; stage < Log2Size; stage++)
             {
                 // Compute a multiplier factor for the "twiddle factors".
                 // The twiddle factors are complex unit vectors spaced at
@@ -120,13 +121,13 @@ namespace ApiAiSDK.Util
                 // implementations the twiddle factors are cached, but because
                 // array lookup is relatively slow in C#, it's just
                 // as fast to compute them on the fly.
-                double wAngleInc = wIndexStep * 2.0*Math.PI/m_N;
+                double wAngleInc = wIndexStep * 2.0*Math.PI/N;
                 if (inverse == false)
                     wAngleInc *= -1;
                 double wMulRe = Math.Cos(wAngleInc);
                 double wMulIm = Math.Sin(wAngleInc);
 
-                for (uint start = 0; start < m_N; start += spacing)
+                for (uint start = 0; start < N; start += spacing)
                 {
                     FFTElement xTop = m_X[start];
                     FFTElement xBot = m_X[start+span];

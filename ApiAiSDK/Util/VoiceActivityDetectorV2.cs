@@ -28,25 +28,27 @@ namespace ApiAiSDK
     /// </summary>
     public class VoiceActivityDetectorV2
     {
-        int sampleRate;
-        const int frameSize = 10;
+        private int sampleRate;
+        private const int frameSize = 10;
 
-        const int startSilenceFramesCount = 30;
+        private const int startSilenceFramesCount = 30;
 
         // frame size in ms
-        readonly int samplesInFrame;
+        private readonly int samplesInFrame;
 
-        int silenceFramesCount = 0;
+        private int silenceFramesCount = 0;
 
-        int energyPrimThresh = 40;
-        int fPrimTresh = 185;
-        int sfPrimTresh = 5;
+        private int energyPrimThresh = 40;
+        private int fPrimTresh = 185;
+        private int sfPrimTresh = 5;
 
-        int frameNumber;
+        private int frameNumber;
 
-        double minE;
-        double minF;
-        double minSF;
+        private double minE;
+        private double minF;
+        private double minSF;
+
+        private FFT2 fft;
 
         public bool Enabled { get; set; }
 
@@ -60,6 +62,9 @@ namespace ApiAiSDK
             this.sampleRate = sampleRate;
 
             samplesInFrame = sampleRate / (1000 / frameSize);
+
+            fft = new FFT2();
+            fft.init((uint)Math.Log(samplesInFrame, 2));
 
             Enabled = true; // default value
         }
@@ -76,7 +81,6 @@ namespace ApiAiSDK
                 var frame = new short[samplesInFrame];
                 Array.Copy(shortBuffer, samplesInFrame * i, frame, 0, samplesInFrame);
                 ProcessFrame(frame);
-
             }
         }
 
@@ -86,8 +90,10 @@ namespace ApiAiSDK
             frameNumber++;
 
             var frameEnergy = CalcFrameEnergy(frame);
-            var frameSpectralFlatness = CalcSpectralFlatness(frame);
-            var frameDominantFrequence = CalcDominantFrequence(frame);
+
+            var fftResult = CalcFFT(frame);
+            var frameSpectralFlatness = CalcSpectralFlatness(fftResult);
+            var frameDominantFrequence = CalcDominantFrequence(fftResult);
 
             if (frameNumber <= startSilenceFramesCount)
             {
@@ -146,12 +152,12 @@ namespace ApiAiSDK
             return sum;
         }
 
-        double CalcSpectralFlatness(short[] frame)
+        double CalcSpectralFlatness(FFTResult fftResult)
         {
             throw new NotImplementedException();
         }
 
-        double CalcDominantFrequence(short[] frame)
+        double CalcDominantFrequence(FFTResult fftResult)
         {
             throw new NotImplementedException();
         }
@@ -166,6 +172,23 @@ namespace ApiAiSDK
             return 1;
         }
 
+        private FFTResult CalcFFT(short[] frame)
+        {
+            // get frame part according to fft size
+            uint fftSize = fft.N;
+            var re = new double[fftSize];
+            var im = new double[fftSize];
+            Array.Copy(frame, (frame.Length - fftSize) / 2, re, 0, fftSize);
+            fft.run(re, im);
+
+            return new FFTResult { Re = re, Im = im };
+        }
+
+        private struct FFTResult
+        {
+            public double[] Re;
+            public double[] Im;
+        }
     }
 }
 
