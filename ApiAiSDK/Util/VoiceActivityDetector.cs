@@ -231,6 +231,8 @@ namespace ApiAiSDK.Util
 
             SpeechBeginTime = 0;
             SpeechEndTime = 0;
+
+            tempBuffer = null;
         }
 
         protected void OnSpeechBegin()
