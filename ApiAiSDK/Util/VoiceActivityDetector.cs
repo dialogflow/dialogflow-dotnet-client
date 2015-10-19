@@ -134,7 +134,7 @@ namespace ApiAiSDK.Util
                     if (sequenceCounter >= minSpeechSequenceCount) {
 
                         if (!speechActive) {
-                            Console.WriteLine("SPEECH BEGIN " + time);
+                            Debug.WriteLine("SPEECH BEGIN " + time);
                             OnSpeechBegin();
 
                             speechActive = true;
@@ -150,13 +150,13 @@ namespace ApiAiSDK.Util
             } else {
                 if (time - lastSequenceTime > silenceLengthMilis) {
                     if (lastSequenceTime > 0) {
-                        Console.WriteLine("SPEECH END: " + time);
+                        Debug.WriteLine("SPEECH END: " + time);
                         if (speechActive) {
                             speechActive = false;
                             OnSpeechEnd();
                         }
                     } else {
-                        Console.WriteLine("NOSPEECH: " + time);
+                        Debug.WriteLine("NOSPEECH: " + time);
                         OnSpeechNotDetected();
                     }
                 }
