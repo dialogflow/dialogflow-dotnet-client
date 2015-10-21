@@ -143,7 +143,7 @@ namespace ApiAiSDK.Model
         {
             if (string.IsNullOrEmpty("name"))
             {
-                throw new ArgumentNullException(nameof(name));        
+                throw new ArgumentNullException("name");        
             }
 
             if (Parameters.ContainsKey(name))
@@ -162,10 +162,15 @@ namespace ApiAiSDK.Model
         {
             if (string.IsNullOrEmpty(name))
             {
-                throw new ArgumentException("Name must be not empty", nameof(name));
+                throw new ArgumentException("Name must be not empty", "name");
             }
 
-            return Contexts?.FirstOrDefault(c => string.Equals(c.Name, name, StringComparison.CurrentCultureIgnoreCase));
+            if (Contexts == null)
+            {
+                return null;
+            }
+
+            return Contexts.FirstOrDefault(c => string.Equals(c.Name, name, StringComparison.CurrentCultureIgnoreCase));
         }
 
 		public Result ()

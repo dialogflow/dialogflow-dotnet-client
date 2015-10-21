@@ -252,7 +252,7 @@ namespace ApiAiSDK.Util
 
         protected void OnSpeechNotDetected()
         {
-            SpeechNotDetected?.Invoke();
+            SpeechNotDetected.InvokeSafely();
         }
 
         protected void OnAudioLevelChange(float level)
