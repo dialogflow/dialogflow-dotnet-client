@@ -11,4 +11,12 @@ testrunner
 packages
 ApiAiSDK.WP8/bin
 ApiAiSDK.WP8/obj
+ApiAiSDK.W10/bin
+ApiAiSDK.W10/obj
 *.suo
+/ApiAiSDK.W10.Tests/obj
+/ApiAiSDK.W10.Tests/bin
+api-ai-net.sln.DotSettings.user
+/.vs/config
+/ApiAiSDK.W10/.vs/config
+.DS_Store

@@ -4,6 +4,7 @@ solution: api-ai-net.sln
 branches:
   only:
     - master
+    - dev
 
 install:
   - nuget restore api-ai-net.sln

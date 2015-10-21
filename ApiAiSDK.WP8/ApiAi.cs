@@ -27,8 +27,21 @@ namespace ApiAiSDK
 {
     public class ApiAi: ApiAiBase
     {
-        private AIConfiguration config;
-        private AIDataService dataService;
+        private readonly AIConfiguration config;
+        private readonly AIDataService dataService;
+
+        public string SessionId
+        {
+            get
+            {
+                return dataService.SessionId;
+            }
+
+            set
+            {
+                dataService.SessionId = value;
+            }
+        }
 
         public ApiAi(AIConfiguration config)
         {

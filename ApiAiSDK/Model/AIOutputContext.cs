@@ -33,6 +33,12 @@ namespace ApiAiSDK.Model
 		[JsonProperty("parameters")]
 		public Dictionary<string, string> Parameters { get; set; }
 
+        /// <summary>
+        /// Lifespan of the context measured in requests
+        /// </summary>
+        [JsonProperty("lifespan")]
+        public int? Lifespan { get; set; }
+
 		public AIOutputContext()
 		{
 		}

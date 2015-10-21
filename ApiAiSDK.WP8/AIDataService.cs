@@ -34,7 +34,20 @@ namespace ApiAiSDK
     {
         private AIConfiguration config;
 
-        private readonly string sessionId;
+        private string sessionId;
+
+        public string SessionId
+        {
+            get
+            {
+                return sessionId;
+            }
+
+            set
+            {
+                sessionId = value;
+            }
+        }
 
         public AIDataService(AIConfiguration config)
         {
@@ -113,8 +126,7 @@ namespace ApiAiSDK
             {
                 if (requestExtras.HasContexts)
                 {
-                    var contextsList = requestExtras.Contexts.Select(c => c.Name).ToList();
-                    request.Contexts = contextsList;
+                    request.Contexts = requestExtras.Contexts;
                 }
 
                 if (requestExtras.HasEntities)

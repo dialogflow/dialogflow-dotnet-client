@@ -36,7 +36,7 @@ namespace ApiAiSDK.Model
 		public float[] Confidence { get; set; }
 	
 		[JsonProperty("contexts")]
-		public List<String> Contexts { get; set; }
+		public List<AIContext> Contexts { get; set; }
 	
 		[JsonProperty("resetContexts")]
 		public bool? ResetContexts { get; set; }

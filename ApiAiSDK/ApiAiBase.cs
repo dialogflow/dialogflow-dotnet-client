@@ -30,12 +30,12 @@ namespace ApiAiSDK
                 return null;
             }
 
-            float min = 0.000001f;
+            const float min = 0.000001f;
 
-            int startIndex = 0;
-            int endIndex = samples.Length;
+            var startIndex = 0;
+            var endIndex = samples.Length;
 
-            for (int i = 0; i < samples.Length; i++) {
+            for (var i = 0; i < samples.Length; i++) {
 
                 if (Math.Abs(samples[i]) > min) {
                     startIndex = i;
@@ -43,7 +43,7 @@ namespace ApiAiSDK
                 }
             }
 
-            for (int i = samples.Length - 1; i > 0; i--) {
+            for (var i = samples.Length - 1; i > 0; i--) {
                 if (Math.Abs(samples[i]) > min) {
                     endIndex = i;
                     break;
@@ -62,21 +62,21 @@ namespace ApiAiSDK
 
         protected static byte[] ConvertArrayShortToBytes(short[] array)
         {
-            byte[] numArray = new byte[array.Length * 2];
-            Buffer.BlockCopy((Array)array, 0, (Array)numArray, 0, numArray.Length);
+            var numArray = new byte[array.Length * 2];
+            Buffer.BlockCopy(array, 0, numArray, 0, numArray.Length);
             return numArray;
         }
 
         protected static short[] ConvertIeeeToPcm16(float[] source)
         {
-            short[] resultBuffer = new short[source.Length];
-            for (int i = 0; i < source.Length; i++) {
-                float f = source[i] * 32768f;
+            var resultBuffer = new short[source.Length];
+            for (var i = 0; i < source.Length; i++) {
+                var f = source[i] * 32768f;
 
-                if ((double)f > (double)short.MaxValue)
-                    f = (float)short.MaxValue;
-                else if ((double)f < (double)short.MinValue)
-                    f = (float)short.MinValue;
+                if (f > (double)short.MaxValue)
+                    f = short.MaxValue;
+                else if (f < (double)short.MinValue)
+                    f = short.MinValue;
                 resultBuffer[i] = Convert.ToInt16(f);
             }
 

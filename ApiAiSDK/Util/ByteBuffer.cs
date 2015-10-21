@@ -65,8 +65,11 @@ namespace ApiAiSDK.Util
                 {
                     if (BitConverter.IsLittleEndian)
                     {
-                        tmpBuffer[0] = byteBuffer[i + 1];
-                        tmpBuffer[1] = byteBuffer[i];
+//                        tmpBuffer[0] = byteBuffer[i + 1];
+//                        tmpBuffer[1] = byteBuffer[i];
+
+                        tmpBuffer[0] = byteBuffer[i];
+                        tmpBuffer[1] = byteBuffer[i + 1];
                     }
                     else
                     {

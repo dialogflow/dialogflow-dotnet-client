@@ -21,7 +21,9 @@
 using System;
 using System.Globalization;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace ApiAiSDK.Model
 {
@@ -49,7 +51,7 @@ namespace ApiAiSDK.Model
         }
 
 		[JsonProperty("parameters")]
-		public Dictionary<string, string> Parameters { get; set; }
+		public Dictionary<string, object> Parameters { get; set; }
 
 		[JsonProperty("contexts")]
 		public AIOutputContext[] Contexts { get; set; }
@@ -62,6 +64,9 @@ namespace ApiAiSDK.Model
 
         [JsonProperty("fulfillment")]
         public Fulfillment Fulfillment { get; set; }
+
+        [JsonProperty("source")]
+        public string Source { get; set; }
 
         [JsonIgnore]
         public bool HasParameters
@@ -81,7 +86,7 @@ namespace ApiAiSDK.Model
 
             if (Parameters.ContainsKey(name))
             {
-                return Parameters[name];
+                return Parameters[name].ToString();
             }
 
             return defaultValue;
@@ -96,7 +101,7 @@ namespace ApiAiSDK.Model
 
             if (Parameters.ContainsKey(name))
             {
-                var parameterValue = Parameters[name];
+                var parameterValue = Parameters[name].ToString();
                 int result;
                 if (int.TryParse(parameterValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out result))
                 {
@@ -123,7 +128,7 @@ namespace ApiAiSDK.Model
 
             if (Parameters.ContainsKey(name))
             {
-                var parameterValue = Parameters[name];
+                var parameterValue = Parameters[name].ToString();
                 float result;
                 if (float.TryParse(parameterValue, NumberStyles.Float, CultureInfo.InvariantCulture, out result))
                 {
@@ -132,6 +137,35 @@ namespace ApiAiSDK.Model
             }
 
             return defaultValue;
+        }
+
+        public JObject GetJsonParameter(string name, JObject defaultValue = null)
+        {
+            if (string.IsNullOrEmpty("name"))
+            {
+                throw new ArgumentNullException(nameof(name));        
+            }
+
+            if (Parameters.ContainsKey(name))
+            {
+                var parameter = Parameters[name] as JObject;
+                if (parameter != null)
+                {
+                    return parameter;
+                }
+            }
+
+            return defaultValue;
+        }
+
+        public AIOutputContext GetContext(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentException("Name must be not empty", nameof(name));
+            }
+
+            return Contexts?.FirstOrDefault(c => string.Equals(c.Name, name, StringComparison.CurrentCultureIgnoreCase));
         }
 
 		public Result ()
