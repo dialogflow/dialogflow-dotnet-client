@@ -80,10 +80,9 @@ namespace ApiAiSDK.Tests
             var complexParam = response.Result.GetJsonParameter("complex_param");
             Assert.IsNotNull(complexParam);
 
-            var nestedToken = complexParam["nested_key"] as JValue;
-            Assert.NotNull(nestedToken);
-            Assert.AreEqual(JTokenType.String, nestedToken.Type);
-            Assert.AreEqual("nested_value", nestedToken.ToString());
+            var nestedVal = complexParam.SelectToken("nested_key");
+            Assert.NotNull(nestedVal);
+            Assert.AreEqual("nested_value", nestedVal);
         }
     }
 }

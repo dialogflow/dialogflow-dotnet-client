@@ -148,10 +148,10 @@ namespace ApiAiSDK.Model
 
             if (Parameters.ContainsKey(name))
             {
-                var parameter = Parameters[name] as JObject;
+                var parameter = Parameters[name] as Dictionary<string,object>;
                 if (parameter != null)
                 {
-                    return parameter;
+                    return new JObject(parameter);
                 }
             }
 
