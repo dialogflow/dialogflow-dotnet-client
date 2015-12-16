@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="AIDataServiceTests.cs" />
     <Compile Include="ApiAiTest.cs" />
+    <Compile Include="ParametersParserTests.cs" />
     <Compile Include="VADTest.cs" />
     <Compile Include="ModelTests.cs" />
   </ItemGroup>
@@ -51,9 +52,7 @@
       <Name>ApiAiSDK</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="TestData\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="TestData\what_is_your_name.raw" />
     <EmbeddedResource Include="TestData\speech.raw" />

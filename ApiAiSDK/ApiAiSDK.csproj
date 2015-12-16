@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="LibraryInfo.cs" />
+    <Compile Include="Model\AIDate.cs" />
     <Compile Include="Model\AIRequest.cs" />
     <Compile Include="Model\AIResponse.cs" />
     <Compile Include="Model\QuestionMetadata.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="SupportedLanguage.cs" />
     <Compile Include="Model\AIOutputContext.cs" />
     <Compile Include="Model\Metadata.cs" />
+    <Compile Include="Util\ParametersParser.cs" />
     <Compile Include="Util\VoiceActivityDetector.cs" />
     <Compile Include="Util\ActionExtensions.cs" />
     <Compile Include="Util\ByteBuffer.cs" />
