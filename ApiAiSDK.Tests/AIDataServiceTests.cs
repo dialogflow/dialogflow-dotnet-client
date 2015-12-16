@@ -298,7 +298,7 @@ namespace ApiAiSDK.Tests
                 {
                     { "location", "London"}
                 },
-                Lifespan = 2
+                Lifespan = 3
             };
 
             aiRequest.Contexts =
