@@ -25,6 +25,10 @@ using System.Text;
 
 namespace ApiAiSDK.Model
 {
+    /// <summary>
+    /// AIDate represents standard date-time object with unknown parts. 
+    /// Unknown parts represented with "uu" values. And particular date parts will be null.
+    /// </summary>
     public class AIDate
     {
         private const string UNSPECIFIED_YEAR = "uuuu";
@@ -32,8 +36,6 @@ namespace ApiAiSDK.Model
         private const string UNSPECIFIED_DAY = "uu";
         private const string UNSPECIFIED_HOUR = "uu";
         private const string UNSPECIFIED_MINUTE = "uu";
-
-        private DateTime dateTime;
         
         private int? year;
         private int? month;

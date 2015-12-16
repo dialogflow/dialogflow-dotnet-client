@@ -22,6 +22,7 @@ using System;
 using System.Globalization;
 using System.Collections.Generic;
 using System.Linq;
+using ApiAiSDK.Util;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -134,6 +135,40 @@ namespace ApiAiSDK.Model
                 {
                     return result;
                 }
+            }
+
+            return defaultValue;
+        }
+
+        public AIDate GetDateParameter(string name, AIDate defaultValue = null)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException("name");
+            }
+
+            if (Parameters.ContainsKey(name))
+            {
+                var parameterValue = Parameters[name].ToString();
+                var result = ParametersParser.ParsePartialDate(parameterValue);
+                return result;
+            }
+
+            return defaultValue;
+        }
+
+        public AIDate GetDateTimeParameter(string name, AIDate defaultValue = null)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException("name");
+            }
+
+            if (Parameters.ContainsKey(name))
+            {
+                var parameterValue = Parameters[name].ToString();
+                var result = ParametersParser.ParsePartialDateTime(parameterValue);
+                return result;
             }
 
             return defaultValue;
