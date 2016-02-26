@@ -235,6 +235,25 @@ namespace ApiAiSDK.Tests
         }
 
         [Test]
+	    public void TimeParameterTest()
+	    {
+            var config = new AIConfiguration(SUBSCRIPTION_KEY,
+                "23e7d37f6dd24e4eb7dbbd7491f832cf", // special agent with domains
+                SupportedLanguage.English);
+
+            var dataService = new AIDataService(config);
+
+            var aiRequest = new AIRequest("set alarm to ten pm");
+            var response = MakeRequest(dataService, aiRequest);
+
+            Assert.AreEqual("domains", response.Result.Source);
+            Assert.AreEqual("clock.alarm_set", response.Result.Action);
+
+            var stringParameter = response.Result.GetStringParameter("time");
+            Assert.IsNotNull(stringParameter);
+        }
+
+        [Test]
 	    public void InputContextWithParametersTest()
 	    {
             var dataService = CreateDataService();
