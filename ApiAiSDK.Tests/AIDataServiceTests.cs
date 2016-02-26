@@ -195,7 +195,6 @@ namespace ApiAiSDK.Tests
         }
 
         [Test]
-        [ExpectedException(typeof(AIServiceException))]
         public void WrongEntitiesTest()
         {
             var dataService = CreateDataService();
@@ -210,7 +209,10 @@ namespace ApiAiSDK.Tests
 
             aiRequest.Entities = extraEntities;
 
-            MakeRequest(dataService, aiRequest);
+            Assert.Throws<AIServiceException>(delegate 
+                {
+                    MakeRequest(dataService, aiRequest);
+                }); 
         }
 
         [Test]
@@ -298,7 +300,7 @@ namespace ApiAiSDK.Tests
                 {
                     { "location", "London"}
                 },
-                Lifespan = 2
+                Lifespan = 3
             };
 
             aiRequest.Contexts =
@@ -320,6 +322,16 @@ namespace ApiAiSDK.Tests
             Assert.IsNull(response.Result.GetContext("weather"));
         }
 
+        [Test]
+        public void DutchLangTest()
+        {
+            var config = new AIConfiguration(SUBSCRIPTION_KEY, "77a69b3645a745999db66fcd7f0fd813", SupportedLanguage.English);
+            var dataService = new AIDataService(config);
+
+            var response = MakeRequest(dataService, new AIRequest("hallo"));
+            Assert.IsNotNull(response);
+            Assert.AreEqual("goededag!", response.Result.Fulfillment.Speech);
+        }
 
 		private AIResponse MakeRequest(AIDataService service, AIRequest request)
 		{
