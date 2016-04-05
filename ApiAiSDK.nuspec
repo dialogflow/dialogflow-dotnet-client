@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>ApiAiSDK</id>
-    <version>1.5.1</version>
+    <version>1.6.0</version>
     <title>ApiAiSDK</title>
     <authors>Speaktoit</authors>
     <owners>Speaktoit</owners>
@@ -11,7 +11,7 @@
     <iconUrl>http://api.ai/assets/ico/favicon-e15c6e41317c4ff907cc983a5c8676d9.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Library provides simple programming interface for making text and voice requests to the API.AI service.</description>
-    <releaseNotes>Fixed bug in Voice Activity Detection</releaseNotes>
+    <releaseNotes>Removed subscription key</releaseNotes>
     <copyright>2015 Speaktoit, Inc.</copyright>
     <tags>natural language processing</tags>
 
