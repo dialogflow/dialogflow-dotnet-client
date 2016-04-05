@@ -63,8 +63,7 @@ namespace ApiAiSDK
                 httpRequest.Accept = "application/json";
 						
                 httpRequest.Headers.Add("Authorization", "Bearer " + config.ClientAccessToken);
-                httpRequest.Headers.Add("ocp-apim-subscription-key", config.SubscriptionKey);
-						
+                		
                 var jsonSettings = new JsonSerializerSettings
                 { 
                     NullValueHandling = NullValueHandling.Ignore
@@ -126,8 +125,7 @@ namespace ApiAiSDK
                 httpRequest.Accept = "application/json";
 				
                 httpRequest.Headers.Add("Authorization", "Bearer " + config.ClientAccessToken);
-                httpRequest.Headers.Add("ocp-apim-subscription-key", config.SubscriptionKey);
-
+                
                 var jsonSettings = new JsonSerializerSettings
                 { 
                     NullValueHandling = NullValueHandling.Ignore

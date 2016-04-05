@@ -82,8 +82,6 @@ namespace ApiAiSDK
 
             httpClient.DefaultRequestHeaders.Authorization = new HttpCredentialsHeaderValue("Bearer", config.ClientAccessToken);
             httpClient.DefaultRequestHeaders.Accept.Add(new HttpMediaTypeWithQualityHeaderValue("application/json"));
-            httpClient.DefaultRequestHeaders.Append("ocp-apim-subscription-key", config.SubscriptionKey);
-
         }
 
         public async Task<AIResponse> RequestAsync(AIRequest request)

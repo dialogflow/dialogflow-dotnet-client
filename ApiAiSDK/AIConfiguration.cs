@@ -31,9 +31,7 @@ namespace ApiAiSDK
 		private const string SERVICE_DEV_URL = "https://dev.api.ai/api/";
 
         private const string CURRENT_PROTOCOL_VERSION = "20150910";
-
-		public string SubscriptionKey { get; private set; }
-
+        
 		public string ClientAccessToken { get; private set; }
 
 		public SupportedLanguage Language { get; set; }
@@ -67,9 +65,8 @@ namespace ApiAiSDK
             }
         }
         	
-		public AIConfiguration(string subscriptionKey, string clientAccessToken, SupportedLanguage language)
+		public AIConfiguration(string clientAccessToken, SupportedLanguage language)
 		{
-			this.SubscriptionKey = subscriptionKey;
 			this.ClientAccessToken = clientAccessToken;
 			this.Language = language;
 
