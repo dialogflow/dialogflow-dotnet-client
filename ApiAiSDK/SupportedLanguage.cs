@@ -34,7 +34,8 @@ namespace ApiAiSDK
 		public static readonly SupportedLanguage Spanish = new SupportedLanguage("es");
 		public static readonly SupportedLanguage French = new SupportedLanguage("fr");
 		public static readonly SupportedLanguage Italian = new SupportedLanguage("it");
-		public static readonly SupportedLanguage Japanese = new SupportedLanguage("ja");
+        public static readonly SupportedLanguage Dutch = new SupportedLanguage("nl");
+        public static readonly SupportedLanguage Japanese = new SupportedLanguage("ja");
 		public static readonly SupportedLanguage ChineseChina = new SupportedLanguage("zh-CN");
 		public static readonly SupportedLanguage ChineseHongKong = new SupportedLanguage("zh-HK");
 		public static readonly SupportedLanguage ChineseTaiwan = new SupportedLanguage("zh-TW");
@@ -49,6 +50,7 @@ namespace ApiAiSDK
                 Spanish,
                 French,
                 Italian,
+                Dutch,
                 Japanese,
                 ChineseChina,
                 ChineseHongKong,
