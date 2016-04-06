@@ -20,3 +20,4 @@ api-ai-net.sln.DotSettings.user
 /.vs/config
 /ApiAiSDK.W10/.vs/config
 .DS_Store
+/*.sln.iml
