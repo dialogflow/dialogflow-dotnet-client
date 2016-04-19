@@ -68,6 +68,9 @@ namespace ApiAiSDK.Model
         [JsonProperty("source")]
         public string Source { get; set; }
 
+        [JsonProperty("score")]
+        public float Score { get; set; }
+
         [JsonIgnore]
         public bool HasParameters
         {
