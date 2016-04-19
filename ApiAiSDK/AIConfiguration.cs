@@ -38,6 +38,8 @@ namespace ApiAiSDK
 
         public bool VoiceActivityDetectionEnabled { get; set; }
 
+        public string SessionId { get; set; }
+
 		/// <summary>
 		/// If true, will be used Testing API.AI server instead of Production server. This option for TESTING PURPOSES ONLY.
 		/// </summary>

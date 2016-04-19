@@ -19,6 +19,7 @@
 // ***********************************************************************************************************************
 
 using System;
+using System.Configuration;
 using System.Net;
 using System.IO;
 using System.Linq;
@@ -31,21 +32,22 @@ namespace ApiAiSDK
 {
     public class AIDataService
     {
-        private AIConfiguration config;
+        private readonly AIConfiguration config;
 
-        private readonly string sessionId;
-        public string SessionId
-        {
-            get
-            {
-                return sessionId;
-            }
-        }
+        public string SessionId { get; }
 
         public AIDataService(AIConfiguration config)
         {
             this.config = config;
-            sessionId = Guid.NewGuid().ToString();
+
+            if (string.IsNullOrEmpty(config.SessionId))
+            {
+                SessionId = Guid.NewGuid().ToString();
+            }
+            else
+            {
+                SessionId = config.SessionId;
+            }
         }
 
         public AIResponse Request(AIRequest request)
@@ -53,7 +55,7 @@ namespace ApiAiSDK
 
             request.Language = config.Language.code;
             request.Timezone = TimeZone.CurrentTimeZone.StandardName;
-            request.SessionId = sessionId;
+            request.SessionId = SessionId;
 
             try
             {
@@ -111,7 +113,7 @@ namespace ApiAiSDK
             var request = new AIRequest();
             request.Language = config.Language.code;
             request.Timezone = TimeZone.CurrentTimeZone.StandardName;
-            request.SessionId = sessionId;
+            request.SessionId = SessionId;
 
             if (requestExtras != null)
             {
