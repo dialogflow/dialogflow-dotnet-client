@@ -30,7 +30,6 @@ namespace ApiAiSDK.Tests
 	[TestFixture]
 	public class AIDataServiceTests
 	{
-		private const string SUBSCRIPTION_KEY = "cb9693af-85ce-4fbf-844a-5563722fc27f";
 		private const string ACCESS_TOKEN = "3485a96fb27744db83e78b8c4bc9e7b7";
 
 		[Test]
@@ -48,7 +47,7 @@ namespace ApiAiSDK.Tests
 
 	    private AIDataService CreateDataService()
 	    {
-	        var config = new AIConfiguration(SUBSCRIPTION_KEY, ACCESS_TOKEN, SupportedLanguage.English);
+	        var config = new AIConfiguration(ACCESS_TOKEN, SupportedLanguage.English);
 	        var dataService = new AIDataService(config);
 	        return dataService;
 	    }
@@ -70,7 +69,7 @@ namespace ApiAiSDK.Tests
 			}
 
 			{
-				var config = new AIConfiguration(SUBSCRIPTION_KEY, "968235e8e4954cf0bb0dc07736725ecd", SupportedLanguage.English);
+				var config = new AIConfiguration("968235e8e4954cf0bb0dc07736725ecd", SupportedLanguage.English);
 				var dataService = new AIDataService(config);
 				var request = new AIRequest(query);
 				
@@ -85,7 +84,7 @@ namespace ApiAiSDK.Tests
 		[Test]
 		public void SessionTest()
 		{
-			var config = new AIConfiguration(SUBSCRIPTION_KEY, ACCESS_TOKEN, SupportedLanguage.English);
+			var config = new AIConfiguration(ACCESS_TOKEN, SupportedLanguage.English);
 			
 			var firstService = new AIDataService(config);
 			var secondService = new AIDataService(config);
@@ -218,7 +217,7 @@ namespace ApiAiSDK.Tests
         [Test]
         public void ComplexParameterTest()
         {
-            var config = new AIConfiguration(SUBSCRIPTION_KEY, 
+            var config = new AIConfiguration(
                 "23e7d37f6dd24e4eb7dbbd7491f832cf", // special agent with domains
                 SupportedLanguage.English);
             
@@ -325,7 +324,7 @@ namespace ApiAiSDK.Tests
         [Test]
         public void DutchLangTest()
         {
-            var config = new AIConfiguration(SUBSCRIPTION_KEY, "77a69b3645a745999db66fcd7f0fd813", SupportedLanguage.English);
+            var config = new AIConfiguration("77a69b3645a745999db66fcd7f0fd813", SupportedLanguage.English);
             var dataService = new AIDataService(config);
 
             var response = MakeRequest(dataService, new AIRequest("hallo"));

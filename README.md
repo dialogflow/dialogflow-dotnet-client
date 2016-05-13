@@ -35,8 +35,7 @@ private ApiAi apiAi;
 
 Now you need to initialize `ApiAi` object with appropriate access keys and language.
 ```csharp
-var config = new AIConfiguration("YOUR_SUBSCRIPTION_KEY", 
-                                 "YOUR_CLIENT_ACCESS_TOKEN", 
+var config = new AIConfiguration("YOUR_CLIENT_ACCESS_TOKEN", 
                                  SupportedLanguage.English);
 apiAi = new ApiAi(config);
 ```
@@ -67,7 +66,7 @@ To use special features you need to use `AIService` class instead of `ApiAi` cla
 First, you need to initialize AIConfiguration object with your keys and desired language.
 
 ```csharp
-var config = new AIConfiguration("subscription key", "client access token", SupportedLanguage.English);
+var config = new AIConfiguration("client access token", SupportedLanguage.English);
 ```
 
 Second, create AIService object using the configuration object.
@@ -94,7 +93,7 @@ The entire code snippet:
 ```csharp
 try
 {
-    var config = new AIConfiguration("subscription key", "client access token", SupportedLanguage.English);
+    var config = new AIConfiguration("client access token", SupportedLanguage.English);
 
     aiService = AIService.CreateService(config);
     aiService.OnResult += aiService_OnResult;
