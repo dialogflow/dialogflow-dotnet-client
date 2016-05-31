@@ -39,7 +39,10 @@ namespace ApiAiSDK.Model
 		[JsonProperty("status")]
 		public Status Status{ get; set; }
 
-		public bool IsError
+        [JsonProperty("sessionId")]
+        public string SessionId { get; set; }
+
+        public bool IsError
 		{
 			get
 			{
