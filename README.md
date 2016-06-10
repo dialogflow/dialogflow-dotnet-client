@@ -52,7 +52,7 @@ Done! Now you can easily do requests to the API.AI service
 
 Also see [unit tests](https://github.com/api-ai/api-ai-net/blob/master/ApiAiSDK.Tests/ApiAiTest.cs) for more examples.
 
-## Windows Phone 8 version
+## Windows Phone 8
 
 Windows Phone version has some additional features such as system speech recognition for easy API.AI service integration.
 After installing the library you should add permissions for Internet and Sound recording to your app.
@@ -144,9 +144,68 @@ void aiService_OnResult(ApiAiSDK.Model.AIResponse response)
 }
 ```
 
-## Windows 10 version
+## Universal Windows Platform
 
-Work approach is similar to Windows Phone version.
+UWP version of the library is similar to Windows Phone version except some differences in API.
+After installing the library you should add capabilities for **Internet(Client)** and **Microphone** to your app.
+Currently, speech recognition is performed using `Windows.Media.SpeechRecognition` speech recognition. So, you must be sure languages you are using is installed on device.
+API for the platform uses async/await feature. So, you don't need to set up any callbacks.
+
+To use special features you need to use `AIService` class instead of `ApiAi` class. 
+
+### Initialization 
+
+First, you need to initialize AIConfiguration object with your keys and desired language.
+
+```csharp
+var config = new AIConfiguration("client access token", SupportedLanguage.English);
+```
+
+Second, create AIService object using the configuration object.
+
+```csharp
+var aiService = AIService.CreateService(config);
+```
+
+And at the end call Initialization method
+
+```csharp
+await aiService.InitializeAsync();
+```
+
+The entire code snippet:
+
+```csharp
+try
+{
+    var config = new AIConfiguration("client access token", SupportedLanguage.English);
+    aiService = AIService.CreateService(config);
+    await aiService.InitializeAsync();
+}
+catch (Exception e)
+{
+    // Some exception processing
+}
+```
+
+### Using API.AI
+
+Now you can use methods for listening and requesting results from server, all you need to call `StartRecognitionAsync` method (don't forget to use `await` operator, otherwise you will not be able to catch some processing exceptions)
+
+```csharp
+try
+{
+    var response = await aiService.StartRecognitionAsync();
+}
+catch (Exception exception)
+{
+    // Some exception processing
+}
+```
+
+### Results processing
+
+Results will be in the `response` variable.
 
 ## Open Source Project Credits
 
