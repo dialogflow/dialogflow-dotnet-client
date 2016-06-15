@@ -43,6 +43,7 @@ namespace ApiAiSDK.Tests
 			Assert.IsNotNull(response);
 			Assert.AreEqual("greeting", response.Result.Action);
             Assert.AreEqual("Hi! How are you?", response.Result.Fulfillment.Speech);
+            Assert.IsNotNullOrEmpty(response.SessionId);
 		}
 
 	    private AIDataService CreateDataService()

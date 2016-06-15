@@ -52,11 +52,10 @@ namespace ApiAiSDK
 
         public AIResponse Request(AIRequest request)
         {
-
             request.Language = config.Language.code;
             request.Timezone = TimeZone.CurrentTimeZone.StandardName;
             request.SessionId = SessionId;
-
+            
             try
             {
                 var httpRequest = (HttpWebRequest)WebRequest.Create(config.RequestUrl);
