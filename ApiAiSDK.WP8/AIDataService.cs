@@ -52,7 +52,15 @@ namespace ApiAiSDK
         public AIDataService(AIConfiguration config)
         {
             this.config = config;
-            sessionId = Guid.NewGuid().ToString();
+
+            if (string.IsNullOrEmpty(config.SessionId))
+            {
+                sessionId = Guid.NewGuid().ToString();
+            }
+            else
+            {
+                sessionId = config.SessionId;
+            }
         }
 
         public async Task<AIResponse> RequestAsync(AIRequest request)

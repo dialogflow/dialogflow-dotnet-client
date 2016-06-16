@@ -76,7 +76,16 @@ namespace ApiAiSDK
         public AIDataService(AIConfiguration config)
         {
             this.config = config;
-            sessionId = Guid.NewGuid().ToString();
+
+            if (string.IsNullOrEmpty(config.SessionId))
+            {
+                sessionId = Guid.NewGuid().ToString();
+            }
+            else
+            {
+                sessionId = config.SessionId;
+            }
+            
 
             httpClient = new HttpClient();
 
@@ -91,7 +100,6 @@ namespace ApiAiSDK
 
         public async Task<AIResponse> RequestAsync(AIRequest request, CancellationToken cancellationToken)
         {
-
             request.Language = config.Language.code;
             request.Timezone = TimeZoneInfo.Local.StandardName;
             request.SessionId = sessionId;
