@@ -85,6 +85,24 @@ namespace ApiAiSDK.Tests
             Assert.AreEqual(JTokenType.String, nestedToken.Type);
             Assert.AreEqual("nested_value", nestedToken.ToString());
         }
+
+        [Test]
+        public void TestParseContextParams()
+        {
+            const string TEST_JSON = @"{""id"":""2d2d947b-6ccd-4615-8f16-59b8bfc0fa6b"",""timestamp"":""2015-04-13T11:03:43.023Z"",""result"":{""source"":""agent"",""resolvedQuery"":""test params"",""speech"":""""," +
+                                     @"""contexts"":[{""name"":""test_context""," +
+                                     @"""parameters"": {""from.original"":""Moscow"", ""from"":{""city"":""Moscow"", ""metadata"": {""some_data_key"":""some data value""}}},""lifespan"":1}]}," +
+                                     @"""status"":{""code"":200,""errorType"":""success""}}";
+
+            var response = JsonConvert.DeserializeObject<AIResponse>(TEST_JSON);
+
+            var context = response.Result.Contexts[0];
+
+            Assert.AreEqual("test_context", context.Name);
+            Assert.NotNull(context.Parameters["from"] as JObject);
+            Assert.NotNull(context.Parameters["from.original"] as string);
+        }
+
     }
 }
 

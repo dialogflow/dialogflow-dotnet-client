@@ -31,7 +31,7 @@ namespace ApiAiSDK.Model
 		public string Name { get; set; }
 
 		[JsonProperty("parameters")]
-		public Dictionary<string, string> Parameters { get; set; }
+		public Dictionary<string, object> Parameters { get; set; }
 
         /// <summary>
         /// Lifespan of the context measured in requests

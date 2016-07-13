@@ -21,3 +21,4 @@ api-ai-net.sln.DotSettings.user
 /ApiAiSDK.W10/.vs/config
 .DS_Store
 /*.sln.iml
+/copy_to_xamarin.sh
