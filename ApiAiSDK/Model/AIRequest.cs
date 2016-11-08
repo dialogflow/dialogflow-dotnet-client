@@ -41,6 +41,9 @@ namespace ApiAiSDK.Model
 		[JsonProperty("resetContexts")]
 		public bool? ResetContexts { get; set; }
 
+        [JsonProperty("originalRequest")]
+        public OriginalRequest OriginalRequest { get; set; }
+
 		public AIRequest ()
 		{
 		}

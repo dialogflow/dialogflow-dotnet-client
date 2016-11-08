@@ -43,6 +43,7 @@
     <Compile Include="LibraryInfo.cs" />
     <Compile Include="Model\AIRequest.cs" />
     <Compile Include="Model\AIResponse.cs" />
+    <Compile Include="Model\OriginalRequest.cs" />
     <Compile Include="Model\QuestionMetadata.cs" />
     <Compile Include="Model\Result.cs" />
     <Compile Include="Model\Status.cs" />

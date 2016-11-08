@@ -115,6 +115,9 @@
     <Compile Include="..\ApiAiSDK\Model\Metadata.cs">
       <Link>Model\Metadata.cs</Link>
     </Compile>
+    <Compile Include="..\ApiAiSDK\Model\OriginalRequest.cs">
+      <Link>Model\OriginalRequest.cs</Link>
+    </Compile>
     <Compile Include="..\ApiAiSDK\Model\QuestionMetadata.cs">
       <Link>Model\QuestionMetadata.cs</Link>
     </Compile>
