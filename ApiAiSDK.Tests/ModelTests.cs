@@ -18,6 +18,7 @@
 //
 //  ***********************************************************************************************************************
 using System;
+using System.Globalization;
 using NUnit.Framework;
 using Newtonsoft.Json;
 using ApiAiSDK.Model;
@@ -30,10 +31,42 @@ namespace ApiAiSDK.Tests
     {
         private const string TEST_DATA = "{\"id\":\"2d2d947b-6ccd-4615-8f16-59b8bfc0fa6b\",\"timestamp\":\"2015-04-13T11:03:43.023Z\",\"result\":{\"source\":\"agent\",\"resolvedQuery\":\"test params 1.23\",\"speech\":\"\",\"action\":\"test_params\",\"parameters\":{\"number\":\"1.23\", \"integer\":\"17\", \"str\":\"string value\", \"complex_param\":{\"nested_key\": \"nested_value\"}},\"contexts\":[],\"metadata\":{\"intentId\":\"46a278fb-0ffc-4748-aa9a-5563d89199ee\",\"intentName\":\"test params\"}},\"status\":{\"code\":200,\"errorType\":\"success\"}}";
 
+        private AIResponse GetTestResponse()
+        {
+            var testObject = new
+            {
+                id = "2d2d947b-6ccd-4615-8f16-59b8bfc0fa6b",
+                timestamp = "2015-04-13T11:03:43.023Z",
+                result = new
+                {
+                    source = "agent",
+                    resolvedQuery = "test params 1.23",
+                    speech = "",
+                    action = "test_params",
+                    parameters = new
+                    {
+                        number = "1.23",
+                        integer = "17",
+                        str = "string value",
+                        complex_param = new {nested_key = "nested_value"}
+                    },
+                    metadata = new
+                    {
+                        intentId = "46a278fb-0ffc-4748-aa9a-5563d89199ee",
+                        intentName = "test params"
+                    }
+                },
+                status = new {code = 200, errorType = "success"}
+            };
+
+            var jsonText = JsonConvert.SerializeObject(testObject);
+            return JsonConvert.DeserializeObject<AIResponse>(jsonText);
+        }
+
         [Test]
         public void TestResultGetString()
         {
-            var response = JsonConvert.DeserializeObject<AIResponse>(TEST_DATA);
+            var response = GetTestResponse();
 
             Assert.AreEqual("1.23", response.Result.GetStringParameter("number"));
             Assert.AreEqual("default_value", response.Result.GetStringParameter("non_exist_parameter", "default_value"));
@@ -45,7 +78,7 @@ namespace ApiAiSDK.Tests
         [Test]
         public void TestResultGetInt()
         {
-            var response = JsonConvert.DeserializeObject<AIResponse>(TEST_DATA);
+            var response = GetTestResponse();
 
             Assert.AreEqual(1, response.Result.GetIntParameter("number"));
             Assert.AreEqual(2, response.Result.GetIntParameter("non_exist_parameter", 2));
@@ -60,7 +93,7 @@ namespace ApiAiSDK.Tests
         [Test]
         public void TestResultGetFloat()
         {
-            var response = JsonConvert.DeserializeObject<AIResponse>(TEST_DATA);
+            var response = GetTestResponse();
 
             Assert.AreEqual(1.23f, response.Result.GetFloatParameter("number"), float.Epsilon);
             Assert.AreEqual(1.44f, response.Result.GetFloatParameter("non_exist_parameter", 1.44f), float.Epsilon);
@@ -75,7 +108,7 @@ namespace ApiAiSDK.Tests
         [Test]
         public void TestResultGetComplex()
         {
-            var response = JsonConvert.DeserializeObject<AIResponse>(TEST_DATA);
+            var response = GetTestResponse();
 
             var complexParam = response.Result.GetJsonParameter("complex_param");
             Assert.IsNotNull(complexParam);
@@ -83,24 +116,46 @@ namespace ApiAiSDK.Tests
             var nestedToken = complexParam["nested_key"] as JValue;
             Assert.NotNull(nestedToken);
             Assert.AreEqual(JTokenType.String, nestedToken.Type);
-            Assert.AreEqual("nested_value", nestedToken.ToString());
+            Assert.AreEqual("nested_value", nestedToken.ToString(CultureInfo.InvariantCulture));
         }
 
         [Test]
         public void TestParseContextParams()
         {
-            const string TEST_JSON = @"{""id"":""2d2d947b-6ccd-4615-8f16-59b8bfc0fa6b"",""timestamp"":""2015-04-13T11:03:43.023Z"",""result"":{""source"":""agent"",""resolvedQuery"":""test params"",""speech"":""""," +
-                                     @"""contexts"":[{""name"":""test_context""," +
-                                     @"""parameters"": {""from.original"":""Moscow"", ""from"":{""city"":""Moscow"", ""metadata"": {""some_data_key"":""some data value""}}},""lifespan"":1}]}," +
-                                     @"""status"":{""code"":200,""errorType"":""success""}}";
+            var testObject = new
+            {
+                id = "2d2d947b-6ccd-4615-8f16-59b8bfc0fa6b",
+                timestamp = "2015-04-13T11:03:43.023Z",
+                result = new
+                {
+                    source = "agent",
+                    resolvedQuery = "test params",
+                    speech = "",
+                    contexts = new object[]
+                    {
+                        new
+                        {
+                            name = "test_context",
+                            parameters =
+                            new
+                            {
+                                from_original = "Moscow",
+                                from = new {city = "Moscow", metadata = new {some_data_key = "some data value"}}
+                            },
+                            lifespan = 1
+                        }
+                    },
+                    status = new {code = 200, errorType = "success"}
+                }
+            };
 
-            var response = JsonConvert.DeserializeObject<AIResponse>(TEST_JSON);
+            var response = JsonConvert.DeserializeObject<AIResponse>(JsonConvert.SerializeObject(testObject));
 
             var context = response.Result.Contexts[0];
 
             Assert.AreEqual("test_context", context.Name);
             Assert.NotNull(context.Parameters["from"] as JObject);
-            Assert.NotNull(context.Parameters["from.original"] as string);
+            Assert.NotNull(context.Parameters["from_original"] as string);
         }
 
         [Test]
