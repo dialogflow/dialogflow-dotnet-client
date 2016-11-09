@@ -7,7 +7,7 @@ namespace ApiAiSDK
 {
     internal static class LibraryInfo
     {
-        internal const string Version = "1.6.3";
+        internal const string Version = "1.6.4";
 
         internal const string Title = "ApiAiSDK";
         internal const string Description = "Library provides simple programming interface for making text and voice requests to the API.AI service.";

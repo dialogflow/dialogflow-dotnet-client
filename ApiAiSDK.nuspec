@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>ApiAiSDK</id>
-    <version>1.6.3</version>
+    <version>1.6.4</version>
     <title>ApiAiSDK</title>
     <authors>Speaktoit</authors>
     <owners>Speaktoit</owners>
@@ -11,7 +11,7 @@
     <iconUrl>https://api.ai/assets/ico/favicon-220ed053738020816b0c8b48de7212a8.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Library provides simple programming interface for making text and voice requests to the API.AI service.</description>
-    <releaseNotes>Support for complex parameters in contexts</releaseNotes>
+    <releaseNotes>Added messages field to fulfillment</releaseNotes>
     <copyright>2016 Speaktoit, Inc.</copyright>
     <tags>natural language processing</tags>
 
