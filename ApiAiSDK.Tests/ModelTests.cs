@@ -103,6 +103,139 @@ namespace ApiAiSDK.Tests
             Assert.NotNull(context.Parameters["from.original"] as string);
         }
 
+        [Test]
+        public void TimeParameterTest()
+        {
+            var testResponse = new {
+                id = "ac5d6831-3c27-46b8-b213-05ddc92c9757",
+                timestamp ="2016-11-09T04:45:21.648Z",
+                result = new {
+                    source ="domains",
+                    resolvedQuery ="set alarm to ten pm",
+                    action ="clock.alarm_set",
+                    parameters = new {
+                        time = "22:00:00"
+                    },
+                    fulfillment = new {
+                        speech = ""
+                    },
+                    score = 1
+                },
+                status = new {
+                    code = 200,
+                    errorType = "success"
+                },
+                sessionId = "8f357800-2297-46c7-b001-a21c22912602"
+            };
+
+            var testResponseString = JsonConvert.SerializeObject(testResponse);
+            var response = JsonConvert.DeserializeObject<AIResponse>(testResponseString);
+
+            Assert.AreEqual("domains", response.Result.Source);
+            Assert.AreEqual("clock.alarm_set", response.Result.Action);
+
+            var stringParameter = response.Result.GetStringParameter("time");
+            Assert.IsNotNull(stringParameter);
+        }
+
+        [Test]
+        public void ComplexParameterTest()
+        {
+            var testResponse =
+                new {
+                    id = "32d5cbfb-745f-4ebc-b284-54cbfdf3605f",
+                    timestamp = "2016-11-09T05:49:18.414Z",
+                    result = new
+                    {
+                        source = "domains",
+                        resolvedQuery = "Turn off TV at 7pm",
+                        action = "smarthome.appliances_off",
+                        parameters = new
+                        {
+                            action_condition = new
+                            {
+                                time = "19:00:00"
+                            },
+                            appliance_name = "TV"
+                        },
+                        score = 1
+                    },
+                    status = new
+                    {
+                        code = 200,
+                        errorType = "success"
+                    },
+                    sessionId = "8f357800-2297-46c7-b001-a21c22912602"
+                };
+
+            var testResponseString = JsonConvert.SerializeObject(testResponse);
+            var response = JsonConvert.DeserializeObject<AIResponse>(testResponseString);
+
+            Assert.AreEqual("domains", response.Result.Source);
+            Assert.AreEqual("smarthome.appliances_off", response.Result.Action);
+
+            var actionCondition = response.Result.GetJsonParameter("action_condition");
+
+            var timeToken = actionCondition.SelectToken("time");
+            Assert.IsNotNull(timeToken);
+        }
+
+        [Test]
+        public void MessagesTest()
+        {
+            var testResponse = new {
+                id = "ac5d6831-3c27-46b8-b213-05ddc92c9757",
+                timestamp ="2016-11-09T04:45:21.648Z",
+                result = new {
+                    source ="agent",
+                    resolvedQuery ="hello",
+                    action ="hello_action",
+                    fulfillment = new {
+                        speech = "",
+                        messages = new object[] {
+                            new
+                            {
+                                type = 0,
+                                speech = "Some speech"
+                            },
+                            new
+                            {
+                                type = 2,
+                                title = "Choose an item",
+                                replies = new[] {"Good", "Nice"}
+                            }
+                        }
+                    },
+                    score = 1
+                },
+                status = new {
+                    code = 200,
+                    errorType = "success"
+                },
+                sessionId = "8f357800-2297-46c7-b001-a21c22912602"
+            };
+
+            var testResponseString = JsonConvert.SerializeObject(testResponse);
+            var response = JsonConvert.DeserializeObject<AIResponse>(testResponseString);
+
+            Assert.AreEqual("agent", response.Result.Source);
+            Assert.AreEqual("hello_action", response.Result.Action);
+
+            var fulfillment = response.Result.Fulfillment;
+            Assert.NotNull(fulfillment);
+            Assert.AreEqual(2, fulfillment.Messages.Count);
+
+            var firstMessage = (JObject) fulfillment.Messages[0];
+            var secondMessage = (JObject) fulfillment.Messages[1];
+
+            Assert.AreEqual(0, firstMessage["type"].Value<int>());
+            Assert.AreEqual("Some speech", firstMessage["speech"].Value<string>());
+
+            Assert.AreEqual(2, secondMessage["type"].Value<int>());
+            Assert.AreEqual("Choose an item", secondMessage["title"].Value<string>());
+
+        }
+
     }
 }
 

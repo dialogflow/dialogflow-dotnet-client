@@ -24,6 +24,7 @@ using NUnit.Framework;
 using ApiAiSDK;
 using ApiAiSDK.Model;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace ApiAiSDK.Tests
 {
@@ -38,7 +39,7 @@ namespace ApiAiSDK.Tests
 			var dataService = CreateDataService();
 
 		    var request = new AIRequest("Hello");
-			
+
 			var response = dataService.Request(request);
 			Assert.IsNotNull(response);
 			Assert.AreEqual("greeting", response.Result.Action);
@@ -62,22 +63,22 @@ namespace ApiAiSDK.Tests
 				var dataService = CreateDataService();
 
 				var request = new AIRequest(query);
-				
+
 				var response = dataService.Request(request);
 				Assert.IsNotNull(response.Result);
 				Assert.AreEqual("pizza", response.Result.Action);
-				
+
 			}
 
 			{
 				var config = new AIConfiguration("968235e8e4954cf0bb0dc07736725ecd", SupportedLanguage.English);
 				var dataService = new AIDataService(config);
 				var request = new AIRequest(query);
-				
+
 				var response = dataService.Request(request);
 				Assert.IsNotNull(response.Result);
 				Assert.IsTrue(string.IsNullOrEmpty(response.Result.Action));
-				
+
 			}
 
 		}
@@ -86,7 +87,7 @@ namespace ApiAiSDK.Tests
 		public void SessionTest()
 		{
 			var config = new AIConfiguration(ACCESS_TOKEN, SupportedLanguage.English);
-			
+
 			var firstService = new AIDataService(config);
 			var secondService = new AIDataService(config);
 
@@ -95,13 +96,13 @@ namespace ApiAiSDK.Tests
 				var weatherResponse = MakeRequest(firstService, weatherRequest);
                 Assert.IsNotNull(weatherResponse);
 			}
-			
+
 			{
 				var checkSecondRequest = new AIRequest("check weather");
 				var checkSecondResponse = MakeRequest(secondService, checkSecondRequest);
                 Assert.IsEmpty(checkSecondResponse.Result.Action);
 			}
-			
+
 			{
 				var checkFirstRequest = new AIRequest("check weather");
 				var checkFirstResponse = MakeRequest(firstService, checkFirstRequest);
@@ -114,9 +115,9 @@ namespace ApiAiSDK.Tests
 		public void ParametersTest()
 		{
 			var dataService = CreateDataService();
-			
+
 			var request = new AIRequest("what is your name");
-			
+
 			var response = MakeRequest(dataService, request);
 
 			Assert.IsNotNull(response.Result.Parameters);
@@ -146,7 +147,7 @@ namespace ApiAiSDK.Tests
             var action = aiResponse.Result.Action;
             Assert.AreEqual("showWeather", action);
             Assert.IsTrue(aiResponse.Result.Contexts.Any(c=>c.Name == "weather"));
-                
+
         }
 
         [Test]
@@ -169,7 +170,7 @@ namespace ApiAiSDK.Tests
                 var aiResponse = MakeRequest(dataService, aiRequest);
                 Assert.IsFalse(aiResponse.Result.Contexts.Any(c=>c.Name == "name_question"));
             }
-                
+
         }
 
         [Test]
@@ -211,44 +212,6 @@ namespace ApiAiSDK.Tests
             aiRequest.Entities = extraEntities;
 
             MakeRequest(dataService, aiRequest);
-        }
-
-        [Test]
-        public void ComplexParameterTest()
-        {
-            var config = new AIConfiguration("23e7d37f6dd24e4eb7dbbd7491f832cf", // special agent with domains
-                SupportedLanguage.English);
-            
-            var dataService = new AIDataService(config);
-
-            var aiRequest = new AIRequest("Turn off TV at 7pm");
-            var response = MakeRequest(dataService, aiRequest);
-
-            Assert.AreEqual("domains", response.Result.Source);
-            Assert.AreEqual("smarthome.appliances_off", response.Result.Action);
-
-            var actionCondition = response.Result.GetJsonParameter("action_condition");
-
-            var timeToken = actionCondition.SelectToken("time");
-            Assert.IsNotNull(timeToken);
-        }
-
-        [Test]
-	    public void TimeParameterTest()
-	    {
-            var config = new AIConfiguration("23e7d37f6dd24e4eb7dbbd7491f832cf", // special agent with domains
-                SupportedLanguage.English);
-
-            var dataService = new AIDataService(config);
-
-            var aiRequest = new AIRequest("set alarm to ten pm");
-            var response = MakeRequest(dataService, aiRequest);
-
-            Assert.AreEqual("domains", response.Result.Source);
-            Assert.AreEqual("clock.alarm_set", response.Result.Action);
-
-            var stringParameter = response.Result.GetStringParameter("time");
-            Assert.IsNotNull(stringParameter);
         }
 
         [Test]
