@@ -243,6 +243,7 @@ namespace ApiAiSDK.Tests
                     source ="agent",
                     resolvedQuery ="hello",
                     action ="hello_action",
+                    actionIncomplete = false,
                     fulfillment = new {
                         speech = "",
                         messages = new object[] {
