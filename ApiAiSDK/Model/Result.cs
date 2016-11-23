@@ -33,6 +33,9 @@ namespace ApiAiSDK.Model
 	
         String action;
 
+        [JsonProperty("actionIncomplete")]
+        public Boolean ActionIncomplete { get; set; }
+
 		[JsonProperty("action")]
         public String Action
         {
