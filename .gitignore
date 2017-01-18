@@ -22,3 +22,5 @@ api-ai-net.sln.DotSettings.user
 .DS_Store
 /*.sln.iml
 /copy_to_xamarin.sh
+ApiAiSDK.NETCore/obj
+ApiAiSDK.NETCore/bin
