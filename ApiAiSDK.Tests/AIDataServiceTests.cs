@@ -31,9 +31,10 @@ namespace ApiAiSDK.Tests
 	[TestFixture]
 	public class AIDataServiceTests
 	{
-		private const string ACCESS_TOKEN = "3485a96fb27744db83e78b8c4bc9e7b7";
+		private const string ACCESS_TOKEN = "bd96597446144a01ab462c52c7a98463";
+        private const string EMPTY_AGENT_ACCESS_TOKEN = "b6f91a7069f54e16abf8113e67424500";
 
-		[Test]
+        [Test]
 		public void TextRequestTest()
 		{
 			var dataService = CreateDataService();
@@ -71,13 +72,13 @@ namespace ApiAiSDK.Tests
 			}
 
 			{
-				var config = new AIConfiguration("968235e8e4954cf0bb0dc07736725ecd", SupportedLanguage.English);
+                var config = new AIConfiguration(EMPTY_AGENT_ACCESS_TOKEN, SupportedLanguage.English);
 				var dataService = new AIDataService(config);
 				var request = new AIRequest(query);
 
 				var response = dataService.Request(request);
 				Assert.IsNotNull(response.Result);
-				Assert.IsTrue(string.IsNullOrEmpty(response.Result.Action));
+                Assert.AreEqual("input.unknown", response.Result.Action);
 
 			}
 
@@ -100,7 +101,7 @@ namespace ApiAiSDK.Tests
 			{
 				var checkSecondRequest = new AIRequest("check weather");
 				var checkSecondResponse = MakeRequest(secondService, checkSecondRequest);
-                Assert.IsEmpty(checkSecondResponse.Result.Action);
+                Assert.AreEqual("input.unknown", checkSecondResponse.Result.Action);
 			}
 
 			{
@@ -278,7 +279,7 @@ namespace ApiAiSDK.Tests
                 {
                     { "location", "London"}
                 },
-                Lifespan = 3
+                Lifespan = 4
             };
 
             aiRequest.Contexts =
