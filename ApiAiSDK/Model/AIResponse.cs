@@ -33,7 +33,10 @@ namespace ApiAiSDK.Model
 		[JsonProperty("timestamp")]
 		public DateTime Timestamp{ get; set; }
 
-		[JsonProperty("result")]
+        [JsonProperty("lang")]
+        public string Lang { get; set; }
+
+        [JsonProperty("result")]
 		public Result Result{ get; set; }
 	
 		[JsonProperty("status")]
