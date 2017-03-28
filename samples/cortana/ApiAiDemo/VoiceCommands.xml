@@ -1,0 +1,291 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<VoiceCommands xmlns="http://schemas.microsoft.com/voicecommands/1.2">
+  <CommandSet Name="pizza" xml:lang="en-us">
+    <AppName>pizza</AppName>
+    <Example>Pizza delivery app</Example>
+    <Command Name="unknown">
+      <Example>Some another command</Example>
+      <ListenFor RequireAppName="BeforePhrase">{*}</ListenFor>
+      <Feedback>Processing...</Feedback>
+      <VoiceCommandService Target="ApiAiVoiceCommandService"/>
+    </Command>
+    <Command Name="time_delivery_time">
+      <Example>Add example for time - delivery-time command</Example>
+      <ListenFor RequireAppName="BeforePhrase">{DateTimeTopic}</ListenFor>
+      <Feedback>Thank you for your order!</Feedback>
+      <Navigate/>
+    </Command>
+    <Command Name="topping">
+      <Example>chicken pizza</Example>
+      <ListenFor RequireAppName="BeforeOrAfterPhrase">chicken pizza</ListenFor>
+      <ListenFor RequireAppName="BeforeOrAfterPhrase">bacon and broccoli pizza</ListenFor>
+      <ListenFor RequireAppName="BeforeOrAfterPhrase">I 'd like chicken pizza</ListenFor>
+      <ListenFor RequireAppName="BeforeOrAfterPhrase">pizza with salami</ListenFor>
+      <ListenFor RequireAppName="BeforeOrAfterPhrase">pizza with tomatoes and mozzarella</ListenFor>
+      <ListenFor RequireAppName="BeforeOrAfterPhrase">I'd like pizza with gorgonzola cheese</ListenFor>
+      <ListenFor RequireAppName="BeforeOrAfterPhrase">I want pizza with chicken and tomatoes</ListenFor>
+      <ListenFor RequireAppName="BeforeOrAfterPhrase">deliver salami pizza</ListenFor>
+      <ListenFor RequireAppName="BeforeOrAfterPhrase">I want to have prosciutto pizza</ListenFor>
+      <ListenFor RequireAppName="BeforeOrAfterPhrase">do you have salami pizza</ListenFor>
+      <Feedback>Sure! What type of crust do you prefer?</Feedback>
+      <Navigate/>
+    </Command>
+    <Command Name="now_delivery_time">
+      <Example>now</Example>
+      <ListenFor RequireAppName="BeforePhrase">now</ListenFor>
+      <ListenFor RequireAppName="BeforeOrAfterPhrase">as soon as possible</ListenFor>
+      <Feedback>Thank you for your order! You'll get your pizza in 45 minutes.</Feedback>
+      <Navigate/>
+    </Command>
+    <Command Name="size_size">
+      <Example>Add example for size - size command</Example>
+      <ListenFor RequireAppName="BeforePhrase">{size}</ListenFor>
+      <ListenFor RequireAppName="BeforePhrase">{*} {size}</ListenFor>
+      <ListenFor RequireAppName="BeforePhrase">{*} {size} {*}</ListenFor>
+      <ListenFor RequireAppName="BeforePhrase">{size} {*}</ListenFor>
+      <Feedback>Great choice. Where should we deliver it?</Feedback>
+      <Navigate/>
+    </Command>
+    <Command Name="pizza">
+      <Example>pizza</Example>
+      <ListenFor RequireAppName="BeforePhrase">pizza</ListenFor>
+      <ListenFor RequireAppName="BeforeOrAfterPhrase">i want to eat pizza</ListenFor>
+      <ListenFor RequireAppName="BeforeOrAfterPhrase">deliver pizza</ListenFor>
+      <ListenFor RequireAppName="BeforeOrAfterPhrase">pizza delivery</ListenFor>
+      <ListenFor RequireAppName="BeforeOrAfterPhrase">i love pizza</ListenFor>
+      <Feedback>Sure, let me help you get the best pizza for you! What pizza would you like?</Feedback>
+      <Navigate/>
+    </Command>
+    
+    <Command Name="crust_pizza_crust">
+      <Example>Add example for crust - pizza-crust command</Example>
+      <ListenFor RequireAppName="BeforePhrase">{crust}</ListenFor>
+      <ListenFor RequireAppName="BeforePhrase">{crust} pizza</ListenFor>
+      <ListenFor RequireAppName="BeforeOrAfterPhrase">i like {crust}</ListenFor>
+      <ListenFor RequireAppName="BeforeOrAfterPhrase">i want {crust}</ListenFor>
+      <ListenFor RequireAppName="BeforeOrAfterPhrase">pizza with {crust}</ListenFor>
+      <ListenFor RequireAppName="BeforeOrAfterPhrase">i like {crust} pizza</ListenFor>
+      <ListenFor RequireAppName="BeforeOrAfterPhrase">i want {crust} pizza</ListenFor>
+      <Feedback> crust it is! What kind of sauce would you like?</Feedback>
+      <Navigate/>
+    </Command>
+    
+    <Command Name="address_delivery_address">
+      <Example>Add example for address - delivery-address command</Example>
+      <ListenFor RequireAppName="BeforePhrase">{AddressTopic}</ListenFor>
+      <ListenFor RequireAppName="BeforePhrase">to {AddressTopic}</ListenFor>
+      <ListenFor RequireAppName="BeforePhrase">on {AddressTopic}</ListenFor>
+      <ListenFor RequireAppName="BeforeOrAfterPhrase">i live at {AddressTopic}</ListenFor>
+      <ListenFor RequireAppName="BeforeOrAfterPhrase">i live on {AddressTopic}</ListenFor>
+      <Feedback>When would you like to receive your pizza?</Feedback>
+      <Navigate/>
+    </Command>
+    <Command Name="yes_topping_type">
+      <Example>yes</Example>
+      <ListenFor RequireAppName="BeforePhrase">yes</ListenFor>
+      <Feedback>Okay, what toppings would you like to add?</Feedback>
+      <Navigate/>
+    </Command>
+    <Command Name="greetings">
+      <Example>hello</Example>
+      <ListenFor RequireAppName="BeforePhrase">hello</ListenFor>
+      <ListenFor RequireAppName="BeforeOrAfterPhrase">how are you</ListenFor>
+      <ListenFor RequireAppName="BeforeOrAfterPhrase">nice to meet you</ListenFor>
+      <Feedback>Hello! What kind of pizza would you like?</Feedback>
+      <VoiceCommandService Target="ApiAiVoiceCommandService"/>
+    </Command>
+    <Command Name="type">
+      <Example>Add example for type command</Example>
+      <ListenFor RequireAppName="BeforePhrase">{type}</ListenFor>
+      <ListenFor RequireAppName="BeforePhrase">{type} pizza</ListenFor>
+      <ListenFor RequireAppName="BeforeOrAfterPhrase">i want to eat {type} [pizza]</ListenFor>
+      <ListenFor RequireAppName="BeforeOrAfterPhrase">deliver me {type} [pizza]</ListenFor>
+      <ListenFor RequireAppName="BeforeOrAfterPhrase">i love {type} [pizza]</ListenFor>
+      <Feedback>I'll make sure you get the best  pizza ever! Would you like to add some extra toppings?</Feedback>
+      <VoiceCommandService Target="ApiAiVoiceCommandService"/>
+    </Command>
+    <Command Name="no_toppings_topping_type">
+      <Example>no</Example>
+      <ListenFor RequireAppName="BeforePhrase">no</ListenFor>
+      <Feedback>All right, I won't add extra toppings. What size pizza would you like?</Feedback>
+      <Navigate/>
+    </Command>
+    <Command Name="topping_topping_type">
+      <Example>Add example for topping - topping-type command</Example>
+      <ListenFor RequireAppName="BeforePhrase">{topping}</ListenFor>
+      <ListenFor RequireAppName="BeforePhrase">{topping} {topping}</ListenFor>
+      <ListenFor RequireAppName="BeforePhrase">{topping} {topping} {topping}</ListenFor>
+      <ListenFor RequireAppName="BeforePhrase">{topping} {*}</ListenFor>
+      <ListenFor RequireAppName="BeforePhrase">{topping} {topping} {*}</ListenFor>
+      <ListenFor RequireAppName="BeforePhrase">{topping} {topping} {topping} {*}</ListenFor>
+      <ListenFor RequireAppName="BeforePhrase">extra {topping}</ListenFor>
+      <ListenFor RequireAppName="BeforeOrAfterPhrase">i want {topping}</ListenFor>
+      <ListenFor RequireAppName="BeforeOrAfterPhrase">i d like {topping} {topping}</ListenFor>
+      <ListenFor RequireAppName="BeforeOrAfterPhrase">i want {topping} {topping} {topping}</ListenFor>
+      <Feedback>Got it! I'll add it to your pizza. Now what size pizza would you like?</Feedback>
+      <Navigate/>
+    </Command>
+    <Command Name="sauce_sauce_type">
+      <Example>Add example for sauce - sauce-type command</Example>
+      <ListenFor RequireAppName="BeforePhrase">{sauce}</ListenFor>
+      <ListenFor RequireAppName="BeforePhrase">{sauce} sauce</ListenFor>
+      <ListenFor RequireAppName="BeforeOrAfterPhrase">i like {sauce}</ListenFor>
+      <ListenFor RequireAppName="BeforeOrAfterPhrase">i want {sauce}</ListenFor>
+      <ListenFor RequireAppName="BeforeOrAfterPhrase">i ll have {sauce}</ListenFor>
+      <ListenFor RequireAppName="BeforeOrAfterPhrase">i like {sauce} sauce</ListenFor>
+      <ListenFor RequireAppName="BeforeOrAfterPhrase">i want {sauce} sauce</ListenFor>
+      <ListenFor RequireAppName="BeforeOrAfterPhrase">i ll have {sauce} sauce</ListenFor>
+      <Feedback>Got it! Would you like any extra toppings?</Feedback>
+      <Navigate/>
+    </Command>
+    <PhraseList Label="size">
+      <Item>small</Item>
+      <Item>medium</Item>
+      <Item>large</Item>
+    </PhraseList>
+    <PhraseList Label="crust">
+      <Item>thin</Item>
+      <Item>thick</Item>
+      <Item>stuffed</Item>
+      <Item>thin crust</Item>
+      <Item>thin crusted</Item>
+      <Item>thick crust</Item>
+      <Item>thick crusted</Item>
+      <Item>stuffed crust</Item>
+    </PhraseList>
+    <PhraseList Label="type">
+      <Item>capricciosa</Item>
+      <Item>quattro stagioni</Item>
+      <Item>four cheese</Item>
+      <Item>vegetarian</Item>
+      <Item>marinara</Item>
+      <Item>margherita</Item>
+      <Item>frutti di mare</Item>
+      <Item>neapolitan</Item>
+      <Item>hawaii</Item>
+      <Item>calzone</Item>
+      <Item>bolognese</Item>
+      <Item>mexican</Item>
+      <Item>sicilian</Item>
+      <Item>new york style</Item>
+      <Item>italian</Item>
+      <Item>greek</Item>
+      <Item>deep dish</Item>
+      <Item>detroit style</Item>
+      <Item>pepperoni</Item>
+      <Item>quattro formaggi</Item>
+      <Item>vegetariana</Item>
+      <Item>vege</Item>
+      <Item>veg</Item>
+      <Item>veggie</Item>
+      <Item>vegetable</Item>
+      <Item>napolitana</Item>
+      <Item>hawaiian</Item>
+      <Item>stuffed</Item>
+      <Item>mexicana</Item>
+      <Item>greek style</Item>
+      <Item>chicago style</Item>
+      <Item>chicago deep dish</Item>
+      <Item>peperoni</Item>
+    </PhraseList>
+    <PhraseList Label="topping">
+      <Item>asparagus</Item>
+      <Item>anchovy</Item>
+      <Item>artichoke</Item>
+      <Item>bacon</Item>
+      <Item>bean sprout</Item>
+      <Item>beef</Item>
+      <Item>bell pepper</Item>
+      <Item>broccoli</Item>
+      <Item>capers</Item>
+      <Item>chicken</Item>
+      <Item>chili pepper</Item>
+      <Item>corn</Item>
+      <Item>eggplant</Item>
+      <Item>garlic</Item>
+      <Item>ham</Item>
+      <Item>jalapeño</Item>
+      <Item>meat</Item>
+      <Item>meatball</Item>
+      <Item>mushroom</Item>
+      <Item>mussels</Item>
+      <Item>olives</Item>
+      <Item>onion</Item>
+      <Item>oysters</Item>
+      <Item>pepperoni</Item>
+      <Item>pineapple</Item>
+      <Item>pork</Item>
+      <Item>prosciutto</Item>
+      <Item>salami</Item>
+      <Item>sausage</Item>
+      <Item>seafood</Item>
+      <Item>spinach</Item>
+      <Item>shrimp</Item>
+      <Item>scallops</Item>
+      <Item>sun dried tomato</Item>
+      <Item>tomato</Item>
+      <Item>tuna</Item>
+      <Item>zucchini</Item>
+      <Item>green olives</Item>
+      <Item>feta</Item>
+      <Item>cheddar</Item>
+      <Item>goat cheese</Item>
+      <Item>gorgonzola</Item>
+      <Item>mozzarella</Item>
+      <Item>smoked mozzarella</Item>
+      <Item>parmesan</Item>
+      <Item>pecorino</Item>
+      <Item>no topping</Item>
+      <Item>artichoke heart</Item>
+      <Item>smoked bacon</Item>
+      <Item>ground beef</Item>
+      <Item>chicken breast</Item>
+      <Item>aubergine</Item>
+      <Item>jalapeno</Item>
+      <Item>jalapeño pepper</Item>
+      <Item>jalapeno pepper</Item>
+      <Item>minsed meat</Item>
+      <Item>ground meat</Item>
+      <Item>meat ball</Item>
+      <Item>black olives</Item>
+      <Item>pork slice</Item>
+      <Item>fresh tomato</Item>
+      <Item>feta cheese</Item>
+      <Item>cheddar cheese</Item>
+      <Item>gorgonzola cheese</Item>
+      <Item>mozzarella cheese</Item>
+      <Item>fresh mozzarella cheese</Item>
+      <Item>fresh mozzarella</Item>
+      <Item>parmesan cheese</Item>
+      <Item>pecorino cheese</Item>
+      <Item>without toppings</Item>
+    </PhraseList>
+    <PhraseList Label="sauce">
+      <Item>alfredo</Item>
+      <Item>bbq</Item>
+      <Item>bechamel</Item>
+      <Item>curry</Item>
+      <Item>garlic oil</Item>
+      <Item>garlic aioli</Item>
+      <Item>marinara</Item>
+      <Item>pesto</Item>
+      <Item>ranch</Item>
+      <Item>salsa</Item>
+      <Item>tomato</Item>
+      <Item>no</Item>
+      <Item>barbeque</Item>
+      <Item>garlic and oil</Item>
+      <Item>garlic n oil</Item>
+      <Item>classic marinara</Item>
+      <Item>classic tomato</Item>
+      <Item>no sause</Item>
+      <Item>without sause</Item>
+    </PhraseList>
+    <PhraseTopic Label="DateTimeTopic">
+      <Subject>Date/Time</Subject>
+    </PhraseTopic>
+    <PhraseTopic Label="AddressTopic">
+      <Subject>Addresses</Subject>
+    </PhraseTopic>
+  </CommandSet>
+</VoiceCommands>

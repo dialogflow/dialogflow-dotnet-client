@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<VoiceCommands xmlns="http://schemas.microsoft.com/voicecommands/1.2">
+    <CommandSet Name="someUnusedWord" xml:lang="en-us">
+        <AppName>DemoUninstalled</AppName>
+        <Example>Disabled commands</Example>
+        <Command Name="now_delivery_time">
+            <Example>now</Example>
+            <ListenFor RequireAppName="BeforePhrase">now</ListenFor>
+            <ListenFor RequireAppName="BeforeOrAfterPhrase">as soon as possible</ListenFor>
+            <Feedback>Thank you for your order! You'll get your pizza in 45 minutes.</Feedback>
+            <Navigate/>
+        </Command>
+    </CommandSet>
+</VoiceCommands>

@@ -1,0 +1,13 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/ApiAiDemo/bin
+/ApiAiDemo/obj
+/.vs/ApiAiDemo/v14
+/VoiceCommandService/bin
+/VoiceCommandService/obj
+/.vs/config
+/ApiAiDemo/AppPackages
+/ApiAiDemoTests/bin
+/ApiAiDemoTests/obj

@@ -1,0 +1,114 @@
+﻿<Page
+    x:Class="ApiAiDemo.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ApiAiDemo"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+
+        <Style x:Key="apiaiButton" TargetType="Button">
+            <Setter Property="Background" Value="#36A0E1" />
+            <Setter Property="Foreground" Value="#F7FFFF" />
+            <Setter Property="Margin" Value="5" />
+        </Style>
+
+    </Page.Resources>
+
+    <Grid Background="#2B303E">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"
+                  Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Image Grid.Column="0"
+                       Source="Assets/apiai.png" />
+
+                <TextBlock Grid.Column="1" FontWeight="Bold"
+                           FontSize="26.667"
+                           Margin="10,0,0,9"
+                           Foreground="#F7FFFF">
+
+                    Pizza
+                </TextBlock>
+
+            </Grid>
+
+            <Button Grid.Row="1" Grid.Column="0"
+                    Name="listenButton"
+                    Style="{StaticResource apiaiButton}"
+                    Content="Listen"
+                    Click="Listen_Click" />
+
+            <Button Grid.Row="1" Grid.Column="3"
+                    Style="{StaticResource apiaiButton}"
+                    Content="Install"
+                    Click="InstallVoiceCommands_Click" />
+
+            <Button Grid.Row="1" Grid.Column="4"
+                    Style="{StaticResource apiaiButton}"
+                    Content="Uninstall"
+                    Click="UninstallCommands_Click" />
+
+            <Button Grid.Row="1" Grid.Column="5"
+                    Style="{StaticResource apiaiButton}"
+                    Content="JSON"
+                    Click="JsonButton_Click" />
+
+
+            <ScrollViewer Grid.Row="3" Grid.Column="0"
+                          Grid.ColumnSpan="6"
+                          Name="jsonContaner"
+                          Visibility="Collapsed"
+                          VerticalScrollMode="Enabled"
+                          HorizontalScrollMode="Disabled"
+                          VerticalScrollBarVisibility="Visible"
+                          ZoomMode="Disabled">
+
+                <TextBlock
+                    Name="resultTextBlock"
+                    TextWrapping="Wrap"
+                    Margin="5"
+                    Foreground="#F7FFFF"
+                    LineStackingStrategy="MaxHeight" />
+
+            </ScrollViewer>
+
+
+            <TextBlock Grid.Row="2" Grid.Column="0"
+                       Grid.ColumnSpan="6"
+                       Name="parametersTextBlock"
+                       Margin="5"
+                       TextWrapping="WrapWholeWords"
+                       Foreground="#F7FFFF"
+                       LineStackingStrategy="MaxHeight" 
+                       />
+
+
+            <MediaElement Grid.Row="0" Name="mediaElement" />
+
+        </Grid>
+    </Grid>
+</Page>
