@@ -22,13 +22,14 @@ using NUnit.Framework;
 using Newtonsoft.Json;
 using ApiAiSDK.Model;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 
 namespace ApiAiSDK.Tests
 {
     [TestFixture]
     public class ModelTests
     {
-        private const string TEST_DATA = "{\"id\":\"2d2d947b-6ccd-4615-8f16-59b8bfc0fa6b\",\"timestamp\":\"2015-04-13T11:03:43.023Z\",\"result\":{\"source\":\"agent\",\"resolvedQuery\":\"test params 1.23\",\"speech\":\"\",\"action\":\"test_params\",\"parameters\":{\"number\":\"1.23\", \"integer\":\"17\", \"str\":\"string value\", \"complex_param\":{\"nested_key\": \"nested_value\"}},\"contexts\":[],\"metadata\":{\"intentId\":\"46a278fb-0ffc-4748-aa9a-5563d89199ee\",\"intentName\":\"test params\"}},\"status\":{\"code\":200,\"errorType\":\"success\"}}";
+        private const string TEST_DATA = "{\"id\":\"2d2d947b-6ccd-4615-8f16-59b8bfc0fa6b\",\"timestamp\":\"2015-04-13T11:03:43.023Z\",\"result\":{\"source\":\"agent\",\"resolvedQuery\":\"test params 1.23\",\"speech\":\"\",\"action\":\"test_params\",\"parameters\":{\"number\":\"1.23\", \"integer\":\"17\", \"str\":\"string value\", \"complex_param\":{\"nested_key\": \"nested_value\"}},\"contexts\":[{\"name\": \"some_context_name\", \"parameters\": {\"context_param1\": \"some_string param\", \"context_param2\": {\"context_val\": \"some context value\"}}}],\"metadata\":{\"intentId\":\"46a278fb-0ffc-4748-aa9a-5563d89199ee\",\"intentName\":\"test params\"}},\"status\":{\"code\":200,\"errorType\":\"success\"}}";
 
         [Test]
         public void TestResultGetString()
@@ -40,6 +41,23 @@ namespace ApiAiSDK.Tests
             Assert.AreEqual(string.Empty, response.Result.GetStringParameter("non_exist_parameter"));
 
             Assert.AreEqual("string value", response.Result.GetStringParameter("str"));
+        }
+
+        [Test]
+        public void TestResultContext ()
+        {
+            var response = JsonConvert.DeserializeObject<AIResponse> (TEST_DATA);
+
+            var context = response.Result.Contexts[0];
+            Assert.NotNull (context);
+            Assert.AreEqual ("some_context_name", context.Name);
+
+            var contextParam1 = context.Parameters ["context_param1"];
+            Assert.AreEqual ("some_string param", contextParam1);
+
+            var contextParam2 = (Dictionary<string, object>)context.Parameters ["context_param2"];
+            Assert.NotNull (contextParam2);
+            Assert.AreEqual ("some context value", contextParam2 ["context_val"]);
         }
 
         [Test]
