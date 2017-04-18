@@ -29,7 +29,7 @@ namespace ApiAiSDK.Tests
     [TestFixture]
     public class ModelTests
     {
-        private const string TEST_DATA = "{\"id\":\"2d2d947b-6ccd-4615-8f16-59b8bfc0fa6b\",\"timestamp\":\"2015-04-13T11:03:43.023Z\",\"result\":{\"source\":\"agent\",\"resolvedQuery\":\"test params 1.23\",\"speech\":\"\",\"action\":\"test_params\",\"parameters\":{\"number\":\"1.23\", \"integer\":\"17\", \"str\":\"string value\", \"complex_param\":{\"nested_key\": \"nested_value\"}},\"contexts\":[{\"name\": \"some_context_name\", \"parameters\": {\"context_param1\": \"some_string param\", \"context_param2\": {\"context_val\": \"some context value\"}}}],\"metadata\":{\"intentId\":\"46a278fb-0ffc-4748-aa9a-5563d89199ee\",\"intentName\":\"test params\"}},\"status\":{\"code\":200,\"errorType\":\"success\"}}";
+        private const string TEST_DATA = "{\"id\":\"2d2d947b-6ccd-4615-8f16-59b8bfc0fa6b\",\"timestamp\":\"2015-04-13T11:03:43.023Z\",\"result\":{\"source\":\"agent\",\"resolvedQuery\":\"test params 1.23\",\"speech\":\"\",\"action\":\"test_params\",\"parameters\":{\"number\":\"1.23\", \"integer\":\"17\", \"str\":\"string value\", \"complex_param\":{\"nested_key\": \"nested_value\"}},\"contexts\":[{\"name\": \"some_context_name\", \"parameters\": {\"context_param1\": \"some_string param\", \"context_param2\": {\"context_val\": \"some context value\"}, \"category.original\": \"\", \"category\": []}}],\"metadata\":{\"intentId\":\"46a278fb-0ffc-4748-aa9a-5563d89199ee\",\"intentName\":\"test params\"}},\"status\":{\"code\":200,\"errorType\":\"success\"}}";
 
         [Test]
         public void TestResultGetString()
