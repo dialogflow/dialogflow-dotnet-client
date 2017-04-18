@@ -30,7 +30,7 @@ namespace ApiAiSDK.Tests
 	[TestFixture]
 	public class AIDataServiceTests
 	{
-		private const string ACCESS_TOKEN = "3485a96fb27744db83e78b8c4bc9e7b7";
+		private const string ACCESS_TOKEN = "bd96597446144a01ab462c52c7a98463";
 
 		[Test]
 		public void TextRequestTest()
@@ -98,7 +98,7 @@ namespace ApiAiSDK.Tests
 			{
 				var checkSecondRequest = new AIRequest("check weather");
 				var checkSecondResponse = MakeRequest(secondService, checkSecondRequest);
-                Assert.IsEmpty(checkSecondResponse.Result.Action);
+                Assert.AreEqual("input.unknown", checkSecondResponse.Result.Action);
 			}
 			
 			{
@@ -299,12 +299,12 @@ namespace ApiAiSDK.Tests
                 {
                     { "location", "London"}
                 },
-                Lifespan = 3
+                Lifespan = 4
             };
 
             aiRequest.Contexts =
                 new List<AIContext>
-                {
+                {   
                     aiContext
                 };
 

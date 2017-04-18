@@ -29,7 +29,7 @@ namespace ApiAiSDK.Tests
 	[TestFixture]
 	public class ApiAiTest
 	{
-		private const string ACCESS_TOKEN = "3485a96fb27744db83e78b8c4bc9e7b7";
+		private const string ACCESS_TOKEN = "bd96597446144a01ab462c52c7a98463";
 
 		[Test]
 		public void TextRequestTest()
@@ -60,7 +60,7 @@ namespace ApiAiSDK.Tests
             Assert.AreEqual("Hi! How are you?", response.Result.Fulfillment.Speech);
 		}
 
-		[Test]
+        [Obsolete]
 		public void VoiceRequestTest()
 		{
 			var config = new AIConfiguration(ACCESS_TOKEN, SupportedLanguage.English);
