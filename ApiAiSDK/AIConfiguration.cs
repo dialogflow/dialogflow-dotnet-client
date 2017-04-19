@@ -32,11 +32,13 @@ namespace ApiAiSDK
 
         private const string CURRENT_PROTOCOL_VERSION = "20150910";
 
-		public string ClientAccessToken { get; private set; }
+		public string ClientAccessToken { get; }
 
 		public SupportedLanguage Language { get; set; }
 
         public bool VoiceActivityDetectionEnabled { get; set; }
+
+        public string SessionId { get; set; }
 
 		/// <summary>
 		/// If true, will be used Testing API.AI server instead of Production server. This option for TESTING PURPOSES ONLY.
