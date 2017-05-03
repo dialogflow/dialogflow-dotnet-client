@@ -19,10 +19,9 @@
 // ***********************************************************************************************************************
 
 using System;
-using System.Collections;
-using System.Net;
 using System.IO;
 using ApiAiSDK.Model;
+using System.Threading.Tasks;
 
 namespace ApiAiSDK
 {
@@ -38,44 +37,44 @@ namespace ApiAiSDK
 			dataService = new AIDataService(this.config);
 		}
 
-		public AIResponse TextRequest(string text)
+		public Task<AIResponse> TextRequestAsync(string text)
 		{
 			if (string.IsNullOrEmpty(text)) {
 				throw new ArgumentNullException("text");
 			}
 
-			return TextRequest(new AIRequest(text));
+			return TextRequestAsync(new AIRequest(text));
 		}
 
-		public AIResponse TextRequest(AIRequest request)
+		public Task<AIResponse> TextRequestAsync(AIRequest request)
 		{
 			if (request == null) {
 				throw new ArgumentNullException("request");
 			}
 
-			return dataService.Request(request);
+			return dataService.RequestAsync(request);
 		}
 
-        public AIResponse TextRequest(string text, RequestExtras requestExtras)
+        public Task<AIResponse> TextRequestAsync(string text, RequestExtras requestExtras)
         {
             if (string.IsNullOrEmpty(text)) {
                 throw new ArgumentNullException("text");
             }
 
-            return TextRequest(new AIRequest(text, requestExtras));
+            return TextRequestAsync(new AIRequest(text, requestExtras));
         }
 
-		public AIResponse VoiceRequest(Stream voiceStream, RequestExtras requestExtras = null)
+		public Task<AIResponse> VoiceRequestAsync(Stream voiceStream, RequestExtras requestExtras = null)
 		{
 		    if (config.Language == SupportedLanguage.Italian)
 		    {
 		        throw new AIServiceException("Sorry, but Italian language now is not supported in Speaktoit recognition. Please use some another speech recognition engine.");
 		    }
 
-			return dataService.VoiceRequest(voiceStream, requestExtras);
+			return dataService.VoiceRequestAsync(voiceStream, requestExtras);
 		}
 
-		public AIResponse VoiceRequest(float[] samples)
+		public Task<AIResponse> VoiceRequestAsync(float[] samples)
 		{
 			try {
 
@@ -89,7 +88,7 @@ namespace ApiAiSDK
 					var voiceStream = new MemoryStream(bytes);
 					voiceStream.Seek(0, SeekOrigin.Begin);
 				
-					var aiResponse = VoiceRequest(voiceStream);
+					var aiResponse = VoiceRequestAsync(voiceStream);
 					return aiResponse;
 				}
 

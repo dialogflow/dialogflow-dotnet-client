@@ -180,7 +180,7 @@ namespace ApiAiSDK.Tests
 
         private Stream ReadFileFromResource(string resourceId)
         {
-            Assembly a = Assembly.GetExecutingAssembly();
+            Assembly a = Assembly.GetEntryAssembly();
             Stream stream = a.GetManifestResourceStream("ApiAiSDK.Tests.TestData." + resourceId);
             return stream;
         }

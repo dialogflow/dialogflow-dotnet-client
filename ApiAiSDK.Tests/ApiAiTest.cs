@@ -23,6 +23,7 @@ using System.IO;
 using NUnit.Framework;
 using ApiAiSDK.Model;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace ApiAiSDK.Tests
 {
@@ -32,13 +33,13 @@ namespace ApiAiSDK.Tests
 		private const string ACCESS_TOKEN = "3485a96fb27744db83e78b8c4bc9e7b7";
 
 		[Test]
-		public void TextRequestTest()
+		public async Task TextRequestTest()
 		{
 			var config = new AIConfiguration(ACCESS_TOKEN, SupportedLanguage.English);
 
 			var apiAi = new ApiAi(config);
 
-			var response = apiAi.TextRequest("hello");
+			var response = await apiAi.TextRequestAsync("hello");
 
 			Assert.IsNotNull(response);
 			Assert.AreEqual("greeting", response.Result.Action);
@@ -46,14 +47,14 @@ namespace ApiAiSDK.Tests
 		}
 
 		[Test]
-		public void TextAIRequestTest()
+		public async Task TextAIRequestTest()
 		{
 			var config = new AIConfiguration(ACCESS_TOKEN, SupportedLanguage.English);
 			
 			var apiAi = new ApiAi(config);
 
 			var request = new AIRequest("hello");
-			var response = apiAi.TextRequest(request);
+			var response = await apiAi.TextRequestAsync(request);
 			
 			Assert.IsNotNull(response);
 			Assert.AreEqual("greeting", response.Result.Action);
@@ -61,14 +62,14 @@ namespace ApiAiSDK.Tests
 		}
 
 		[Test]
-		public void VoiceRequestTest()
+		public async Task VoiceRequestTest()
 		{
 			var config = new AIConfiguration(ACCESS_TOKEN, SupportedLanguage.English);
 
 			var apiAi = new ApiAi(config);
 			var stream = ReadFileFromResource("ApiAiSDK.Tests.TestData.what_is_your_name.raw");
 
-			var response = apiAi.VoiceRequest(stream);
+			var response = await apiAi.VoiceRequestAsync(stream);
 
 			Assert.IsNotNull(response);
 			Assert.AreEqual("what is your name", response.Result.ResolvedQuery);
@@ -76,7 +77,7 @@ namespace ApiAiSDK.Tests
 
 		private Stream ReadFileFromResource(string resourceId)
 		{
-			Assembly a = Assembly.GetExecutingAssembly();
+			Assembly a = Assembly.GetEntryAssembly();
 			Stream stream = a.GetManifestResourceStream(resourceId);
 			return stream;
 		}
