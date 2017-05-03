@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyTitle>ApiAiSDK</AssemblyTitle>
+    <TargetFramework>netstandard1.5</TargetFramework>
+    <AssemblyName>ApiAiSDK.NETCore</AssemblyName>
+    <PackageId>ApiAiSDK.NETCore</PackageId>
+    <!--<NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>-->
+    <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
+    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\ApiAiSDK\AIConfiguration.cs;..\ApiAiSDK\AIServiceException.cs;..\ApiAiSDK\ApiAiBase.cs;..\ApiAiSDK\LibraryInfo.cs;..\ApiAiSDK\RequestExtras.cs;..\ApiAiSDK\SupportedLanguage.cs;..\ApiAiSDK\Model\AIContext.cs;..\ApiAiSDK\Model\AIOutputContext.cs;..\ApiAiSDK\Model\AIRequest.cs;..\ApiAiSDK\Model\AIResponse.cs;..\ApiAiSDK\Model\Entity.cs;..\ApiAiSDK\Model\EntityEntry.cs;..\ApiAiSDK\Model\Fulfillment.cs;..\ApiAiSDK\Model\Metadata.cs;..\ApiAiSDK\Model\OriginalRequest.cs;..\ApiAiSDK\Model\QuestionMetadata.cs;..\ApiAiSDK\Model\Result.cs;..\ApiAiSDK\Model\Status.cs;..\ApiAiSDK\Util\ActionExtensions.cs;..\ApiAiSDK\Util\ByteBuffer.cs;..\ApiAiSDK\Util\FFT2.cs;..\ApiAiSDK\Util\VoiceActivityDetector.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
+  </ItemGroup>
+
+</Project>
