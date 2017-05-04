@@ -20,14 +20,13 @@
 
 using System;
 using System.IO;
-using NUnit.Framework;
 using ApiAiSDK.Model;
 using ApiAiSDK.Util;
 using System.Reflection;
+using Xunit;
 
 namespace ApiAiSDK.Tests
 {
-    [TestFixture]
     public class VADTest
     {
         private const int SAMPLE_RATE = 16000;
@@ -36,7 +35,7 @@ namespace ApiAiSDK.Tests
         bool speechBegin;
         bool speechNotDetected;
 
-        [Test]
+        [Fact]
         public void TestSpeechDetect(){
             var vad = new VoiceActivityDetector(SAMPLE_RATE);
 
@@ -52,15 +51,15 @@ namespace ApiAiSDK.Tests
 
             ProcessStream(vad, inputStream);
 
-            Assert.IsTrue(speechBegin);
-            Assert.IsTrue(speechEnd);
-            Assert.IsFalse(speechNotDetected);
+            Assert.True(speechBegin);
+            Assert.True(speechEnd);
+            Assert.False(speechNotDetected);
 
-            Assert.IsTrue(vad.SpeechBeginTime > 800 && vad.SpeechBeginTime < 950, "vad.SpeechBeginTime " + vad.SpeechBeginTime);
-            Assert.IsTrue(vad.SpeechEndTime > 2400 && vad.SpeechEndTime < 2900, "vad.SpeechEndTime " + vad.SpeechEndTime);
+            Assert.True(vad.SpeechBeginTime > 800 && vad.SpeechBeginTime < 950, "vad.SpeechBeginTime " + vad.SpeechBeginTime);
+            Assert.True(vad.SpeechEndTime > 2400 && vad.SpeechEndTime < 2900, "vad.SpeechEndTime " + vad.SpeechEndTime);
         }
 
-        [Test]
+        [Fact]
         public void TestSilence() {
             var vad = new VoiceActivityDetector(SAMPLE_RATE);
 
@@ -76,12 +75,12 @@ namespace ApiAiSDK.Tests
 
             ProcessStream(vad, inputStream);
 
-            //Assert.IsFalse(speechBegin);
-            Assert.IsFalse(speechEnd);
-            Assert.IsTrue(speechNotDetected);
+            //Assert.False(speechBegin);
+            Assert.False(speechEnd);
+            Assert.True(speechNotDetected);
         }
 
-        [Test]
+        [Fact]
         public void TestEnabled() {
             var vad = new VoiceActivityDetector(SAMPLE_RATE);
             vad.Enabled = false;
@@ -96,11 +95,11 @@ namespace ApiAiSDK.Tests
 
             ProcessStream(vad, inputStream);
 
-            Assert.IsTrue(speechBegin);
-            Assert.IsFalse(speechEnd);
+            Assert.True(speechBegin);
+            Assert.False(speechEnd);
         }
 
-        [Test]
+        [Fact]
         public void TestFFT()
         {
             const int SIZE = 512;
@@ -125,11 +124,11 @@ namespace ApiAiSDK.Tests
 
             for (int i = 0; i < SIZE; i++)
             {
-                Assert.AreEqual(expected[i], re[i], 0.000000001);
+                Assert.Equal(expected[i], re[i], 9);
             }
         }
 
-        //[Test] Yet not implemented
+        //[Fact] Yet not implemented
         public void TestVAD2()
         {
             var vad = new VoiceActivityDetectorV2(SAMPLE_RATE);
@@ -145,8 +144,8 @@ namespace ApiAiSDK.Tests
 
             ProcessStream(vad, inputStream);
 
-            Assert.IsTrue(speechBegin);
-            Assert.IsFalse(speechEnd);
+            Assert.True(speechBegin);
+            Assert.False(speechEnd);
         }
 
         static void ProcessStream(VoiceActivityDetector vad, Stream inputStream)

@@ -54,6 +54,11 @@ namespace ApiAiSDK
             httpClient = new HttpClient();
         }
 
+        public AIResponse Request(AIRequest request)
+        {
+            return RequestAsync(request).GetAwaiter().GetResult();
+        }
+
         public async Task<AIResponse> RequestAsync(AIRequest request)
         {
             request.Language = config.Language.code;
@@ -96,6 +101,11 @@ namespace ApiAiSDK
             {
                 throw new AIServiceException(e);
             }
+        }
+
+        public AIResponse VoiceRequest(Stream voiceStream, RequestExtras requestExtras = null)
+        {
+            return VoiceRequestAsync(voiceStream, requestExtras).GetAwaiter().GetResult();
         }
 
         public async Task<AIResponse> VoiceRequestAsync(Stream voiceStream, RequestExtras requestExtras = null)
@@ -162,6 +172,11 @@ namespace ApiAiSDK
             {
                 throw new AIServiceException(e);
             }
+        }
+
+        public bool ResetContexts()
+        {
+            return ResetContextsAsync().GetAwaiter().GetResult();
         }
 
         public async Task<bool> ResetContextsAsync()

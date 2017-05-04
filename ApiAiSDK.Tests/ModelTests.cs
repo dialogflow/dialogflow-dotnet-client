@@ -19,14 +19,13 @@
 //  ***********************************************************************************************************************
 
 using System.Globalization;
-using NUnit.Framework;
 using Newtonsoft.Json;
 using ApiAiSDK.Model;
 using Newtonsoft.Json.Linq;
+using Xunit;
 
 namespace ApiAiSDK.Tests
 {
-    [TestFixture]
     public class ModelTests
     {
         private AIResponse GetTestResponse()
@@ -61,63 +60,63 @@ namespace ApiAiSDK.Tests
             return JsonConvert.DeserializeObject<AIResponse>(jsonText);
         }
 
-        [Test]
+        [Fact]
         public void TestResultGetString()
         {
             var response = GetTestResponse();
 
-            Assert.AreEqual("1.23", response.Result.GetStringParameter("number"));
-            Assert.AreEqual("default_value", response.Result.GetStringParameter("non_exist_parameter", "default_value"));
-            Assert.AreEqual(string.Empty, response.Result.GetStringParameter("non_exist_parameter"));
+            Assert.Equal("1.23", response.Result.GetStringParameter("number"));
+            Assert.Equal("default_value", response.Result.GetStringParameter("non_exist_parameter", "default_value"));
+            Assert.Equal(string.Empty, response.Result.GetStringParameter("non_exist_parameter"));
 
-            Assert.AreEqual("string value", response.Result.GetStringParameter("str"));
+            Assert.Equal("string value", response.Result.GetStringParameter("str"));
         }
 
-        [Test]
+        [Fact]
         public void TestResultGetInt()
         {
             var response = GetTestResponse();
 
-            Assert.AreEqual(1, response.Result.GetIntParameter("number"));
-            Assert.AreEqual(2, response.Result.GetIntParameter("non_exist_parameter", 2));
-            Assert.AreEqual(0, response.Result.GetIntParameter("non_exist_parameter"));
+            Assert.Equal(1, response.Result.GetIntParameter("number"));
+            Assert.Equal(2, response.Result.GetIntParameter("non_exist_parameter", 2));
+            Assert.Equal(0, response.Result.GetIntParameter("non_exist_parameter"));
 
-            Assert.AreEqual(17, response.Result.GetIntParameter("integer"));
+            Assert.Equal(17, response.Result.GetIntParameter("integer"));
 
-            Assert.AreEqual(5, response.Result.GetIntParameter("str"), 5);
-            Assert.AreEqual(0, response.Result.GetIntParameter("str"));
+            Assert.Equal(5, response.Result.GetIntParameter("str"));
+            Assert.Equal(0, response.Result.GetIntParameter("str"));
         }
 
-        [Test]
+        [Fact]
         public void TestResultGetFloat()
         {
             var response = GetTestResponse();
 
-            Assert.AreEqual(1.23f, response.Result.GetFloatParameter("number"), float.Epsilon);
-            Assert.AreEqual(1.44f, response.Result.GetFloatParameter("non_exist_parameter", 1.44f), float.Epsilon);
-            Assert.AreEqual(0, response.Result.GetFloatParameter("non_exist_parameter"));
+            Assert.Equal(1.23f, response.Result.GetFloatParameter("number"), 15);
+            Assert.Equal(1.44f, response.Result.GetFloatParameter("non_exist_parameter", 1.44f), 15);
+            Assert.Equal(0, response.Result.GetFloatParameter("non_exist_parameter"));
 
-            Assert.AreEqual(17, response.Result.GetFloatParameter("integer"), float.Epsilon);
+            Assert.Equal(17, response.Result.GetFloatParameter("integer"), 15);
 
-            Assert.AreEqual(5f, response.Result.GetFloatParameter("str", 5f), float.Epsilon);
-            Assert.AreEqual(0, response.Result.GetFloatParameter("str"));
+            Assert.Equal(5f, response.Result.GetFloatParameter("str", 5f), 15);
+            Assert.Equal(0, response.Result.GetFloatParameter("str"));
         }
 
-        [Test]
+        [Fact]
         public void TestResultGetComplex()
         {
             var response = GetTestResponse();
 
             var complexParam = response.Result.GetJsonParameter("complex_param");
-            Assert.IsNotNull(complexParam);
+            Assert.NotNull(complexParam);
 
             var nestedToken = complexParam["nested_key"] as JValue;
             Assert.NotNull(nestedToken);
-            Assert.AreEqual(JTokenType.String, nestedToken.Type);
-            Assert.AreEqual("nested_value", nestedToken.ToString(CultureInfo.InvariantCulture));
+            Assert.Equal(JTokenType.String, nestedToken.Type);
+            Assert.Equal("nested_value", nestedToken.ToString(CultureInfo.InvariantCulture));
         }
 
-        [Test]
+        [Fact]
         public void TestParseContextParams()
         {
             var testObject = new
@@ -151,12 +150,12 @@ namespace ApiAiSDK.Tests
 
             var context = response.Result.Contexts[0];
 
-            Assert.AreEqual("test_context", context.Name);
+            Assert.Equal("test_context", context.Name);
             Assert.NotNull(context.Parameters["from"] as JObject);
             Assert.NotNull(context.Parameters["from_original"] as string);
         }
 
-        [Test]
+        [Fact]
         public void TimeParameterTest()
         {
             var testResponse = new {
@@ -184,14 +183,14 @@ namespace ApiAiSDK.Tests
             var testResponseString = JsonConvert.SerializeObject(testResponse);
             var response = JsonConvert.DeserializeObject<AIResponse>(testResponseString);
 
-            Assert.AreEqual("domains", response.Result.Source);
-            Assert.AreEqual("clock.alarm_set", response.Result.Action);
+            Assert.Equal("domains", response.Result.Source);
+            Assert.Equal("clock.alarm_set", response.Result.Action);
 
             var stringParameter = response.Result.GetStringParameter("time");
-            Assert.IsNotNull(stringParameter);
+            Assert.NotNull(stringParameter);
         }
 
-        [Test]
+        [Fact]
         public void ComplexParameterTest()
         {
             var testResponse =
@@ -224,16 +223,16 @@ namespace ApiAiSDK.Tests
             var testResponseString = JsonConvert.SerializeObject(testResponse);
             var response = JsonConvert.DeserializeObject<AIResponse>(testResponseString);
 
-            Assert.AreEqual("domains", response.Result.Source);
-            Assert.AreEqual("smarthome.appliances_off", response.Result.Action);
+            Assert.Equal("domains", response.Result.Source);
+            Assert.Equal("smarthome.appliances_off", response.Result.Action);
 
             var actionCondition = response.Result.GetJsonParameter("action_condition");
 
             var timeToken = actionCondition.SelectToken("time");
-            Assert.IsNotNull(timeToken);
+            Assert.NotNull(timeToken);
         }
 
-        [Test]
+        [Fact]
         public void MessagesTest()
         {
             var testResponse = new {
@@ -272,21 +271,21 @@ namespace ApiAiSDK.Tests
             var testResponseString = JsonConvert.SerializeObject(testResponse);
             var response = JsonConvert.DeserializeObject<AIResponse>(testResponseString);
 
-            Assert.AreEqual("agent", response.Result.Source);
-            Assert.AreEqual("hello_action", response.Result.Action);
+            Assert.Equal("agent", response.Result.Source);
+            Assert.Equal("hello_action", response.Result.Action);
 
             var fulfillment = response.Result.Fulfillment;
             Assert.NotNull(fulfillment);
-            Assert.AreEqual(2, fulfillment.Messages.Count);
+            Assert.Equal(2, fulfillment.Messages.Count);
 
             var firstMessage = (JObject) fulfillment.Messages[0];
             var secondMessage = (JObject) fulfillment.Messages[1];
 
-            Assert.AreEqual(0, firstMessage["type"].Value<int>());
-            Assert.AreEqual("Some speech", firstMessage["speech"].Value<string>());
+            Assert.Equal(0, firstMessage["type"].Value<int>());
+            Assert.Equal("Some speech", firstMessage["speech"].Value<string>());
 
-            Assert.AreEqual(2, secondMessage["type"].Value<int>());
-            Assert.AreEqual("Choose an item", secondMessage["title"].Value<string>());
+            Assert.Equal(2, secondMessage["type"].Value<int>());
+            Assert.Equal("Choose an item", secondMessage["title"].Value<string>());
 
         }
 

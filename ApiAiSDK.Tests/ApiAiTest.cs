@@ -20,65 +20,63 @@
 
 using System;
 using System.IO;
-using NUnit.Framework;
 using ApiAiSDK.Model;
 using System.Reflection;
-using System.Threading.Tasks;
+using Xunit;
 
 namespace ApiAiSDK.Tests
 {
-	[TestFixture]
 	public class ApiAiTest
 	{
 		private const string ACCESS_TOKEN = "3485a96fb27744db83e78b8c4bc9e7b7";
 
-		[Test]
-		public async Task TextRequestTest()
+		[Fact]
+		public void TextRequestTest()
 		{
 			var config = new AIConfiguration(ACCESS_TOKEN, SupportedLanguage.English);
 
 			var apiAi = new ApiAi(config);
 
-			var response = await apiAi.TextRequestAsync("hello");
+			var response = apiAi.TextRequest("hello");
 
-			Assert.IsNotNull(response);
-			Assert.AreEqual("greeting", response.Result.Action);
-            Assert.AreEqual("Hi! How are you?", response.Result.Fulfillment.Speech);
+			Assert.NotNull(response);
+			Assert.Equal("greeting", response.Result.Action);
+            Assert.Equal("Hi! How are you?", response.Result.Fulfillment.Speech);
 		}
 
-		[Test]
-		public async Task TextAIRequestTest()
+		[Fact]
+		public void TextAIRequestTest()
 		{
 			var config = new AIConfiguration(ACCESS_TOKEN, SupportedLanguage.English);
 			
 			var apiAi = new ApiAi(config);
 
 			var request = new AIRequest("hello");
-			var response = await apiAi.TextRequestAsync(request);
+			var response = apiAi.TextRequest(request);
 			
-			Assert.IsNotNull(response);
-			Assert.AreEqual("greeting", response.Result.Action);
-            Assert.AreEqual("Hi! How are you?", response.Result.Fulfillment.Speech);
+			Assert.NotNull(response);
+			Assert.Equal("greeting", response.Result.Action);
+            Assert.Equal("Hi! How are you?", response.Result.Fulfillment.Speech);
 		}
 
-		[Test]
-		public async Task VoiceRequestTest()
+		[Fact]
+		public void VoiceRequestTest()
 		{
 			var config = new AIConfiguration(ACCESS_TOKEN, SupportedLanguage.English);
 
 			var apiAi = new ApiAi(config);
 			var stream = ReadFileFromResource("ApiAiSDK.Tests.TestData.what_is_your_name.raw");
 
-			var response = await apiAi.VoiceRequestAsync(stream);
+			var response = apiAi.VoiceRequest(stream);
 
-			Assert.IsNotNull(response);
-			Assert.AreEqual("what is your name", response.Result.ResolvedQuery);
+			Assert.NotNull(response);
+			Assert.Equal("what is your name", response.Result.ResolvedQuery);
 		}
 
 		private Stream ReadFileFromResource(string resourceId)
 		{
 			Assembly a = Assembly.GetEntryAssembly();
-			Stream stream = a.GetManifestResourceStream(resourceId);
+            Stream stream = a.GetManifestResourceStream(resourceId);
 			return stream;
 		}
 

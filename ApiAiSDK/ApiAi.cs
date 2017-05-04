@@ -37,6 +37,11 @@ namespace ApiAiSDK
 			dataService = new AIDataService(this.config);
 		}
 
+		public AIResponse TextRequest(string text)
+		{
+			return TextRequestAsync(text).GetAwaiter().GetResult();
+		}
+
 		public Task<AIResponse> TextRequestAsync(string text)
 		{
 			if (string.IsNullOrEmpty(text)) {
@@ -44,6 +49,11 @@ namespace ApiAiSDK
 			}
 
 			return TextRequestAsync(new AIRequest(text));
+		}
+
+		public AIResponse TextRequest(AIRequest request)
+		{
+			return TextRequestAsync(request).GetAwaiter().GetResult();
 		}
 
 		public Task<AIResponse> TextRequestAsync(AIRequest request)
@@ -55,6 +65,11 @@ namespace ApiAiSDK
 			return dataService.RequestAsync(request);
 		}
 
+		public AIResponse TextRequest(string text, RequestExtras requestExtras)
+		{
+			return TextRequestAsync(text, requestExtras).GetAwaiter().GetResult();
+		}
+
         public Task<AIResponse> TextRequestAsync(string text, RequestExtras requestExtras)
         {
             if (string.IsNullOrEmpty(text)) {
@@ -64,6 +79,11 @@ namespace ApiAiSDK
             return TextRequestAsync(new AIRequest(text, requestExtras));
         }
 
+		public AIResponse VoiceRequest(Stream voiceStream, RequestExtras requestExtras = null)
+		{
+			return VoiceRequestAsync(voiceStream, requestExtras).GetAwaiter().GetResult();
+		}
+
 		public Task<AIResponse> VoiceRequestAsync(Stream voiceStream, RequestExtras requestExtras = null)
 		{
 		    if (config.Language == SupportedLanguage.Italian)
@@ -72,6 +92,11 @@ namespace ApiAiSDK
 		    }
 
 			return dataService.VoiceRequestAsync(voiceStream, requestExtras);
+		}
+
+		public AIResponse VoiceRequest(float[] samples)
+		{
+			return VoiceRequestAsync(samples).GetAwaiter().GetResult();
 		}
 
 		public Task<AIResponse> VoiceRequestAsync(float[] samples)
