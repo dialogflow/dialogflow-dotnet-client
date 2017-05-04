@@ -1,7 +1,7 @@
 api.ai: .NET Library
 ==============
 
-[![Build Status](https://travis-ci.org/api-ai/api-ai-net.svg?branch=master)](https://travis-ci.org/api-ai/api-ai-net)
+[![Build Status](https://travis-ci.org/api-ai/apiai-dotnet-client.svg?branch=master)](https://travis-ci.org/api-ai/apiai-dotnet-client)
 [![Nuget Version](https://img.shields.io/nuget/v/ApiAiSDK.svg)](https://www.nuget.org/packages/ApiAiSDK/)
 
 The api.ai .NET Library makes it easy to integrate the [API.AI natural language processing API](http://api.ai) into your .NET application. API.AI allows using voice commands and integration with dialog scenarios defined for a particular agent in API.AI.
