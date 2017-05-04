@@ -19,14 +19,14 @@
 // ***********************************************************************************************************************
 
 using System;
-using System.Configuration;
-using System.Net;
 using System.IO;
-using System.Linq;
 using Newtonsoft.Json;
 using ApiAiSDK.Model;
-using ApiAiSDK.Http;
 using System.Diagnostics;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace ApiAiSDK
 {
@@ -35,6 +35,8 @@ namespace ApiAiSDK
         private readonly AIConfiguration config;
 
         public string SessionId { get; }
+
+        private readonly HttpClient httpClient;
 
         public AIDataService(AIConfiguration config)
         {
@@ -48,20 +50,25 @@ namespace ApiAiSDK
             {
                 SessionId = config.SessionId;
             }
+
+            httpClient = new HttpClient();
         }
 
         public AIResponse Request(AIRequest request)
         {
+            return RequestAsync(request).GetAwaiter().GetResult();
+        }
+
+        public async Task<AIResponse> RequestAsync(AIRequest request)
+        {
             request.Language = config.Language.code;
-            request.Timezone = TimeZone.CurrentTimeZone.StandardName;
+            request.Timezone = TimeZoneInfo.Local.StandardName;
             request.SessionId = SessionId;
             
             try
             {
-                var httpRequest = (HttpWebRequest)WebRequest.Create(config.RequestUrl);
-                httpRequest.Method = "POST";
-                httpRequest.ContentType = "application/json; charset=utf-8";
-                httpRequest.Accept = "application/json";
+                var httpRequest = new HttpRequestMessage(HttpMethod.Post, config.RequestUrl);
+                httpRequest.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 						
                 httpRequest.Headers.Add("Authorization", "Bearer " + config.ClientAccessToken);
                 		
@@ -69,36 +76,25 @@ namespace ApiAiSDK
                 { 
                     NullValueHandling = NullValueHandling.Ignore
                 };
+
 			
                 var jsonRequest = JsonConvert.SerializeObject(request, Formatting.None, jsonSettings);
+                httpRequest.Content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
                 if (config.DebugLog)
                 {
                     Debug.WriteLine("Request: " + jsonRequest);
                 }
 
-                using (var streamWriter = new StreamWriter(httpRequest.GetRequestStream()))
-                {
-                    streamWriter.Write(jsonRequest);
-                    streamWriter.Close();
-                }
+                var httpResponse = await httpClient.SendAsync(httpRequest);
 
-                var httpResponse = httpRequest.GetResponse() as HttpWebResponse;
-                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-                {
-                    var result = streamReader.ReadToEnd();
+                var result = await httpResponse.Content.ReadAsStringAsync();
 
-                    if (config.DebugLog)
-                    {
-                        Debug.WriteLine("Response: " + result);
-                    }
+                var aiResponse = JsonConvert.DeserializeObject<AIResponse>(result);
 
-                    var aiResponse = JsonConvert.DeserializeObject<AIResponse>(result);
+                CheckForErrors(aiResponse);
 
-                    CheckForErrors(aiResponse);
-
-                    return aiResponse;
-                }
+                return aiResponse;
 
             }
             catch (Exception e)
@@ -109,9 +105,14 @@ namespace ApiAiSDK
 
         public AIResponse VoiceRequest(Stream voiceStream, RequestExtras requestExtras = null)
         {
+            return VoiceRequestAsync(voiceStream, requestExtras).GetAwaiter().GetResult();
+        }
+
+        public async Task<AIResponse> VoiceRequestAsync(Stream voiceStream, RequestExtras requestExtras = null)
+        {
             var request = new AIRequest();
             request.Language = config.Language.code;
-            request.Timezone = TimeZone.CurrentTimeZone.StandardName;
+            request.Timezone = TimeZoneInfo.Local.StandardName;
             request.SessionId = SessionId;
 
             if (requestExtras != null)
@@ -121,10 +122,10 @@ namespace ApiAiSDK
 
             try
             {
-                var httpRequest = (HttpWebRequest)WebRequest.Create(config.RequestUrl);
-                httpRequest.Method = "POST";
-                httpRequest.Accept = "application/json";
-				
+                var httpRequest = new HttpRequestMessage(HttpMethod.Post, config.RequestUrl);
+                httpRequest.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                httpRequest.Headers.Add("Content-Type", "application/json");
+
                 httpRequest.Headers.Add("Authorization", "Bearer " + config.ClientAccessToken);
                 
                 var jsonSettings = new JsonSerializerSettings
@@ -139,27 +140,33 @@ namespace ApiAiSDK
                     Debug.WriteLine("Request: " + jsonRequest);
                 }
 
-                var multipartClient = new MultipartHttpClient(httpRequest);
-                multipartClient.connect();
-
-                multipartClient.addStringPart("request", jsonRequest);
-                multipartClient.addFilePart("voiceData", "voice.wav", voiceStream);
-
-                multipartClient.finish();
-
-                var responseJsonString = multipartClient.getResponse();
-
-                if (config.DebugLog)
+                using (var content = new MultipartFormDataContent())
                 {
-                    Debug.WriteLine("Response: " + responseJsonString);
+                    content.Add(new StringContent(jsonRequest), "request");
+                    var voicePart = new StreamContent(voiceStream);
+                    voicePart.Headers.ContentDisposition = new ContentDispositionHeaderValue("voiceData")
+                    {
+                        FileName = "voice.wav"
+                    };
+                    content.Add(voicePart);
+
+                    httpRequest.Content = content;
+
+                    var response = await httpClient.SendAsync(httpRequest);
+
+                    var responseJsonString = await response.Content.ReadAsStringAsync();
+
+                    if (config.DebugLog)
+                    {
+                        Debug.WriteLine("Response: " + responseJsonString);
+                    }
+
+                    var aiResponse = JsonConvert.DeserializeObject<AIResponse>(responseJsonString);
+
+                    CheckForErrors(aiResponse);
+
+                    return aiResponse;
                 }
-
-                var aiResponse = JsonConvert.DeserializeObject<AIResponse>(responseJsonString);
-
-                CheckForErrors(aiResponse);
-
-                return aiResponse;
-
             }
             catch (Exception e)
             {
@@ -169,10 +176,15 @@ namespace ApiAiSDK
 
         public bool ResetContexts()
         {
+            return ResetContextsAsync().GetAwaiter().GetResult();
+        }
+
+        public async Task<bool> ResetContextsAsync()
+        {
             var cleanRequest = new AIRequest("empty_query_for_resetting_contexts");
             cleanRequest.ResetContexts = true;
             try {
-                var response = Request(cleanRequest);
+                var response = await RequestAsync(cleanRequest);
                 return !response.IsError;
             } catch (AIServiceException e) {
                 Debug.WriteLine("Exception while contexts clean." + e);

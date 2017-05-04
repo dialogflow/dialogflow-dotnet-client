@@ -20,20 +20,19 @@
 
 using System;
 using System.Linq;
-using NUnit.Framework;
 using ApiAiSDK;
 using ApiAiSDK.Model;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Xunit;
 
 namespace ApiAiSDK.Tests
 {
-	[TestFixture]
 	public class AIDataServiceTests
 	{
 		private const string ACCESS_TOKEN = "3485a96fb27744db83e78b8c4bc9e7b7";
 
-		[Test]
+		[Fact]
 		public void TextRequestTest()
 		{
 			var dataService = CreateDataService();
@@ -41,10 +40,10 @@ namespace ApiAiSDK.Tests
 		    var request = new AIRequest("Hello");
 
 			var response = dataService.Request(request);
-			Assert.IsNotNull(response);
-			Assert.AreEqual("greeting", response.Result.Action);
-            Assert.AreEqual("Hi! How are you?", response.Result.Fulfillment.Speech);
-            Assert.IsNotNullOrEmpty(response.SessionId);
+			Assert.NotNull(response);
+			Assert.Equal("greeting", response.Result.Action);
+            Assert.Equal("Hi! How are you?", response.Result.Fulfillment.Speech);
+            Assert.False(string.IsNullOrEmpty(response.SessionId));
 		}
 
 	    private AIDataService CreateDataService()
@@ -54,7 +53,7 @@ namespace ApiAiSDK.Tests
 	        return dataService;
 	    }
 
-	    [Test]
+	    [Fact]
 		public void DifferentAgentsTest()
 		{
 			var query = "I want pizza";
@@ -65,8 +64,8 @@ namespace ApiAiSDK.Tests
 				var request = new AIRequest(query);
 
 				var response = dataService.Request(request);
-				Assert.IsNotNull(response.Result);
-				Assert.AreEqual("pizza", response.Result.Action);
+				Assert.NotNull(response.Result);
+				Assert.Equal("pizza", response.Result.Action);
 
 			}
 
@@ -76,14 +75,14 @@ namespace ApiAiSDK.Tests
 				var request = new AIRequest(query);
 
 				var response = dataService.Request(request);
-				Assert.IsNotNull(response.Result);
-				Assert.IsTrue(string.IsNullOrEmpty(response.Result.Action));
+				Assert.NotNull(response.Result);
+				Assert.True(string.IsNullOrEmpty(response.Result.Action));
 
 			}
 
 		}
 
-		[Test]
+		[Fact]
 		public void SessionTest()
 		{
 			var config = new AIConfiguration(ACCESS_TOKEN, SupportedLanguage.English);
@@ -94,24 +93,24 @@ namespace ApiAiSDK.Tests
 			{
 				var weatherRequest = new AIRequest("weather");
 				var weatherResponse = MakeRequest(firstService, weatherRequest);
-                Assert.IsNotNull(weatherResponse);
+                Assert.NotNull(weatherResponse);
 			}
 
 			{
 				var checkSecondRequest = new AIRequest("check weather");
 				var checkSecondResponse = MakeRequest(secondService, checkSecondRequest);
-                Assert.IsEmpty(checkSecondResponse.Result.Action);
+                Assert.Empty(checkSecondResponse.Result.Action);
 			}
 
 			{
 				var checkFirstRequest = new AIRequest("check weather");
 				var checkFirstResponse = MakeRequest(firstService, checkFirstRequest);
-				Assert.IsNotNull(checkFirstResponse.Result.Action);
-				Assert.IsTrue(checkFirstResponse.Result.Action.Equals("checked", StringComparison.InvariantCultureIgnoreCase));
+				Assert.NotNull(checkFirstResponse.Result.Action);
+				Assert.True(checkFirstResponse.Result.Action.Equals("checked", StringComparison.OrdinalIgnoreCase));
 			}
 		}
 
-		[Test]
+		[Fact]
 		public void ParametersTest()
 		{
 			var dataService = CreateDataService();
@@ -120,22 +119,22 @@ namespace ApiAiSDK.Tests
 
 			var response = MakeRequest(dataService, request);
 
-			Assert.IsNotNull(response.Result.Parameters);
-			Assert.IsTrue(response.Result.Parameters.Count > 0);
+			Assert.NotNull(response.Result.Parameters);
+			Assert.True(response.Result.Parameters.Count > 0);
 
-			Assert.IsTrue(response.Result.Parameters.ContainsKey("my_name"));
-			Assert.IsTrue(response.Result.Parameters.ContainsValue("Sam"));
+			Assert.True(response.Result.Parameters.ContainsKey("my_name"));
+			Assert.True(response.Result.Parameters.ContainsValue("Sam"));
 
-			Assert.IsNotNull(response.Result.Contexts);
-			Assert.IsTrue(response.Result.Contexts.Length > 0);
+			Assert.NotNull(response.Result.Contexts);
+			Assert.True(response.Result.Contexts.Length > 0);
 			var context = response.Result.Contexts[0];
 
-			Assert.IsNotNull(context.Parameters);
-			Assert.IsTrue(context.Parameters.ContainsKey("my_name"));
-			Assert.IsTrue(context.Parameters.ContainsValue("Sam"));
+			Assert.NotNull(context.Parameters);
+			Assert.True(context.Parameters.ContainsKey("my_name"));
+			Assert.True(context.Parameters.ContainsValue("Sam"));
 		}
 
-        [Test]
+        [Fact]
         public void ContextsTest()
         {
             var dataService = CreateDataService();
@@ -145,12 +144,12 @@ namespace ApiAiSDK.Tests
 
             var aiResponse = MakeRequest(dataService, aiRequest);
             var action = aiResponse.Result.Action;
-            Assert.AreEqual("showWeather", action);
-            Assert.IsTrue(aiResponse.Result.Contexts.Any(c=>c.Name == "weather"));
+            Assert.Equal("showWeather", action);
+            Assert.True(aiResponse.Result.Contexts.Any(c=>c.Name == "weather"));
 
         }
 
-        [Test]
+        [Fact]
         public void ResetContextsTest()
         {
             var dataService = CreateDataService();
@@ -160,20 +159,20 @@ namespace ApiAiSDK.Tests
             {
                 var aiRequest = new AIRequest("what is your name");
                 var aiResponse = MakeRequest(dataService, aiRequest);
-                Assert.IsTrue(aiResponse.Result.Contexts.Any(c=>c.Name == "name_question"));
+                Assert.True(aiResponse.Result.Contexts.Any(c=>c.Name == "name_question"));
                 var resetSucceed = dataService.ResetContexts();
-                Assert.IsTrue(resetSucceed);
+                Assert.True(resetSucceed);
             }
 
             {
                 var aiRequest = new AIRequest("hello");
                 var aiResponse = MakeRequest(dataService, aiRequest);
-                Assert.IsFalse(aiResponse.Result.Contexts.Any(c=>c.Name == "name_question"));
+                Assert.False(aiResponse.Result.Contexts.Any(c=>c.Name == "name_question"));
             }
 
         }
 
-        [Test]
+        [Fact]
         public void EntitiesTest()
         {
             var dataService = CreateDataService();
@@ -190,31 +189,33 @@ namespace ApiAiSDK.Tests
 
             var aiResponse = MakeRequest(dataService, aiRequest);
 
-            Assert.IsTrue(!string.IsNullOrEmpty(aiResponse.Result.ResolvedQuery));
-            Assert.AreEqual("say_hi", aiResponse.Result.Action);
-            Assert.AreEqual("hi Bilbo, I am Ori", aiResponse.Result.Fulfillment.Speech);
+            Assert.True(!string.IsNullOrEmpty(aiResponse.Result.ResolvedQuery));
+            Assert.Equal("say_hi", aiResponse.Result.Action);
+            Assert.Equal("hi Bilbo, I am Ori", aiResponse.Result.Fulfillment.Speech);
         }
 
-        [Test]
-        [ExpectedException(typeof(AIServiceException))]
+        [Fact]
         public void WrongEntitiesTest()
         {
-            var dataService = CreateDataService();
+            Assert.Throws<AIServiceException>(() =>
+            { 
+                var dataService = CreateDataService();
 
-            var aiRequest = new AIRequest("hi nori");
+                var aiRequest = new AIRequest("hi nori");
 
-            var myDwarfs = new Entity("not_dwarfs");
-            myDwarfs.AddEntry(new EntityEntry("Ori", new [] {"ori", "Nori"}));
-            myDwarfs.AddEntry(new EntityEntry("bifur", new [] {"Bofur","Bombur"}));
+                var myDwarfs = new Entity("not_dwarfs");
+                myDwarfs.AddEntry(new EntityEntry("Ori", new[] { "ori", "Nori" }));
+                myDwarfs.AddEntry(new EntityEntry("bifur", new[] { "Bofur", "Bombur" }));
 
-            var extraEntities = new List<Entity> { myDwarfs };
+                var extraEntities = new List<Entity> { myDwarfs };
 
-            aiRequest.Entities = extraEntities;
+                aiRequest.Entities = extraEntities;
 
-            MakeRequest(dataService, aiRequest);
+                MakeRequest(dataService, aiRequest);
+            });
         }
 
-        [Test]
+        [Fact]
 	    public void InputContextWithParametersTest()
 	    {
             var dataService = CreateDataService();
@@ -237,36 +238,36 @@ namespace ApiAiSDK.Tests
 
             var response = MakeRequest(dataService, aiRequest);
 
-            Assert.AreEqual("Weather in London for tomorrow", response.Result.Fulfillment.Speech);
+            Assert.Equal("Weather in London for tomorrow", response.Result.Fulfillment.Speech);
 	    }
 
-        [Test]
+        [Fact]
         public void ContextLifespanTest()
         {
             var dataService = CreateDataService();
             var aiResponse = MakeRequest(dataService, new AIRequest("weather in london"));
-            Assert.AreEqual(2, aiResponse.Result.GetContext("shortContext").Lifespan.Value);
-            Assert.AreEqual(5, aiResponse.Result.GetContext("weather").Lifespan.Value);
-            Assert.AreEqual(10, aiResponse.Result.GetContext("longContext").Lifespan.Value);
+            Assert.Equal(2, aiResponse.Result.GetContext("shortContext").Lifespan.Value);
+            Assert.Equal(5, aiResponse.Result.GetContext("weather").Lifespan.Value);
+            Assert.Equal(10, aiResponse.Result.GetContext("longContext").Lifespan.Value);
 
             for (int i = 0; i < 3; i++)
             {
                 aiResponse = MakeRequest(dataService, new AIRequest("another request"));
             }
-            Assert.IsNull(aiResponse.Result.GetContext("shortContext"));
-            Assert.IsNotNull(aiResponse.Result.GetContext("weather"));
-            Assert.IsNotNull(aiResponse.Result.GetContext("longContext"));
+            Assert.Null(aiResponse.Result.GetContext("shortContext"));
+            Assert.NotNull(aiResponse.Result.GetContext("weather"));
+            Assert.NotNull(aiResponse.Result.GetContext("longContext"));
 
             for (int i = 0; i < 3; i++)
             {
                 aiResponse = MakeRequest(dataService, new AIRequest("another request"));
             }
-            Assert.IsNull(aiResponse.Result.GetContext("shortContext"));
-            Assert.IsNull(aiResponse.Result.GetContext("weather"));
-            Assert.IsNotNull(aiResponse.Result.GetContext("longContext"));
+            Assert.Null(aiResponse.Result.GetContext("shortContext"));
+            Assert.Null(aiResponse.Result.GetContext("weather"));
+            Assert.NotNull(aiResponse.Result.GetContext("longContext"));
         }
 
-        [Test]
+        [Fact]
         public void InputContextLifespanTest()
         {
             var dataService = CreateDataService();
@@ -288,26 +289,26 @@ namespace ApiAiSDK.Tests
                 };
 
             var response = MakeRequest(dataService, aiRequest);
-            Assert.IsNotNull(response.Result.GetContext("weather"));
+            Assert.NotNull(response.Result.GetContext("weather"));
 
             for (int i = 0; i < 2; i++)
             {
                 response = MakeRequest(dataService, new AIRequest("next request"));
             }
 
-            Assert.IsNotNull(response.Result.GetContext("weather"));
+            Assert.NotNull(response.Result.GetContext("weather"));
             response = MakeRequest(dataService, new AIRequest("next request"));
-            Assert.IsNull(response.Result.GetContext("weather"));
+            Assert.Null(response.Result.GetContext("weather"));
         }
 
 
 		private AIResponse MakeRequest(AIDataService service, AIRequest request)
 		{
 			var aiResponse = service.Request(request);
-			Assert.IsNotNull(aiResponse);
-			Assert.IsFalse(aiResponse.IsError);
-			Assert.IsFalse(string.IsNullOrEmpty(aiResponse.Id));
-			Assert.IsNotNull(aiResponse.Result);
+			Assert.NotNull(aiResponse);
+			Assert.False(aiResponse.IsError);
+			Assert.False(string.IsNullOrEmpty(aiResponse.Id));
+			Assert.NotNull(aiResponse.Result);
 			return aiResponse;
 		}
 

@@ -20,18 +20,17 @@
 
 using System;
 using System.IO;
-using NUnit.Framework;
 using ApiAiSDK.Model;
 using System.Reflection;
+using Xunit;
 
 namespace ApiAiSDK.Tests
 {
-	[TestFixture]
 	public class ApiAiTest
 	{
 		private const string ACCESS_TOKEN = "3485a96fb27744db83e78b8c4bc9e7b7";
 
-		[Test]
+		[Fact]
 		public void TextRequestTest()
 		{
 			var config = new AIConfiguration(ACCESS_TOKEN, SupportedLanguage.English);
@@ -40,12 +39,12 @@ namespace ApiAiSDK.Tests
 
 			var response = apiAi.TextRequest("hello");
 
-			Assert.IsNotNull(response);
-			Assert.AreEqual("greeting", response.Result.Action);
-            Assert.AreEqual("Hi! How are you?", response.Result.Fulfillment.Speech);
+			Assert.NotNull(response);
+			Assert.Equal("greeting", response.Result.Action);
+            Assert.Equal("Hi! How are you?", response.Result.Fulfillment.Speech);
 		}
 
-		[Test]
+		[Fact]
 		public void TextAIRequestTest()
 		{
 			var config = new AIConfiguration(ACCESS_TOKEN, SupportedLanguage.English);
@@ -55,12 +54,12 @@ namespace ApiAiSDK.Tests
 			var request = new AIRequest("hello");
 			var response = apiAi.TextRequest(request);
 			
-			Assert.IsNotNull(response);
-			Assert.AreEqual("greeting", response.Result.Action);
-            Assert.AreEqual("Hi! How are you?", response.Result.Fulfillment.Speech);
+			Assert.NotNull(response);
+			Assert.Equal("greeting", response.Result.Action);
+            Assert.Equal("Hi! How are you?", response.Result.Fulfillment.Speech);
 		}
 
-		[Test]
+		[Fact]
 		public void VoiceRequestTest()
 		{
 			var config = new AIConfiguration(ACCESS_TOKEN, SupportedLanguage.English);
@@ -70,14 +69,14 @@ namespace ApiAiSDK.Tests
 
 			var response = apiAi.VoiceRequest(stream);
 
-			Assert.IsNotNull(response);
-			Assert.AreEqual("what is your name", response.Result.ResolvedQuery);
+			Assert.NotNull(response);
+			Assert.Equal("what is your name", response.Result.ResolvedQuery);
 		}
 
 		private Stream ReadFileFromResource(string resourceId)
 		{
-			Assembly a = Assembly.GetExecutingAssembly();
-			Stream stream = a.GetManifestResourceStream(resourceId);
+			Assembly a = typeof(ApiAiTest).GetTypeInfo().Assembly;
+            Stream stream = a.GetManifestResourceStream(resourceId);
 			return stream;
 		}
 

@@ -178,7 +178,7 @@ namespace ApiAiSDK
             uint fftSize = fft.N;
             var re = new double[fftSize];
             var im = new double[fftSize];
-            Array.Copy(frame, (frame.Length - fftSize) / 2, re, 0, fftSize);
+            Array.Copy(frame, (frame.Length - (int)fftSize) / 2, re, 0, (int)fftSize);
             fft.run(re, im);
 
             return new FFTResult { Re = re, Im = im };

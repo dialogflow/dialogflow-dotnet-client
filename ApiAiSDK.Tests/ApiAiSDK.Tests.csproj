@@ -1,68 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{4260780A-F629-40EF-9BC8-A523B129E10C}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <TargetFrameworks>netcoreapp1.1;net461</TargetFrameworks>
     <RootNamespace>ApiAiSDK.Tests</RootNamespace>
     <AssemblyName>ApiAiSDK.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>True</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>False</Optimize>
-    <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <ConsolePause>False</ConsolePause>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>none</DebugType>
-    <Optimize>True</Optimize>
-    <OutputPath>bin\Release</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <ConsolePause>False</ConsolePause>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="nunit.framework">
-      <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
-    </Reference>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
+    <PackageReference Include="xunit" Version="2.2.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="AIDataServiceTests.cs" />
-    <Compile Include="ApiAiTest.cs" />
-    <Compile Include="VADTest.cs" />
-    <Compile Include="ModelTests.cs" />
+    <ProjectReference Include="..\ApiAiSDK\ApiAiSDK.csproj" />
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+
   <ItemGroup>
-    <ProjectReference Include="..\ApiAiSDK\ApiAiSDK.csproj">
-      <Project>{162D1664-491D-41A3-B4E7-332EAAF87CCA}</Project>
-      <Name>ApiAiSDK</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="TestData\" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="TestData\what_is_your_name.raw" />
-    <EmbeddedResource Include="TestData\speech.raw" />
-    <EmbeddedResource Include="TestData\log.raw" />
-    <EmbeddedResource Include="TestData\noiseAndNotification.raw" />
-    <EmbeddedResource Include="TestData\noiseOnly.raw" />
-    <EmbeddedResource Include="TestData\silence.raw" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
+    <EmbeddedResource Include="TestData\*.raw" />
   </ItemGroup>
 </Project>
