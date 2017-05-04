@@ -179,7 +179,7 @@ namespace ApiAiSDK.Tests
 
         private Stream ReadFileFromResource(string resourceId)
         {
-            Assembly a = Assembly.GetEntryAssembly();
+            Assembly a = typeof(VADTest).GetTypeInfo().Assembly;
             Stream stream = a.GetManifestResourceStream("ApiAiSDK.Tests.TestData." + resourceId);
             return stream;
         }

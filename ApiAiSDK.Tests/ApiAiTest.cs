@@ -75,7 +75,7 @@ namespace ApiAiSDK.Tests
 
 		private Stream ReadFileFromResource(string resourceId)
 		{
-			Assembly a = Assembly.GetEntryAssembly();
+			Assembly a = typeof(ApiAiTest).GetTypeInfo().Assembly;
             Stream stream = a.GetManifestResourceStream(resourceId);
 			return stream;
 		}
