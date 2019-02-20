@@ -1,5 +1,8 @@
-api.ai: .NET Library
-==============
+# DEPRECATED api.ai: .NET Library
+
+| Deprecated |
+|-------|
+| This Dialogflow client library and Dialogflow API V1 [have been deprecated and will be shut down on October 23th, 2019](https://blog.dialogflow.com/post/migrate-to-dialogflow-api-v2/). Please migrate to Dialogflow API V2 and the [v2 client library](https://cloud.google.com/dialogflow-enterprise/docs/reference/libraries/csharp) |
 
 [![Build Status](https://travis-ci.org/api-ai/apiai-dotnet-client.svg?branch=master)](https://travis-ci.org/api-ai/apiai-dotnet-client)
 [![Nuget Version](https://img.shields.io/nuget/v/ApiAiSDK.svg)](https://www.nuget.org/packages/ApiAiSDK/)
